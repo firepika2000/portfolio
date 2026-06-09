@@ -1,0 +1,3521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rey Soto — Engineering Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0D1F3C;
+    --navy-mid: #162847;
+    --navy-light: #1E3560;
+    --gold: #C8962E;
+    --gold-light: #E0B050;
+    --gold-dim: #8A6420;
+    --cream: #F5F0E8;
+    --white: #FFFFFF;
+    --muted: #8A9BB5;
+    --border: rgba(200,150,46,0.18);
+    --card-bg: rgba(255,255,255,0.03);
+    --tag-bg: rgba(200,150,46,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--cream);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(200,150,46,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,150,46,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(13,31,60,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold-light); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 3rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-weight: 400;
+    color: var(--gold-light);
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+  .hero-desc {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+  .stat { display: flex; flex-direction: column; gap: 0.2rem; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .cta-row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 2rem;
+    background: var(--gold);
+    color: var(--navy);
+    font-weight: 500;
+    font-size: 0.88rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .hero-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .hero-cta-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 2rem;
+    background: transparent;
+    color: var(--gold);
+    font-weight: 500;
+    font-size: 0.88rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--gold-dim);
+    transition: border-color 0.2s, color 0.2s, transform 0.15s;
+  }
+  .hero-cta-ghost:hover { border-color: var(--gold); color: var(--gold-light); transform: translateY(-1px); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  .scroll-hint::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: var(--gold-dim);
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ── SHARED SECTION ── */
+  section {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 3rem;
+  }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 3.5rem;
+    line-height: 1.2;
+  }
+  .divider {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 3rem;
+  }
+  .divider hr { border: none; border-top: 1px solid var(--border); }
+
+  /* ── ABOUT / PHILOSOPHY ── */
+  .about-section {
+    position: relative;
+    z-index: 1;
+    background: rgba(200,150,46,0.04);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .about-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .philosophy-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.25;
+    border-left: 3px solid var(--gold);
+    padding-left: 1.5rem;
+  }
+  .philosophy-quote em {
+    color: var(--gold-light);
+    font-style: italic;
+  }
+  .about-body p {
+    font-size: 0.97rem;
+    color: var(--muted);
+    line-height: 1.85;
+    margin-bottom: 1.25rem;
+  }
+  .about-body p:last-child { margin-bottom: 0; }
+  .about-body strong { color: var(--cream); font-weight: 500; }
+
+  /* ── TIMELINE LAYOUT ── */
+  .timeline-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .timeline-sticky { position: sticky; top: 7rem; }
+  .thread-card {
+    padding: 2.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+  }
+  @media (max-width: 768px) {
+    .timeline-layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .timeline-sticky {
+      position: static;
+    }
+    .thread-card {
+      padding: 1.5rem;
+      border-top: none;
+      border-left: 3px solid var(--gold-dim);
+      background: transparent;
+      margin-top: 0;
+    }
+    .thread-card p {
+      font-size: 0.88rem !important;
+    }
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--border);
+  }
+  .timeline-item {
+    position: relative;
+    padding-bottom: 3rem;
+    padding-left: 2rem;
+  }
+  .timeline-item:last-child { padding-bottom: 0; }
+  .timeline-dot {
+    position: absolute;
+    left: -2.45rem;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    border: 2px solid var(--navy);
+    transition: background 0.3s;
+  }
+  .timeline-item:hover .timeline-dot { background: var(--gold); }
+  .timeline-item.active .timeline-dot {
+    background: var(--gold);
+    box-shadow: 0 0 0 4px rgba(200,150,46,0.2);
+  }
+  .timeline-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+  .timeline-role {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--white);
+    margin-bottom: 0.2rem;
+  }
+  .timeline-org {
+    font-size: 0.85rem;
+    color: var(--gold-light);
+    font-weight: 500;
+    margin-bottom: 0.6rem;
+  }
+  .timeline-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 480px;
+  }
+  .timeline-badge {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    background: var(--tag-bg);
+    color: var(--gold-light);
+    border: 1px solid rgba(200,150,46,0.2);
+  }
+
+  /* ── PROJECT CARDS ── */
+  .projects-grid { display: grid; gap: 2px; }
+  .project-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 3rem;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .project-card:hover {
+    border-color: rgba(200,150,46,0.45);
+    background: rgba(255,255,255,0.05);
+  }
+  .project-card.featured { border-left: 3px solid var(--gold); }
+  .project-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  .project-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .project-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    line-height: 1.25;
+  }
+  .project-subtitle {
+    font-size: 0.88rem;
+    color: var(--gold-light);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .tag {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    background: var(--tag-bg);
+    color: var(--gold-light);
+    border: 1px solid rgba(200,150,46,0.25);
+  }
+  .project-desc {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+  .case-block { display: flex; flex-direction: column; gap: 1.5rem; }
+  .case-item {
+    padding: 1.25rem 1.5rem;
+    border-left: 2px solid var(--border);
+    background: rgba(0,0,0,0.2);
+    transition: border-left-color 0.2s;
+  }
+  .case-item:hover { border-left-color: var(--gold); }
+  .case-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .case-text { font-size: 0.92rem; color: var(--cream); line-height: 1.7; }
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 2rem;
+    border: 1px solid var(--border);
+  }
+  .impact-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+    background: rgba(200,150,46,0.07);
+    text-align: center;
+    min-height: 180px;
+  }
+  .metric-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .metric-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    max-width: 140px;
+  }
+
+  /* ── SUB-INITIATIVES ── */
+  .sub-initiatives {
+    margin-top: 2rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .sub-init-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+  }
+  .sub-init-header:hover {
+    border-color: rgba(200,150,46,0.45);
+    background: rgba(255,255,255,0.04);
+  }
+  .sub-init-header.open {
+    border-color: rgba(200,150,46,0.5);
+    border-bottom: none;
+    background: rgba(200,150,46,0.06);
+  }
+  .sub-init-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+  .sub-init-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-top: 0.25rem;
+  }
+  .sub-init-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+  }
+  .sub-init-chevron {
+    font-size: 0.85rem;
+    color: var(--gold-dim);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 1.5rem;
+  }
+  .sub-init-header.open .sub-init-chevron { transform: rotate(180deg); }
+  .sub-init-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s ease;
+    border: 1px solid rgba(200,150,46,0.5);
+    border-top: none;
+    background: rgba(0,0,0,0.15);
+  }
+  .sub-init-body.open { max-height: 900px; }
+  .sub-init-inner {
+    padding: 1.75rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .sub-init-cases { display: flex; flex-direction: column; gap: 1rem; }
+  .sub-init-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    align-self: start;
+  }
+  .sub-metric {
+    padding: 1.25rem 1.5rem;
+    background: rgba(200,150,46,0.07);
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .sub-metric-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .sub-metric-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  @media (max-width: 700px) {
+    .sub-init-inner { grid-template-columns: 1fr; }
+  }
+
+  /* ── SKILLS VIZ ── */
+  .skills-viz-section {
+    position: relative;
+    z-index: 1;
+    background: rgba(0,0,0,0.2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .skills-viz-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 3rem;
+  }
+  .skills-categories {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+  .skill-cat-btn {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.5rem 1.25rem;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .skill-cat-btn:hover { border-color: var(--gold-dim); color: var(--cream); }
+  .skill-cat-btn.active {
+    background: var(--gold);
+    color: var(--navy);
+    border-color: var(--gold);
+  }
+  .skill-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  @media (max-width: 900px) { .skill-card-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .skill-card-grid { grid-template-columns: 1fr; } }
+  .skill-card {
+    padding: 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease,
+                border-color 0.2s, background 0.2s;
+  }
+  .skill-card.show { opacity: 1; transform: translateY(0); }
+  .skill-card:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(200,150,46,0.35);
+  }
+  .skill-card[data-cat="attraction"] { border-left-color: #c8962e; }
+  .skill-card[data-cat="controls"]   { border-left-color: #7eb8d4; }
+  .skill-card[data-cat="ai"]         { border-left-color: #9b7fd4; }
+  .skill-card[data-cat="fabrication"]{ border-left-color: #6fbf8e; }
+  .skill-card-domain {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+  }
+  .skill-card[data-cat="attraction"] .skill-card-domain { color: #c8962e; }
+  .skill-card[data-cat="controls"]   .skill-card-domain { color: #7eb8d4; }
+  .skill-card[data-cat="ai"]         .skill-card-domain { color: #9b7fd4; }
+  .skill-card[data-cat="fabrication"] .skill-card-domain { color: #6fbf8e; }
+  .skill-card-name {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+  .skill-card-proof {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── RECRUITER BRIEF ── */
+  .recruiter-brief {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: rgba(200,150,46,0.03);
+  }
+  .recruiter-brief-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 3rem;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .recruiter-nav { display: flex; flex-direction: column; gap: 2px; }
+  .recruiter-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .recruiter-nav-btn:hover {
+    border-color: rgba(200,150,46,0.45);
+    background: rgba(255,255,255,0.04);
+  }
+  .recruiter-nav-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gold-dim);
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+    width: 1.8rem;
+  }
+  .recruiter-nav-btn strong {
+    display: block;
+    font-size: 0.88rem;
+    color: var(--cream);
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+  }
+  .recruiter-nav-btn span span {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+  .recruiter-nav-arrow {
+    margin-left: auto;
+    color: var(--gold-dim);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  @media (max-width: 768px) {
+    .recruiter-brief-inner {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      padding: 3rem 1.5rem;
+    }
+  }
+  @media (max-width: 480px) {
+    .recruiter-brief-inner { padding: 2.5rem 1.25rem; }
+  }
+
+  /* ── CARD DETAIL ACCORDION ── */
+  .card-detail-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    color: var(--gold-dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .card-detail-trigger:hover { color: var(--gold-light); }
+  .card-detail-trigger.open { color: var(--gold-light); }
+  .card-detail-trigger.open .sub-init-chevron { transform: rotate(180deg); }
+  .card-detail-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+  }
+  .card-detail-body.open { max-height: 4000px; }
+
+  /* ── PERSONAL PROJECTS ── */
+  .personal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  .personal-card {
+    padding: 2rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .personal-card:hover {
+    border-color: rgba(200,150,46,0.45);
+    background: rgba(255,255,255,0.05);
+  }
+  .personal-icon {
+    width: 44px; height: 44px;
+    border: 1px solid var(--gold-dim);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+  .personal-icon svg { width: 22px; height: 22px; stroke: var(--gold); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .personal-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+  }
+  .personal-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+  .photo-placeholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: rgba(200,150,46,0.05);
+    border: 1px dashed rgba(200,150,46,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    color: var(--gold-dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .photo-placeholder svg { width: 28px; height: 28px; stroke: var(--gold-dim); fill: none; stroke-width: 1; }
+
+  /* ── SKILLS STRIP ── */
+  .skills-section {
+    position: relative;
+    z-index: 1;
+    background: rgba(200,150,46,0.06);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 4rem 3rem;
+  }
+  .skills-inner { max-width: 1100px; margin: 0 auto; }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-top: 2.5rem;
+  }
+  .skill-group-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .skill-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+  .skill-list li {
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .skill-list li::before {
+    content: '';
+    display: block;
+    width: 4px; height: 4px;
+    background: var(--gold-dim);
+    flex-shrink: 0;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 3rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  footer strong { color: var(--gold); }
+
+  /* ── ANIMATIONS ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero, section { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .project-layout { grid-template-columns: 1fr; }
+    .personal-grid { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: repeat(2, 1fr); }
+    .metrics-row { grid-template-columns: 1fr; }
+    .hero-stats { gap: 2rem; }
+    .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .skill-row { grid-template-columns: 140px 1fr 2rem; }
+  }
+
+  /* Inline two-column grids inside personal cards — stack on mobile */
+  @media (max-width: 768px) {
+    .personal-card > div[style*="grid-template-columns"],
+    .personal-card > div > div[style*="grid-template-columns"] {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2rem !important;
+    }
+  }
+
+  /* ── MOBILE (iPhone) ── */
+  @media (max-width: 480px) {
+    /* Nav */
+    nav { padding: 0.85rem 1.25rem; }
+
+    /* Hero */
+    .hero { padding: 5rem 1.25rem 6rem; }
+    .cta-row { flex-direction: column; align-items: stretch; }
+    .cta-row a { text-align: center; }
+    .scroll-hint { bottom: 1.5rem; }
+    .hero h1 { font-size: clamp(2.2rem, 11vw, 3.2rem); }
+    .hero-title { font-size: clamp(0.95rem, 4vw, 1.1rem); }
+    .hero-desc { font-size: 0.88rem; }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+    .stat-num { font-size: 1.6rem; }
+
+    /* Sections */
+    section { padding: 3.5rem 1.25rem; }
+    .section-title { font-size: clamp(1.5rem, 7vw, 2rem); }
+
+    /* Project cards */
+    .project-card { padding: 1.5rem; }
+    .project-title { font-size: 1.2rem; }
+    .metrics-row { grid-template-columns: 1fr 1fr; }
+    .metric-num { font-size: 2rem; }
+    .impact-metric { padding: 1.5rem 1rem; min-height: auto; }
+
+    /* Sub-initiatives */
+    .sub-init-header { padding: 0.85rem 1rem; }
+    .sub-init-inner { padding: 1.25rem; }
+    .sub-metric-num { font-size: 1.5rem; }
+
+    /* Personal cards */
+    .personal-card { padding: 1.5rem; }
+    .personal-name { font-size: 1.1rem !important; }
+
+    /* Skills */
+    .skills-viz-section .skills-viz-inner { padding: 3rem 1.25rem; }
+    .skill-card { padding: 1.1rem; }
+
+    /* Timeline */
+    .timeline-date { font-size: 0.75rem; }
+
+    /* About section */
+    .philosophy-quote { font-size: clamp(1.3rem, 5vw, 1.8rem); }
+
+    /* Tags — prevent overflow */
+    .project-tags, .sub-init-tags { gap: 0.35rem; }
+    .tag { font-size: 0.62rem; padding: 0.25rem 0.55rem; }
+
+    /* Case blocks */
+    .case-item { padding: 1rem 1.1rem; }
+    .case-text { font-size: 0.87rem; }
+
+    /* Dividers */
+    .divider { padding: 0 1.25rem; }
+
+    /* HMI modal iframe — constrain on mobile */
+    #hmiModal iframe { width: 100% !important; height: 70vh !important; }
+
+    /* Easter egg — push up from bottom nav */
+    #easterEgg { bottom: 80px; right: 16px; width: 42px; }
+  }
+
+  /* ── EASTER EGG ── */
+  #easterEgg {
+    position: fixed;
+    z-index: 200;
+    cursor: pointer;
+    opacity: 0;
+    bottom: 60px;
+    right: 36px;
+    width: 54px;
+    height: auto;
+    transition: transform 0.2s, filter 0.2s;
+    animation: eggFloat 7s ease-in-out infinite, eggAppear 2s ease 6s forwards;
+    filter: invert(1) sepia(0.4) saturate(2) brightness(0.75) drop-shadow(0 0 0px rgba(200,150,46,0));
+  }
+  #easterEgg:hover {
+    transform: scale(1.2) !important;
+    filter: invert(1) sepia(1) saturate(4) brightness(0.85) drop-shadow(0 0 14px rgba(200,150,46,0.8)) !important;
+    animation-play-state: paused;
+    opacity: 0.9 !important;
+  }
+  @keyframes eggFloat {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    30% { transform: translateY(-10px) rotate(2deg); }
+    60% { transform: translateY(-5px) rotate(-1deg); }
+    80% { transform: translateY(-13px) rotate(3deg); }
+  }
+  @keyframes eggAppear {
+    0% { opacity: 0; }
+    100% { opacity: 0.18; }
+  }
+  @keyframes eggShake {
+    0%,100% { transform: translateX(0) rotate(-3deg); }
+    15%      { transform: translateX(-6px) rotate(-6deg); }
+    30%      { transform: translateX(6px) rotate(0deg); }
+    45%      { transform: translateX(-5px) rotate(-5deg); }
+    60%      { transform: translateX(5px) rotate(1deg); }
+    75%      { transform: translateX(-3px) rotate(-4deg); }
+    90%      { transform: translateX(3px) rotate(0deg); }
+  }
+  #easterEgg.shaking {
+    animation: eggShake 0.55s ease-in-out 3 !important;
+    opacity: 0.55 !important;
+  }
+
+  /* ── SPEECH BUBBLE ── */
+  #eggBubble {
+    position: fixed;
+    bottom: 118px;
+    right: 26px;
+    background: #fff;
+    color: #0D1F3C;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    line-height: 1.45;
+    padding: 0.55rem 0.8rem;
+    border-radius: 10px 10px 4px 10px;
+    max-width: 160px;
+    text-align: center;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+    opacity: 0;
+    transform: scale(0.6) translateY(10px);
+    transform-origin: bottom right;
+    transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+    z-index: 199;
+  }
+  #eggBubble.visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+  }
+  /* tail pointing down-right toward Mickey */
+  #eggBubble::after {
+    content: '';
+    position: absolute;
+    bottom: -9px;
+    right: 14px;
+    border-width: 9px 8px 0 0;
+    border-style: solid;
+    border-color: #fff transparent transparent transparent;
+  }
+
+  /* Riddle overlay */
+  #riddleOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: rgba(5,12,25,0.94);
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+  #riddleOverlay.open { display: flex; }
+  #riddleBox {
+    max-width: 500px;
+    width: 90%;
+    padding: 2.5rem;
+    background: #08111f;
+    border: 1px solid var(--gold);
+    box-shadow: 0 0 80px rgba(200,150,46,0.1);
+    text-align: center;
+    position: relative;
+  }
+  #riddleClose {
+    position: absolute; top: 1rem; right: 1.25rem;
+    background: none; border: none;
+    color: var(--muted); font-size: 1.2rem;
+    cursor: pointer; transition: color 0.2s;
+  }
+  #riddleClose:hover { color: var(--gold); }
+  .r-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 1.25rem;
+  }
+  .r-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; color: var(--white);
+    margin-bottom: 1.5rem; line-height: 1.3;
+  }
+  .r-riddle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem; color: var(--muted);
+    line-height: 2.1; margin-bottom: 2rem;
+    border-left: 2px solid var(--gold-dim);
+    padding-left: 1.25rem; text-align: left;
+  }
+  .r-riddle em { color: var(--gold-light); font-style: normal; }
+  #riddleInput {
+    width: 100%; background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border); color: var(--cream);
+    font-family: 'DM Mono', monospace; font-size: 0.9rem;
+    padding: 0.7rem 1rem; letter-spacing: 0.15em;
+    text-align: center; outline: none; margin-bottom: 0.75rem;
+    transition: border-color 0.2s;
+    text-transform: uppercase;
+  }
+  #riddleInput:focus { border-color: var(--gold); }
+  #riddleInput.wrong { border-color: #882222; animation: shake 0.3s ease; }
+  #riddleInput.correct { border-color: #228822; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+  #riddleSubmit {
+    width: 100%; padding: 0.7rem;
+    background: var(--gold); color: var(--navy);
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+    font-weight: 500; letter-spacing: 0.1em;
+    text-transform: uppercase; border: none;
+    cursor: pointer; transition: background 0.2s;
+  }
+  #riddleSubmit:hover { background: var(--gold-light); }
+  #riddleHint {
+    font-size: 0.7rem; color: var(--muted);
+    margin-top: 0.85rem; font-family: 'DM Mono', monospace;
+    min-height: 1.1em; letter-spacing: 0.08em;
+  }
+</style>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     FIREWORKS INTRO
+     Stage 1 : blank navy screen + Enter prompt
+     Stage 2 : click → audio + fireworks (castle visible)
+     Stage 3 : name reveal at finale peak
+     Stage 4 : auto-dismiss to portfolio (or click to skip)
+══════════════════════════════════════════════════════════ -->
+<div id="fwOverlay" style="
+  position:fixed;inset:0;z-index:9999;
+  background:#0D1F3C;
+  transition:opacity 1.2s ease;">
+
+
+  <!-- ── Stage 2: show layer (canvas + castle) ──────────────────────── -->
+  <canvas id="fwCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;"></canvas>
+  <img src="assets/castle.svg" alt=""
+       style="position:absolute;bottom:0;left:0;width:100%;display:block;
+              z-index:0;pointer-events:none;
+              filter:drop-shadow(0 -8px 32px rgba(200,150,46,0.18));">
+  <div style="position:absolute;bottom:0;left:0;right:0;height:120px;z-index:0;
+              pointer-events:none;
+              background:linear-gradient(to top,rgba(200,150,46,0.07),transparent);"></div>
+
+  <!-- ── Stage 3: name reveal ───────────────────────────────────────── -->
+  <div id="fwText" style="
+      position:absolute;inset:0;z-index:3;pointer-events:none;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;padding-bottom:18vh;
+      opacity:0;transition:opacity 1.2s ease;">
+    <div style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.35em;
+                color:#C8962E;text-transform:uppercase;margin-bottom:0.75rem;">
+      Welcome to the portfolio of
+    </div>
+    <div style="font-family:'Playfair Display',serif;font-size:clamp(2.2rem,6vw,4rem);
+                font-weight:700;color:#F5F0E8;letter-spacing:0.04em;
+                text-shadow:0 0 40px rgba(200,150,46,0.7),0 0 80px rgba(200,150,46,0.3);">
+      Rey Soto
+    </div>
+    <div style="font-family:'DM Sans',sans-serif;font-size:0.95rem;
+                color:#8A9BB5;margin-top:0.6rem;letter-spacing:0.08em;">
+      Controls &nbsp;·&nbsp; Animatronics &nbsp;·&nbsp; Systems Engineering
+    </div>
+  </div>
+
+  <!-- ── Skip hint (appears after show starts) ──────────────────────── -->
+  <div id="fwSkip" style="
+      display:none;position:absolute;bottom:2rem;right:2rem;z-index:4;
+      font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;
+      color:rgba(138,155,181,0.5);pointer-events:none;
+      animation:fwBlink 1.8s ease-in-out infinite;">
+    click anywhere to skip
+  </div>
+
+  <!-- ── Audio (plays once, started by user click) ──────────────────
+       File: assets/fireworks_show.mp3
+  ──────────────────────────────────────────────────────────────────── -->
+  <audio id="fwAudio" src="assets/fireworks_show.mp3" preload="auto"></audio>
+
+  <!-- ── Stage 1: PROMPT — solid navy cover, sits on top of everything -->
+  <div id="fwPrompt" style="
+      position:absolute;inset:0;z-index:10;background:#0D1F3C;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:opacity 0.9s ease;">
+    <div style="text-align:center;pointer-events:none;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.68rem;
+                  letter-spacing:0.4em;color:#8A6420;text-transform:uppercase;
+                  margin-bottom:0.9rem;">
+        
+      </div>
+      <div style="font-family:'Playfair Display',serif;
+                  font-size:clamp(2.4rem,6.5vw,4rem);
+                  font-weight:700;color:#F5F0E8;letter-spacing:0.04em;">
+        
+      </div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:0.9rem;
+                  color:#8A9BB5;margin-top:0.5rem;letter-spacing:0.1em;">
+         &nbsp;&nbsp;  &nbsp;&nbsp; 
+      </div>
+      <div style="margin-top:3rem;
+                  display:inline-flex;align-items:center;gap:0.6rem;
+                  padding:0.7rem 2.2rem;
+                  border:1px solid rgba(200,150,46,0.5);border-radius:40px;
+                  background:rgba(200,150,46,0.07);
+                  font-family:'DM Mono',monospace;font-size:0.78rem;
+                  letter-spacing:0.2em;color:#E0B050;text-transform:uppercase;
+                  animation:fwBlink 2s ease-in-out infinite;">
+        ▶ &nbsp;Click here to Start
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+@keyframes fwBlink { 0%,100%{opacity:0.35} 50%{opacity:1} }
+</style>
+
+<script>
+(function(){
+  var overlay   = document.getElementById('fwOverlay');
+  var canvas    = document.getElementById('fwCanvas');
+  var fwText    = document.getElementById('fwText');
+  var ctx       = canvas.getContext('2d');
+  var W, H, done = false;
+  var particles = [], rockets = [];
+  var TP        = Math.PI * 2;
+
+  // ── Colour palette ────────────────────────────────────────
+  var PAL = [
+    [200,150, 46],[224,176, 80],[245,240,232],[255,255,255],
+    [ 90,170,255],[255,160, 50],[255,220, 90],[160,220,255],
+    [255,100,130],[120,255,180],[255,80, 80],[80,220,255],
+  ];
+  function rc(){ return PAL[Math.floor(Math.random()*PAL.length)]; }
+  function rn(a,b){ return a+Math.random()*(b-a); }
+  function rgba(c,a){ return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'; }
+
+  function resize(){
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  window.addEventListener('resize', resize); resize();
+
+  // ── Particle ──────────────────────────────────────────────
+  function Particle(x,y,c,vx,vy,sz,dc){
+    this.x=x; this.y=y; this.c=c;
+    this.vx=vx; this.vy=vy;
+    this.alpha=1; this.decay=dc||rn(0.008,0.017);
+    this.grav=rn(0.05,0.09); this.r=sz||rn(1.8,3.2);
+    this.drag=0.968; this.trail=[];
+  }
+  Particle.prototype.tick=function(){
+    this.trail.push([this.x,this.y]);
+    if(this.trail.length>10) this.trail.shift();
+    this.vx*=this.drag; this.vy*=this.drag;
+    this.vy+=this.grav; this.x+=this.vx; this.y+=this.vy;
+    this.alpha-=this.decay;
+  };
+  Particle.prototype.draw=function(){
+    for(var i=0;i<this.trail.length;i++){
+      var t=this.trail[i], a=(i/this.trail.length)*this.alpha*0.38;
+      ctx.beginPath(); ctx.arc(t[0],t[1],this.r*0.5,0,TP);
+      ctx.fillStyle=rgba(this.c,a); ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,TP);
+    ctx.fillStyle=rgba(this.c,this.alpha); ctx.fill();
+  };
+
+  // ── Tiny glitter sparkle (no trail, fast fade) ────────────
+  function Glitter(x,y,c){
+    this.x=x; this.y=y; this.c=c;
+    this.vx=rn(-4,4); this.vy=rn(-5,1);
+    this.alpha=1; this.decay=rn(0.025,0.055); this.r=rn(0.7,1.8);
+  }
+  Glitter.prototype.tick=function(){
+    this.vx*=0.93; this.vy+=0.06;
+    this.x+=this.vx; this.y+=this.vy; this.alpha-=this.decay;
+  };
+  Glitter.prototype.draw=function(){
+    ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,TP);
+    ctx.fillStyle=rgba(this.c,this.alpha); ctx.fill();
+  };
+
+  // ── Burst helpers ─────────────────────────────────────────
+  function ring(x,y,c,n,spd,sz,dc){
+    for(var i=0;i<n;i++){
+      var a=(i/n)*TP, s=spd*rn(0.88,1.12);
+      particles.push(new Particle(x,y,c,Math.cos(a)*s,Math.sin(a)*s,sz,dc));
+    }
+  }
+  function scatter(x,y,c,n,maxS){
+    for(var i=0;i<n;i++){
+      var a=Math.random()*TP, s=rn(1.2,maxS);
+      particles.push(new Particle(x,y,c,Math.cos(a)*s,Math.sin(a)*s));
+    }
+  }
+  function glitter(x,y,c,n){
+    for(var i=0;i<n;i++) particles.push(new Glitter(x,y,c));
+  }
+  function flash(x,y,r){
+    var g=ctx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,'rgba(255,255,255,0.95)');
+    g.addColorStop(0.25,'rgba(255,230,140,0.55)');
+    g.addColorStop(1,'rgba(255,220,80,0)');
+    ctx.beginPath(); ctx.arc(x,y,r,0,TP);
+    ctx.fillStyle=g; ctx.fill();
+  }
+
+  // ── Explosion types ────────────────────────────────────────
+  function explode(x,y,type){
+    var c1=rc(), c2=rc(), W2=[255,255,255], gold=[200,150,46];
+    flash(x,y,26);
+
+    if(type==='radial'){
+      scatter(x,y,c1,140,8); scatter(x,y,W2,30,5);
+      glitter(x,y,c2,55); glitter(x,y,W2,25);
+
+    }else if(type==='ring'){
+      ring(x,y,c1,130,6.5,2.8,0.008);
+      ring(x,y,W2,35,4,1.8,0.012);
+      glitter(x,y,c1,45);
+
+    }else if(type==='star'){
+      for(var i=0;i<100;i++){
+        var a=(i/100)*TP, s=(i%2===0)?rn(6,8.5):rn(2.5,4);
+        particles.push(new Particle(x,y,c1,Math.cos(a)*s,Math.sin(a)*s,rn(2,3.5)));
+      }
+      glitter(x,y,W2,45); glitter(x,y,c2,25);
+
+    }else if(type==='mickey'){
+      // ── Mickey head: large ring ──
+      ring(x,y,c1,120,7,3,0.008);
+      glitter(x,y,W2,30);
+
+      // Ear centres offset up-left / up-right — ey is 20% higher than ex
+      var ex=52, ey=63;
+      // ── Left ear ──
+      flash(x-ex, y-ey, 14);
+      ring(x-ex,y-ey,c2,75,4.5,2.2,0.009);
+      glitter(x-ex,y-ey,c1,20);
+
+      // ── Right ear ──
+      flash(x+ex, y-ey, 14);
+      ring(x+ex,y-ey,c2,75,4.5,2.2,0.009);
+      glitter(x+ex,y-ey,c1,20);
+
+      // gold rain between the three circles
+      for(var j=0;j<60;j++){
+        var ga=rn(-Math.PI,0), gs=rn(2,9);
+        particles.push(new Particle(x,y,gold,
+          Math.cos(ga)*gs,Math.sin(ga)*gs,rn(1.5,2.5),rn(0.009,0.016)));
+      }
+
+    }else if(type==='double'){
+      ring(x,y,c1,90,8,3,0.007);
+      ring(x,y,c2,70,4.5,2,0.009);
+      scatter(x,y,W2,25,3.5); glitter(x,y,c1,40);
+
+    }else if(type==='chrysanthemum'){
+      ring(x,y,c1,160,6.5,1.8,0.006);
+      scatter(x,y,c2,70,5); scatter(x,y,W2,35,3);
+      glitter(x,y,[255,220,80],65); glitter(x,y,W2,30);
+
+    }else if(type==='comet'){
+      // Several long bright comets fanning upward
+      for(var k=0;k<14;k++){
+        var ca=rn(-Math.PI*0.9,-Math.PI*0.1), cs=rn(9,14);
+        var p=new Particle(x,y,c1,Math.cos(ca)*cs,Math.sin(ca)*cs,rn(2,4),0.006);
+        p.drag=0.992; p.grav=0.04; particles.push(p);
+      }
+      scatter(x,y,c2,80,6); glitter(x,y,W2,50);
+    }
+  }
+
+  // ── Rocket ────────────────────────────────────────────────
+  function Rocket(rx,type){
+    this.x=rx!==null?rx:W*0.12+Math.random()*W*0.76;
+    this.y=H+12;
+    this.targetY=H*0.05+Math.random()*H*0.44;
+    this.vy=-(11+Math.random()*9);
+    this.type=type||['radial','ring','star','mickey','double','chrysanthemum','comet'][Math.floor(Math.random()*7)];
+    this.trail=[]; this.exploded=false;
+  }
+  Rocket.prototype.tick=function(){
+    this.trail.push([this.x,this.y]);
+    if(this.trail.length>22) this.trail.shift();
+    this.vy*=0.983; this.y+=this.vy;
+    // Explode on target OR if momentum is spent (prevents floating yellow dots)
+    if(this.y<=this.targetY || Math.abs(this.vy)<0.5) this.exploded=true;
+  };
+  Rocket.prototype.draw=function(){
+    for(var i=0;i<this.trail.length;i++){
+      var t=this.trail[i], a=(i/this.trail.length)*0.9, r=3*(i/this.trail.length);
+      ctx.beginPath(); ctx.arc(t[0],t[1],r,0,TP);
+      ctx.fillStyle='rgba(255,200,55,'+a+')'; ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(this.x,this.y,4,0,TP);
+    ctx.fillStyle='#fff'; ctx.fill();
+    var g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,14);
+    g.addColorStop(0,'rgba(255,235,100,0.55)');
+    g.addColorStop(1,'rgba(255,200,50,0)');
+    ctx.beginPath(); ctx.arc(this.x,this.y,14,0,TP);
+    ctx.fillStyle=g; ctx.fill();
+  };
+
+  // ── Launch schedule — 44 rockets over 32 s ───────────────
+  // [ms, x_fraction_or_null, type]
+  // Phase 1: SLOW OPENER  (rockets 1-6,  t=0–10 s, ~2 s spacing)
+  // Phase 2: BUILD        (rockets 7-18, t=12–21 s, spacing 800→600 ms)
+  // Phase 3: PEAK         (rockets 19-28,t=21–27 s, spacing 500→350 ms)
+  // Phase 4: FINALE       (rockets 29-44,t=27–32 s, rapid salvos ~200 ms)
+  var SCHED = [
+    // ── Phase 1: Slow opener ──────────────────────────────
+    [    0,  0.50, 'mickey'        ],
+    [ 2000,  0.28, 'chrysanthemum' ],
+    [ 4000,  0.72, 'ring'          ],
+    [ 6000,  0.40, 'star'          ],
+    [ 8000,  0.60, 'comet'         ],
+    [10000,  0.50, 'double'        ],
+
+    // ── Phase 2: Build ────────────────────────────────────
+    [12000,  0.22, 'radial'        ],
+    [12000,  0.78, 'radial'        ],
+    [13200,  0.50, 'chrysanthemum' ],
+    [14200,  0.33, 'mickey'        ],
+    [14200,  0.67, 'ring'          ],
+    [15200,  0.50, 'star'          ],
+    [16000,  0.18, 'comet'         ],
+    [16000,  0.82, 'comet'         ],
+    [16900,  0.42, 'double'        ],
+    [17700,  0.58, 'chrysanthemum' ],
+    [18500,  0.30, 'radial'        ],
+    [19200,  0.70, 'ring'          ],
+
+    // ── Phase 3: Peak ─────────────────────────────────────
+    [21000,  0.50, 'mickey'        ],
+    [21500,  0.25, 'chrysanthemum' ],
+    [21500,  0.75, 'chrysanthemum' ],
+    [22200,  0.40, 'star'          ],
+    [22200,  0.60, 'star'          ],
+    [22900,  0.50, 'double'        ],
+    [23500,  0.32, 'mickey'        ],
+    [23500,  0.68, 'mickey'        ],
+    [24200,  0.50, 'chrysanthemum' ],
+    [25000,  0.20, 'comet'         ],
+    [25000,  0.80, 'comet'         ],
+
+    // ── Phase 4: Rapid-fire finale ────────────────────────
+    [27000,  0.50, 'mickey'        ],
+    [27000,  0.28, 'chrysanthemum' ],
+    [27200,  0.72, 'chrysanthemum' ],
+    [27400,  0.38, 'star'          ],
+    [27400,  0.62, 'star'          ],
+    [27600,  0.50, 'mickey'        ],
+    [27800,  0.22, 'ring'          ],
+    [27800,  0.78, 'ring'          ],
+    [28000,  0.50, 'chrysanthemum' ],
+    [28200,  0.35, 'mickey'        ],
+    [28200,  0.65, 'mickey'        ],
+    [28400,  0.50, 'double'        ],
+    [28700,  0.28, 'chrysanthemum' ],
+    [28700,  0.72, 'chrysanthemum' ],
+    [29000,  0.50, 'mickey'        ],
+    [29500,  0.40, 'star'          ],
+    [29500,  0.60, 'star'          ],
+    [30000,  0.50, 'chrysanthemum' ],
+  ];
+  var launched=0, startTime=null, textShown=false, dismissing=false, fairyTriggered=false;
+
+  var fwAudio  = document.getElementById('fwAudio');
+  var fwPrompt = document.getElementById('fwPrompt');
+  var fwSkip   = document.getElementById('fwSkip');
+
+  // ── Fade audio out then stop ──────────────────────────────
+  function stopAudio(){
+    if(!fwAudio || fwAudio.paused) return;
+    var vol  = fwAudio.volume;
+    var step = vol / (1200 / 16);
+    var fade = setInterval(function(){
+      vol = Math.max(0, vol - step);
+      try{ fwAudio.volume = vol; }catch(e){}
+      if(vol<=0){ clearInterval(fade); fwAudio.pause(); fwAudio.currentTime=0; }
+    }, 16);
+  }
+
+  // ── Dismiss show, fade overlay out ───────────────────────
+  function dismiss(){
+    if(dismissing) return;
+    dismissing = true;
+    stopAudio();
+    if(window.fadeArcTrail) window.fadeArcTrail();
+    overlay.style.opacity = '0';
+    setTimeout(function(){
+      overlay.style.display='none';
+      done=true;
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }, 1200);
+  }
+
+  // ── Stage 1 → Stage 2: prompt click starts everything ────
+  fwPrompt.addEventListener('click', function(e){
+    e.stopPropagation();  // prevent click from bubbling to overlay's dismiss listener
+
+    // Play audio — inside a click handler so browser always allows it
+    if(fwAudio){ fwAudio.volume=0.72; fwAudio.play().catch(function(){}); }
+
+    // Fade prompt out (reveals canvas + castle underneath)
+    fwPrompt.style.opacity = '0';
+    setTimeout(function(){ fwPrompt.style.display='none'; }, 950);
+
+    // Show skip hint; wire dismiss only after prompt is fully gone
+    fwSkip.style.display = 'block';
+    setTimeout(function(){ overlay.addEventListener('click', dismiss); }, 1000);
+
+    // Start fireworks
+    requestAnimationFrame(loop);
+  });
+
+  // ── Main loop ─────────────────────────────────────────────
+  function loop(ts){
+    if(done) return;
+    if(!startTime) startTime = ts;
+    var el=ts-startTime;
+
+    while(launched<SCHED.length && el>=SCHED[launched][0]){
+      var s=SCHED[launched];
+      rockets.push(new Rocket(s[1]!==null?W*s[1]:null, s[2]));
+      launched++;
+    }
+
+    // Clear fully transparent — castle always visible behind canvas
+    ctx.clearRect(0,0,W,H);
+
+    for(var ri=rockets.length-1;ri>=0;ri--){
+      var rk=rockets[ri];
+      if(rk.exploded){ explode(rk.x,rk.y,rk.type); rockets.splice(ri,1); }
+      else { rk.tick(); rk.draw(); }
+    }
+
+    for(var pi=particles.length-1;pi>=0;pi--){
+      var p=particles[pi]; p.tick();
+      if(p.alpha<=0){ particles.splice(pi,1); continue; }
+      p.draw();
+    }
+
+    if(!fairyTriggered && el>24500){
+      fairyTriggered=true;
+      if(window.triggerFairyIntro) window.triggerFairyIntro();
+    }
+    if(!textShown && el>27500){ fwText.style.opacity='1'; textShown=true; }
+    if(el>40000 && !dismissing) dismiss();
+
+    requestAnimationFrame(loop);
+  }
+  // Loop starts only when user clicks the prompt (not on page load)
+})();
+</script>
+
+<nav>
+  <a href="#" class="nav-logo">Rey Soto</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#timeline">Journey</a></li>
+    <li><a href="#personal">Lab</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-eyebrow">Engineering Portfolio</div>
+  <h1>Rey Soto</h1>
+  <div class="hero-title">Ride & Attraction Systems Engineer</div>
+  <p class="hero-desc">
+    10+ years building, commissioning, and restoring complex mechanical and electronic systems — from aerospace and power generation to theme park animatronics. Currently at Walt Disney World, Magic Kingdom West.
+  </p>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num">10+</span>
+      <span class="stat-label">Years Experience</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">4</span>
+      <span class="stat-label">Industries</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">Controls → AI</span>
+      <span class="stat-label">Engineering Stack</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">UCF</span>
+      <span class="stat-label">B.S. Engineering · Disney Aspire</span>
+    </div>
+  </div>
+  <div class="cta-row">
+    <a href="#projects" class="hero-cta">View Case Studies →</a>
+    <a href="assets/Rey_Soto_Resume_Imagineering_v2.docx" download class="hero-cta-ghost">Download Resume ↓</a>
+  </div>
+  <div class="scroll-hint">Scroll</div>
+</div>
+
+<!-- ── RECRUITER SUMMARY ── -->
+<div class="recruiter-brief">
+  <div class="recruiter-brief-inner">
+    <div class="recruiter-brief-left">
+      <div class="section-label" style="margin-bottom:1rem;">For the Recruiter</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);margin-bottom:1.25rem;line-height:1.25;">The 30-Second Version</h2>
+      <p style="font-size:0.93rem;color:var(--muted);line-height:1.85;margin-bottom:1rem;">
+        Rey Soto is a Ride &amp; Attraction Systems Engineer with 10+ years spanning the U.S. Air Force, Boeing aerospace, Universal Orlando, GE power generation, and Walt Disney World. He currently works in Magic Kingdom West as a Ride Systems Technician, applying deep animatronic diagnostics and controls expertise in a live-show environment.
+      </p>
+      <p style="font-size:0.93rem;color:var(--muted);line-height:1.85;margin-bottom:1rem;">
+        Before Disney, he served as a corporate controls engineer across a 10-plant steel manufacturing network — building the company's first real-time SCADA platform and a machine learning predictive maintenance system from the ground up. Before that: hydraulic ride systems and show timing at Universal, and VelociCoaster commissioning alongside Design Engineering.
+      </p>
+      <p style="font-size:0.93rem;color:var(--muted);line-height:1.85;">
+        The target is a full-time engineering role at Walt Disney Imagineering — bringing field-proven animatronic systems knowledge, industrial controls depth, and hands-on commissioning experience to the design and development side of the house.
+      </p>
+    </div>
+    <div class="recruiter-brief-right">
+      <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:1.25rem;">Jump to section</div>
+      <div class="recruiter-nav">
+        <a href="#projects" class="recruiter-nav-btn">
+          <span class="recruiter-nav-num">01</span>
+          <span>
+            <strong>Projects</strong>
+            <span>Disney · Universal · Insteel · GE</span>
+          </span>
+          <span class="recruiter-nav-arrow">→</span>
+        </a>
+        <a href="#personal" class="recruiter-nav-btn">
+          <span class="recruiter-nav-num">02</span>
+          <span>
+            <strong>Home Lab</strong>
+            <span>Animatronics · Controls · Fabrication</span>
+          </span>
+          <span class="recruiter-nav-arrow">→</span>
+        </a>
+        <a href="#skills" class="recruiter-nav-btn">
+          <span class="recruiter-nav-num">03</span>
+          <span>
+            <strong>Skills</strong>
+            <span>Applied experience — no self-ratings</span>
+          </span>
+          <span class="recruiter-nav-arrow">→</span>
+        </a>
+        <a href="#timeline" class="recruiter-nav-btn">
+          <span class="recruiter-nav-num">04</span>
+          <span>
+            <strong>Career Path</strong>
+            <span>USAF → Boeing → Universal → GE → Disney</span>
+          </span>
+          <span class="recruiter-nav-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ABOUT / PHILOSOPHY ── -->
+<div class="about-section" id="about">
+  <div class="about-inner">
+    <div>
+      <div class="section-label" style="margin-bottom: 1.5rem;">Philosophy</div>
+      <div class="philosophy-quote">Engineering is how <em>imagination</em> becomes real.</div>
+    </div>
+    <div class="about-body">
+      <p>
+        I didn't come to theme park engineering through a single straight line — I came through <strong>aerospace precision</strong>, <strong>global power systems</strong>, <strong>industrial automation</strong>, and a genuine obsession with building things that move, respond, and create a reaction in people.
+      </p>
+      <p>
+        What I've learned across every discipline is that the most complex systems still have to answer a simple question: <strong>does it work when it needs to?</strong> At Disney, that question has a weight to it — because when the answer is yes, thousands of guests experience something they'll remember for the rest of their lives.
+      </p>
+      <p>
+        I build animatronics at home for the same reason I troubleshoot them at work — because the boundary between an engineered system and a moment of wonder is thinner than most people think. I'm motivated by the chance to stand on that line every day, and to push it forward.
+      </p>
+      <p>
+        I'm also an early adopter of <strong>AI-augmented engineering</strong> — using agentic tools and machine learning not as shortcuts, but as force multipliers that let me diagnose faster, document better, and solve problems that would otherwise take far longer. This portfolio itself was built with those tools.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ── PROJECTS ── -->
+<section id="projects">
+  <div class="section-label">Case Studies</div>
+  <h2 class="section-title">Engineering Work</h2>
+  <div class="projects-grid">
+
+    <!-- PROJECT 01 — Walt Disney World -->
+    <div class="project-card featured fade-up">
+      <div class="project-number">Project 01 · Walt Disney World</div>
+      <div class="project-layout">
+        <div>
+          <div class="project-title">Ride Systems Technician — Show &amp; Attraction Systems</div>
+          <div class="project-subtitle">Magic Kingdom West · 2025–Present</div>
+          <div class="project-tags">
+            <span class="tag">Animatronics</span>
+            <span class="tag">Electrical Diagnostics</span>
+            <span class="tag">Lighting Controls</span>
+            <span class="tag">Root Cause Analysis</span>
+            <span class="tag">Show Quality</span>
+            <span class="tag">Live-Show Environment</span>
+          </div>
+          <p class="project-desc">Current role as a Ride Systems Technician at Magic Kingdom West — responsible for diagnosing and restoring complex animatronic figures, show lighting systems, and ride control electrical systems in a live guest-facing environment. Established early as the primary technical resource for complex, previously unresolved system issues across multiple show systems disciplines.</p>
+        </div>
+      </div>
+      <div class="card-detail-trigger" onclick="toggleInit('disney-detail')" id="trigger-disney-detail">
+        <span>View Full Case Study</span>
+        <span class="sub-init-chevron" id="chevron-disney-detail">▼</span>
+      </div>
+      <div class="card-detail-body" id="body-disney-detail">
+        <div style="padding-top:1.5rem;">
+          <div class="case-block">
+            <div class="case-item">
+              <div class="case-label">Animatronic Diagnostics &amp; Repair</div>
+              <div class="case-text">Primary technical resource for complex animatronic figure diagnostics — hydraulic, pneumatic, and servo-driven figures across multiple show environments. Root-cause analysis on electrical, mechanical, and control system failure modes under live-show operating conditions, including multi-axis motion systems, drive faults, and figure control hardware.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Lighting System Reliability</div>
+              <div class="case-text">Identified a systemic hardware reliability issue in an installed show lighting fixture line that had resisted prior diagnostic attempts. Root cause traced to a power supply specification mismatch between the fixture design and real-world load demands. Findings escalated to the original manufacturer, resulting in a full fixture replacement program secured at no cost to the operation.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Team Development &amp; Knowledge Transfer</div>
+              <div class="case-text">Actively training the current ride and show team in advanced troubleshooting methodologies, animatronic systems fundamentals, and diagnostic workflows across DMX lighting networks, show control interfaces, ride electrical systems, and animatronic control hardware. Translating deep field experience into repeatable processes that elevate the team's overall technical capability.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 02 — Insteel Industries -->
+    <div class="project-card featured fade-up">
+      <div class="project-number">Project 02 · Insteel Industries</div>
+      <div class="project-layout">
+        <div>
+          <div class="project-title">Enterprise Controls Modernization &amp; Predictive Intelligence Platform</div>
+          <div class="project-subtitle">10-Plant Industrial Automation · 2023–2025</div>
+          <div class="project-tags">
+            <span class="tag">Machine Learning</span>
+            <span class="tag">IBM Maximo</span>
+            <span class="tag">SCADA</span>
+            <span class="tag">Siemens S7</span>
+            <span class="tag">Vibration Analysis</span>
+            <span class="tag">PLC Modernization</span>
+            <span class="tag">Executive Reporting</span>
+          </div>
+          <p class="project-desc">One of five corporate-level engineers at a 10-facility steel manufacturing operation, reporting directly to the CEO and CTO in the absence of a Director of Engineering. Responsible for modernizing the company's industrial controls infrastructure, building a company-wide production intelligence platform, and implementing a machine learning-driven predictive maintenance system across all facilities.</p>
+        </div>
+      </div>
+      <div class="card-detail-trigger" onclick="toggleInit('insteel-detail')" id="trigger-insteel-detail">
+        <span>View Full Case Study</span>
+        <span class="sub-init-chevron" id="chevron-insteel-detail">▼</span>
+      </div>
+      <div class="card-detail-body" id="body-insteel-detail">
+        <div style="padding-top:1.5rem;">
+          <div class="case-block">
+            <div class="case-item">
+              <div class="case-label">Organizational Context</div>
+              <div class="case-text">With no Director of Engineering in place, the corporate engineering team of five reported directly to the CEO and CTO. Within that structure, I was responsible for the controls and automation engineering domain — managing one subordinate controls engineer and a network of 2–3 local controls technicians embedded at each of the 10 plants.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Scale &amp; Scope</div>
+              <div class="case-text">10 manufacturing facilities · 20–30 controls technicians across the network · Siemens S7 PLC fleet modernization · IBM Maximo CMMS integration · Company-wide SCADA deployment · ML failure prediction model · Automated work order generation</div>
+            </div>
+          </div>
+
+          <div class="metrics-row">
+            <div class="impact-metric">
+              <div class="metric-num">10</div>
+              <div class="metric-label">Plants Modernized</div>
+            </div>
+            <div class="impact-metric">
+              <div class="metric-num">30+</div>
+              <div class="metric-label">Controls Techs Across Network</div>
+            </div>
+            <div class="impact-metric">
+              <div class="metric-num">Reactive → Predictive</div>
+              <div class="metric-label">Maintenance Paradigm Shift</div>
+            </div>
+          </div>
+
+          <!-- ── Sub-initiatives ── -->
+          <div class="sub-initiatives">
+
+        <!-- Initiative A: SCADA -->
+        <div>
+          <div class="sub-init-header" onclick="toggleInit('scada')">
+            <div>
+              <div class="sub-init-label">Initiative A · 2023–2024</div>
+              <div class="sub-init-title">SCADA &amp; Production Intelligence System</div>
+              <div class="sub-init-tags">
+                <span class="tag">SCADA</span>
+                <span class="tag">HMI</span>
+                <span class="tag">Real-Time Data</span>
+                <span class="tag">Executive Dashboards</span>
+                <span class="tag">OT Networking</span>
+              </div>
+            </div>
+            <div class="sub-init-chevron" id="chevron-scada">▼</div>
+          </div>
+          <div class="sub-init-body" id="body-scada">
+            <div class="sub-init-inner">
+              <div class="sub-init-cases">
+                <div class="case-item">
+                  <div class="case-label">Problem</div>
+                  <div class="case-text">Plant operations were opaque above the floor level. Executives and directors had no live view into production status, machine states, or throughput across the 10-facility network — decisions were made on lagging reports and phone calls.</div>
+                </div>
+                <div class="case-item">
+                  <div class="case-label">Solution</div>
+                  <div class="case-text">Built a SCADA and production monitoring platform that connected directly to production machinery, aggregated live data across facilities, and surfaced it through dashboards tailored for both operational and executive audiences. Deployed across all 10 plants with consistent data models and alarm structures.</div>
+                </div>
+                <div class="case-item">
+                  <div class="case-label">Outcome</div>
+                  <div class="case-text">First real-time enterprise-wide view of production in company history. Executives gained live plant status. Operations teams gained cross-facility benchmarking. The platform became the data backbone for the downstream ML predictive maintenance initiative.</div>
+                </div>
+              </div>
+              <div class="sub-init-metrics">
+                <div class="sub-metric">
+                  <div class="sub-metric-num">10</div>
+                  <div class="sub-metric-label">Plants Connected</div>
+                </div>
+                <div class="sub-metric">
+                  <div class="sub-metric-num">First</div>
+                  <div class="sub-metric-label">Real-Time Visibility in Company History</div>
+                </div>
+                <div class="sub-metric">
+                  <div class="sub-metric-num">Live</div>
+                  <div class="sub-metric-label">Executive Production Dashboards</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Initiative B: ML + PLC -->
+        <div>
+          <div class="sub-init-header" onclick="toggleInit('mlplc')">
+            <div>
+              <div class="sub-init-label">Initiative B · 2024–2025</div>
+              <div class="sub-init-title">ML-Driven Predictive Maintenance &amp; PLC Infrastructure Modernization</div>
+              <div class="sub-init-tags">
+                <span class="tag">Machine Learning</span>
+                <span class="tag">IBM Maximo</span>
+                <span class="tag">Vibration Analysis</span>
+                <span class="tag">Siemens S7</span>
+                <span class="tag">PLC Modernization</span>
+                <span class="tag">CMMS Integration</span>
+              </div>
+            </div>
+            <div class="sub-init-chevron" id="chevron-mlplc">▼</div>
+          </div>
+          <div class="sub-init-body" id="body-mlplc">
+            <div class="sub-init-inner">
+              <div class="sub-init-cases">
+                <div class="case-item">
+                  <div class="case-label">Predictive Maintenance Pipeline</div>
+                  <div class="case-text">Aggregated real-time equipment data, vibration analysis from motors and bearings, and live oil analysis results into a unified condition monitoring pipeline. A machine learning model processed this data to predict failure probability and automatically generate IBM Maximo work orders — turning equipment failures that were previously discovered after the fact into scheduled, resourced maintenance interventions.</div>
+                </div>
+                <div class="case-item">
+                  <div class="case-label">PLC Infrastructure Modernization</div>
+                  <div class="case-text">Executed a phased migration of legacy PLC hardware across all 10 plants to current-generation Siemens S7 platforms. Improved system reliability, simplified spare parts standardization, and increased data availability — providing the clean, consistent machine-level signals the ML pipeline depended on.</div>
+                </div>
+                <div class="case-item">
+                  <div class="case-label">Outcome</div>
+                  <div class="case-text">Organization-wide shift from reactive to predictive maintenance. Automated work order generation via IBM Maximo CMMS integration. PLC fleet standardized across 10 facilities, reducing support burden and improving cross-plant technician mobility.</div>
+                </div>
+              </div>
+              <div class="sub-init-metrics">
+                <div class="sub-metric">
+                  <div class="sub-metric-num">3</div>
+                  <div class="sub-metric-label">Data Streams Fused</div>
+                </div>
+                <div class="sub-metric">
+                  <div class="sub-metric-num">Auto</div>
+                  <div class="sub-metric-label">Work Order Generation</div>
+                </div>
+                <div class="sub-metric">
+                  <div class="sub-metric-num">10</div>
+                  <div class="sub-metric-label">Plants on Siemens S7</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          </div><!-- /sub-initiatives -->
+        </div>
+      </div><!-- /card-detail-body -->
+    </div>
+
+    <!-- PROJECT 04 — Universal -->
+    <div class="project-card featured fade-up">
+      <div class="project-number">Project 03 · Universal Orlando Resort</div>
+      <div class="project-layout">
+        <div>
+          <div class="project-title">Ride Systems, Hydraulics &amp; Attraction Commissioning</div>
+          <div class="project-subtitle">Show Control · Hydraulic Systems · Commissioning &amp; Test</div>
+          <div class="project-tags">
+            <span class="tag">Hydraulic Systems</span>
+            <span class="tag">Show Coordination</span>
+            <span class="tag">Scene Timing</span>
+            <span class="tag">Animatronics</span>
+            <span class="tag">Ride Controls</span>
+            <span class="tag">Commissioning</span>
+          </div>
+          <p class="project-desc">Progressed through multiple roles at Universal Orlando, building hands-on expertise across hydraulic motion platforms, show control systems, scene prop sequencing, and full attraction commissioning — culminating in the Commissioning &amp; Test team for VelociCoaster.</p>
+        </div>
+      </div>
+      <div class="card-detail-trigger" onclick="toggleInit('universal-detail')" id="trigger-universal-detail">
+        <span>View Full Case Study</span>
+        <span class="sub-init-chevron" id="chevron-universal-detail">▼</span>
+      </div>
+      <div class="card-detail-body" id="body-universal-detail">
+        <div style="padding-top:1.5rem;">
+          <div class="case-block">
+            <div class="case-item">
+              <div class="case-label">Hydraulic Motion Platforms — Simulator Attractions</div>
+              <div class="case-text">Primary role covered simulator attractions including Despicable Me, The Simpsons, and Transformers — all built on large-scale hydraulic motion base systems. Developed deep familiarity with hydraulic actuation, fluid power systems, servo valve control, and the precision show coordination required to synchronize physical motion with projection and audio cues.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Show Timing &amp; Scene Prop Systems — Transformers</div>
+              <div class="case-text">Transformers: The Ride introduced a significantly higher layer of complexity — extensive physical scene props, practical effects, and multi-cue show sequences that had to hit exact timing windows as ride vehicles moved through each scene. Developed precision in show system diagnostics, cue alignment, and coordinating between prop, lighting, audio, and motion systems as an integrated whole.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Commissioning &amp; Test — VelociCoaster</div>
+              <div class="case-text">Final role within Universal's Commissioning &amp; Test team, supporting the validation of VelociCoaster from integration through guest-ready operation. Partnered with Design Engineering to evaluate ride control systems against specifications, performing electrical testing, calibration, and comprehensive verification per OEM and Engineering requirements.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<!-- ── CAREER TIMELINE ── -->
+<section id="timeline">
+  <div class="section-label">Career Journey</div>
+  <h2 class="section-title">The Path Here</h2>
+  <div class="timeline-layout">
+    <div class="timeline">
+
+      <div class="timeline-item active fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Sep 2025 – Present</div>
+        <div class="timeline-role">Ride Systems Technician</div>
+        <div class="timeline-org">Walt Disney World — Magic Kingdom West</div>
+        <div class="timeline-desc">Ride Systems Technician at Magic Kingdom West — complex animatronic diagnostics, electrical systems, and ride control in a live-show environment. Pursuing B.S. Engineering at UCF via Disney Aspire.</div>
+        <span class="timeline-badge">Current Role</span>
+      </div>
+
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Nov 2023 – Sep 2025</div>
+        <div class="timeline-role">Electrical Engineer III — Controls & Process</div>
+        <div class="timeline-org">Insteel Industries</div>
+        <div class="timeline-desc">Corporate controls engineer across 10 manufacturing plants. Designed and deployed ML-driven predictive maintenance system integrated with IBM Maximo, shifting operations from reactive to predictive.</div>
+        <span class="timeline-badge">ML / AI</span>
+        <span class="timeline-badge" style="margin-left: 0.4rem;">Multi-Plant Scale</span>
+      </div>
+
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Jan 2022 – Aug 2024</div>
+        <div class="timeline-role">Field Engineer — Generator Specialist</div>
+        <div class="timeline-org">GE Vernova</div>
+        <div class="timeline-desc">On-site technical direction Project Leader for installation, commissioning, and maintenance of large steam-powered generation systems at international sites. Led skilled union labor teams on safety-critical and infrastructure equipment.</div>
+        <span class="timeline-badge">Global</span>
+      </div>
+
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2019 – 2022</div>
+        <div class="timeline-role">Controls Technician → Green Card Lead → Commissioning & Test</div>
+        <div class="timeline-org">Universal Orlando Resort</div>
+        <div class="timeline-desc">Three progressive roles building deep expertise in animatronics, ride control systems, and attraction commissioning. Partnered with Design Engineering on ride control integration and validation from the ground up.</div>
+        <span class="timeline-badge">Animatronics</span>
+        <span class="timeline-badge" style="margin-left: 0.4rem;">Ride Systems</span>
+      </div>
+
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2010 – 2013</div>
+        <div class="timeline-role">Integral Fuel Cell Technician B</div>
+        <div class="timeline-org">Boeing Commercial Airplanes</div>
+        <div class="timeline-desc">Precision structural and mechanical assembly on commercial aircraft. Wire routing, terminal soldering, and rework per FAA specifications and engineering drawings.</div>
+        <span class="timeline-badge">Aerospace</span>
+      </div>
+
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Oct 2008 – Oct 2013</div>
+        <div class="timeline-role">A&P Mechanic — Flightline Crew Chief</div>
+        <div class="timeline-org">United States Air Force</div>
+        <div class="timeline-desc">Maintained and repaired C-17A airframe systems, powerplants, and avionics. Certified aircraft documentation. The discipline, precision, and accountability standards from the Air Force underpin everything that came after.</div>
+        <span class="timeline-badge">Foundation</span>
+      </div>
+
+    </div>
+
+    <div class="timeline-sticky">
+      <div class="thread-card">
+        <div class="section-label" style="margin-bottom: 1.25rem;">The Thread</div>
+        <p style="font-size: 0.93rem; color: var(--muted); line-height: 1.85; margin-bottom: 1.25rem;">
+          Every role in this career has been about one thing: <strong style="color: var(--cream);">making complex systems do exactly what they need to do, exactly when they need to do it.</strong>
+        </p>
+        <p style="font-size: 0.93rem; color: var(--muted); line-height: 1.85; margin-bottom: 1.25rem;">
+          The Air Force taught precision and accountability. Boeing taught exacting standards. Universal taught how theme park attractions live and breathe. GE and Insteel expanded the scale. Disney brought it all into focus — because here, engineering doesn't just keep a system running. It keeps a story alive.
+        </p>
+        <p style="font-size: 0.93rem; color: var(--muted); line-height: 1.85;">
+          The path to Imagineering isn't always a straight line. But in hindsight, every step pointed the same direction.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<!-- ── SKILLS ── -->
+<div class="skills-viz-section">
+  <div class="skills-viz-inner">
+    <div class="section-label">Capabilities</div>
+    <h2 class="section-title" style="margin-bottom: 0.75rem;">Skills &amp; Applied Experience</h2>
+    <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem;">Each entry reflects a system built, a problem solved, or a result delivered — not a self-assessed score.</p>
+
+    <div class="skills-categories">
+      <button class="skill-cat-btn active" onclick="filterSkills('all')">All</button>
+      <button class="skill-cat-btn" onclick="filterSkills('attraction')">Ride &amp; Attraction</button>
+      <button class="skill-cat-btn" onclick="filterSkills('controls')">Controls &amp; PLC</button>
+      <button class="skill-cat-btn" onclick="filterSkills('ai')">AI &amp; Engineering</button>
+      <button class="skill-cat-btn" onclick="filterSkills('fabrication')">Fabrication</button>
+    </div>
+
+    <div class="skill-card-grid" id="skillsBars"></div>
+  </div>
+</div>
+
+<!-- ── PERSONAL LAB ── -->
+<section id="personal">
+  <div class="section-label">Personal Work</div>
+  <h2 class="section-title">The Home Lab</h2>
+  <p style="color: var(--muted); max-width: 600px; margin-bottom: 3rem; font-size: 0.95rem; line-height: 1.8;">
+    Engineering doesn't stop at the job site. These personal projects represent curiosity in action — building animatronics, machining metal, designing PCBs, and rapid prototyping for the pure challenge of it.
+  </p>
+  <div class="personal-grid">
+
+    <!-- HOME AUTOMATION — S7-1200 HVAC & Lift Station -->
+    <div class="personal-card fade-up" style="grid-column: 1 / -1;">
+      <div class="personal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4M2 10h20"/><circle cx="7" cy="13.5" r="1"/><circle cx="12" cy="13.5" r="1"/><circle cx="17" cy="13.5" r="1"/></svg>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:0.5rem;">Home Automation · Active</div>
+      <div class="personal-name">S7-1200 Home HVAC &amp; Lift Station Control</div>
+      <div style="font-size:0.88rem;color:var(--gold-light);font-style:italic;margin-bottom:1.25rem;">Siemens S7-1200 · VFD Drives · ET200 · PWM · Real Iron, Real Consequences</div>
+      <p class="personal-desc" style="margin-bottom:1.25rem;">
+        The HVAC control board failed. The replacement quote was absurd. There happened to be a Siemens S7-1200 on the shelf and a few small VFDs in the parts bin — so the house got a proper industrial controls system instead. What started as a cost-driven fix turned into a fully functional variable-speed HVAC and septic lift station automation platform running on the same hardware I use professionally.
+      </p>
+      <div class="project-tags" style="margin-top:1.25rem;">
+        <span class="tag">Siemens S7-1200</span>
+        <span class="tag">VFD · Variable Speed</span>
+        <span class="tag">ET200 Distributed I/O</span>
+        <span class="tag">PWM Control</span>
+        <span class="tag">TIA Portal</span>
+        <span class="tag">Lift Station</span>
+        <span class="tag">HVAC Automation</span>
+      </div>
+      <div class="card-detail-trigger" onclick="toggleInit('hvac-detail')" id="trigger-hvac-detail">
+        <span>Expand Details</span>
+        <span class="sub-init-chevron" id="chevron-hvac-detail">▼</span>
+      </div>
+      <div class="card-detail-body" id="body-hvac-detail">
+        <div style="padding-top:1.5rem;">
+          <p class="personal-desc" style="margin-bottom:1.25rem;">
+            The external blower and compressor are now VFD-driven — variable speed on the blower, variable flow on the compressor, both tuned through the S7 instead of hardwired on/off switching. The internal blower fan runs on PWM signal as designed, fed from an ET200 distributed I/O station. The lift station for the septic system runs on the same PLC — level-based pump control, fault detection, and alarm logic that would be overkill anywhere except a home built by an automation engineer.
+          </p>
+          <div class="case-block">
+            <div class="case-item">
+              <div class="case-label">The Problem</div>
+              <div class="case-text">OEM HVAC control board failed. Replacement cost was exorbitant for what amounted to a simple relay and timer board. With an S7-1200 and VFDs already on hand, engineering a proper solution cost less and delivered significantly more capability than the factory part.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">External Unit — VFD Control</div>
+              <div class="case-text">External blower and compressor replaced with VFD-driven operation. Variable blower speed allows staged airflow matched to demand rather than full-on/off cycling. Compressor flow is modulated through the drive — reducing wear, improving efficiency, and giving the S7 closed-loop control over the entire refrigerant circuit behavior.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Internal Unit — ET200 PWM</div>
+              <div class="case-text">Internal blower fan retained its PWM interface as designed — driven by an ET200 distributed I/O station hanging off the S7 network. Keeps the air handler behavior factory-standard while integrating cleanly into the broader control architecture.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Lift Station — Septic Control</div>
+              <div class="case-text">Septic lift station pump control also running on the same S7. Float-switch level logic, pump sequencing, run-time tracking, and fault alarming — all in ladder logic. The kind of protection a pump that runs unattended actually needs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOLLY ROGER — full width featured -->
+    <div class="personal-card fade-up" style="grid-column: 1 / -1; border-left: 3px solid var(--gold);">
+      <div class="personal-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="4"/><path d="M8 13s-2 1-2 4h12c0-3-2-4-2-4M9 21l3-4 3 4M9 5l-2-2M15 5l2-2"/></svg>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:0.5rem;">Animatronics Build — Completed</div>
+      <div class="personal-name" style="font-size:1.45rem;">Jolly Roger Skull & Ship's Wheel</div>
+      <div style="font-size:0.88rem;color:var(--gold-light);font-style:italic;margin-bottom:1.25rem;">Wall-mounted themed prop · Inspired by Pirates of the Caribbean</div>
+      <p class="personal-desc" style="margin-bottom:1.25rem;">
+        A fully animatronic, wall-mounted themed prop — a Jolly Roger skull mounted at the center of a Spanish galleon-style ship's wheel, designed as a complete show piece. The skull features articulated jaw movement driven by a custom servo and linkage system, with hollow eye sockets faithful to the character. The ship's wheel serves both as the structural mount and as the thematic context, evoking the helm of a pirate vessel straight out of the Golden Age of Sail.
+      </p>
+      <div class="project-tags">
+        <span class="tag">Themed Prop Design</span>
+        <span class="tag">Wall Installation</span>
+        <span class="tag">Servo Control</span>
+        <span class="tag">Mechanical Linkages</span>
+        <span class="tag">3D Printed Components</span>
+        <span class="tag">CNC Milled Aluminum</span>
+        <span class="tag">Show Programming</span>
+      </div>
+      <div class="card-detail-trigger" onclick="toggleInit('jolly-detail')" id="trigger-jolly-detail">
+        <span>Expand Details</span>
+        <span class="sub-init-chevron" id="chevron-jolly-detail">▼</span>
+      </div>
+      <div class="card-detail-body" id="body-jolly-detail">
+        <div style="padding-top:1.5rem;">
+          <p class="personal-desc" style="margin-bottom:1.5rem;">
+            Fabricated entirely in-house — structural components CNC milled from aluminum on my home-built machine, organic shell and detail parts 3D printed. Designed for wall installation as a finished, display-ready themed environment piece. No kits, no off-the-shelf assemblies — every part designed, machined, printed, and assembled from scratch.
+          </p>
+          <div class="case-block">
+            <div class="case-item">
+              <div class="case-label">Concept & Design</div>
+              <div class="case-text">Designed as a complete themed environment piece — not just an animatronic figure, but a prop with narrative context. The ship's wheel anchors the skull in a world: a Spanish galleon, a pirate's helm, a story. That's show design thinking, not just engineering.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Fabrication</div>
+              <div class="case-text">Structural and wheel components CNC milled from aluminum on my home-built machine. Shell, skull, and detail parts 3D printed. The combination of precision-machined metal and rapid-prototyped organics mirrors the multi-process fabrication workflow used in professional animatronic and prop development.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Why It Matters</div>
+              <div class="case-text">This isn't a figure — it's a finished installation. It demonstrates the complete creative-to-engineering pipeline: a thematic concept, executed through mechanical design, in-house fabrication, and show programming, delivered as a wall-mounted prop ready for an audience. That's the Imagineering loop in miniature.</div>
+            </div>
+          </div>
+          <!-- ── JOLLY ROGER MEDIA ───────────────────────────────────────
+               Drop files into:  assets/jolly-roger/
+               Images: jolly_roger_01.jpg, _02.jpg, etc.
+               Videos: jolly_roger_video_01.mp4  (e.g. full demo)
+                       jolly_roger_video_02.mp4  (e.g. mechanism closeup)
+               Labels: edit the data-label attributes below to name each clip
+          ─────────────────────────────────────────────────────────── -->
+
+          <!-- VIDEOS -->
+          <div style="margin-top:1.5rem;">
+            <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:0.75rem;">In Action</div>
+            <div id="jrVideos" style="display:flex;flex-direction:column;gap:1rem;"></div>
+          </div>
+
+          <!-- PHOTO GRID -->
+          <div style="margin-top:1.25rem;">
+            <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:0.75rem;">Build Photos</div>
+            <div id="jrGallery" style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;"></div>
+          </div>
+
+          <script>
+          (function(){
+            var BASE = 'assets/jolly-roger/';
+
+            // ── Videos ──────────────────────────────────────────────────
+            var videos = [
+              { src: BASE + 'jolly_roger_video_01.mp4', label: 'Full Demo',        poster: BASE + 'jolly_roger_01.jpg' },
+              { src: BASE + 'jolly_roger_video_02.mp4', label: 'Mechanism Detail', poster: BASE + 'jolly_roger_02.jpg' },
+            ];
+            var vWrap = document.getElementById('jrVideos');
+            videos.forEach(function(v) {
+              var wrap = document.createElement('div');
+              var lbl  = document.createElement('div');
+              lbl.textContent = v.label;
+              lbl.style.cssText = 'font-size:0.72rem;color:var(--gold-light);margin-bottom:0.4rem;font-style:italic;';
+              var vid = document.createElement('video');
+              vid.src       = v.src;
+              vid.poster    = v.poster;
+              vid.controls  = true;
+              vid.setAttribute('playsinline', '');
+              vid.style.cssText = 'width:100%;border-radius:6px;background:#0a0805;display:block;';
+              vid.onerror = function(){ wrap.style.display = 'none'; };
+              wrap.appendChild(lbl);
+              wrap.appendChild(vid);
+              vWrap.appendChild(wrap);
+            });
+
+            // ── Photos ───────────────────────────────────────────────────
+            var imgs = [
+              BASE + 'jolly_roger_01.jpg',
+              BASE + 'jolly_roger_02.jpg',
+              BASE + 'jolly_roger_03.jpg',
+              BASE + 'jolly_roger_04.jpg',
+              BASE + 'jolly_roger_05.jpg',
+              BASE + 'jolly_roger_06.jpg',
+            ];
+            var grid = document.getElementById('jrGallery');
+            imgs.forEach(function(src) {
+              var img = new Image();
+              img.onload = function() {
+                img.style.cssText = 'width:100%;border-radius:4px;display:block;cursor:pointer;';
+                img.onclick = function(){ window.open(src, '_blank'); };
+                grid.appendChild(img);
+              };
+              img.src = src;
+            });
+          })();
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <!-- WALL-E — full width featured, in progress -->
+    <div class="personal-card fade-up" style="grid-column: 1 / -1; border-left: 3px solid var(--gold-dim);">
+      <div class="personal-icon" style="border-color: var(--gold-dim);">
+        <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M7 8V6a5 5 0 0 1 10 0v2"/><circle cx="9" cy="14" r="1.5"/><circle cx="15" cy="14" r="1.5"/><path d="M9 18h6"/></svg>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:0.5rem;">Animatronics Build — In Progress</div>
+      <div class="personal-name" style="font-size:1.45rem;">Full-Size Wall-E</div>
+      <div style="font-size:0.88rem;color:var(--gold-light);font-style:italic;margin-bottom:1.25rem;">Original character build · CAD & animation programming phase</div>
+      <p class="personal-desc" style="margin-bottom:1.25rem;">
+        The most ambitious personal project to date — a fully articulated, full-size Wall-E figure built from the ground up. Currently in the CAD design and animation programming phase, this build is a complete systems engineering challenge: mechanical structure and drive systems, multi-axis servo control for head, eye, arm, and track movement, custom electronics and PCB design for the control architecture, and character animation programming to bring the personality of the character to life.
+      </p>
+      <div class="project-tags">
+        <span class="tag">Full-Scale Build</span>
+        <span class="tag">CAD / SolidWorks</span>
+        <span class="tag">Multi-Axis Control</span>
+        <span class="tag">Custom Electronics</span>
+        <span class="tag">Character Animation</span>
+        <span class="tag">In Progress</span>
+      </div>
+      <div class="card-detail-trigger" onclick="toggleInit('walle-detail')" id="trigger-walle-detail">
+        <span>Expand Details</span>
+        <span class="sub-init-chevron" id="chevron-walle-detail">▼</span>
+      </div>
+      <div class="card-detail-body" id="body-walle-detail">
+        <div style="padding-top:1.5rem;">
+          <p class="personal-desc" style="margin-bottom:1.5rem;">
+            Wall-E is deceptively complex — the character's appeal comes almost entirely from subtle, expressive motion. Getting that right requires the same sensitivity to performance quality that separates a functional animatronic from a memorable one.
+          </p>
+          <div class="case-block">
+            <div class="case-item">
+              <div class="case-label">Current Phase</div>
+              <div class="case-text">Full mechanical design in CAD — structural chassis, drive track system, head and eye gimbals, arm linkages, and body panels. Simultaneously developing the animation programming framework for choreographed character movement sequences.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Engineering Scope</div>
+              <div class="case-text">Full mechanical design · Custom PCB and electronics architecture · Multi-axis servo and motor control · Track drive system · Binocular eye mechanism with independent axes · Shoulder and arm articulation · Character show programming and motion sequencing</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">The Challenge</div>
+              <div class="case-text">Wall-E's expressiveness lives in millimeters of eye movement and fractions of a second of timing. The engineering goal isn't just a figure that moves — it's a figure that communicates. That distinction is what Imagineering gets right, and what this build is designed to practice.</div>
+            </div>
+          </div>
+          <!-- ── WALL-E 3D MODEL VIEWER ─────────────────────────────────── -->
+          <div style="margin-top:2rem;">
+            <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.75rem;">
+              3D Model · CAD Viewer
+            </div>
+            <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;">
+              Full CAD model — drag to rotate, scroll to zoom, pinch on mobile.
+            </div>
+            <model-viewer
+              src="assets/walle/walle_model.glb"
+              alt="Wall-E full CAD model"
+              camera-controls
+              auto-rotate
+              auto-rotate-delay="1000"
+              rotation-per-second="20deg"
+              shadow-intensity="1"
+              exposure="1.1"
+              environment-image="neutral"
+              style="
+                width:100%;
+                height:480px;
+                background:#0D1F3C;
+                border:1px solid var(--border);
+                border-radius:4px;
+                --progress-bar-color: #C8962E;
+                touch-action:none;
+              "
+            ></model-viewer>
+          </div>
+
+          <!-- ── WALL-E MEDIA ──────────────────────────────────────────────
+               Drop files into: assets/walle/
+               Slots: walle_01.jpg … walle_08.jpg  (grid fills automatically)
+               Supported: JPG, PNG
+          ────────────────────────────────────────────────────────────── -->
+          <div id="walleGallery" style="margin-top:0;"></div>
+          <script>
+          (function(){
+            var imgs = [
+              'assets/walle/walle_01.jpg',
+              'assets/walle/walle_02.jpg',
+              'assets/walle/walle_03.jpg',
+              'assets/walle/walle_04.jpg',
+              'assets/walle/walle_05.jpg',
+              'assets/walle/walle_06.jpg',
+              'assets/walle/walle_07.jpg',
+              'assets/walle/walle_08.jpg',
+            ];
+            var wrap = document.getElementById('walleGallery');
+            var grid = document.createElement('div');
+            grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;';
+            var loaded = 0;
+            imgs.forEach(function(src){
+              var img = new Image();
+              img.onload = function(){
+                var a = document.createElement('a');
+                a.href = src; a.target = '_blank';
+                a.style.cssText = 'display:block;overflow:hidden;border-radius:6px;';
+                var i = document.createElement('img');
+                i.src = src;
+                i.style.cssText = 'width:100%;height:130px;object-fit:cover;display:block;cursor:pointer;transition:transform 0.2s;';
+                i.onmouseover = function(){ this.style.transform='scale(1.04)'; };
+                i.onmouseout  = function(){ this.style.transform='scale(1)'; };
+                a.appendChild(i); grid.appendChild(a);
+                if(++loaded === 1) wrap.appendChild(grid);
+              };
+              img.src = src;
+            });
+          })();
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <!-- PIXIE — full width featured -->
+    <div class="personal-card fade-up" style="grid-column: 1 / -1; border-left: 3px solid var(--gold-dim);">
+      <div class="personal-icon" style="border-color: var(--gold-dim);">
+        <svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M12 2v4M12 18v4"/><circle cx="12" cy="12" r="3"/><path d="M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:0.5rem;">Proof of Concept — Active Development</div>
+      <div class="personal-name" style="font-size:1.45rem;">PIXIE</div>
+      <div style="font-size:0.88rem;color:var(--gold-light);font-style:italic;margin-bottom:1.25rem;">Position Interlink for Extended Interface Emulation &nbsp;·&nbsp; PSYNC Protocol</div>
+      <p class="personal-desc" style="margin-bottom:1.25rem;">
+        What started as a wiring problem on the Wall-E build turned into something with real implications for any complex animatronic figure. Seventeen motors across a figure's arms and neck require 68 individual encoder wires routed through narrow, continuously-flexing joint cavities. Wire fatigue from that constant flex is a primary driver of downtime in complex multi-axis animatronic systems.
+      </p>
+      <div class="project-tags">
+        <span class="tag">PIXIE / PSYNC</span>
+        <span class="tag">RP2350 · PIO</span>
+        <span class="tag">RS-422 Differential</span>
+        <span class="tag">Hamming ECC</span>
+        <span class="tag">BiSS-C</span>
+        <span class="tag">Servo Drives</span>
+        <span class="tag">Qt5 HMI</span>
+        <span class="tag">Protocol Design</span>
+        <span class="tag">Wire Reduction</span>
+        <span class="tag">Proof of Concept</span>
+      </div>
+      <div class="card-detail-trigger" onclick="toggleInit('pixie-detail')" id="trigger-pixie-detail">
+        <span>Expand Details</span>
+        <span class="sub-init-chevron" id="chevron-pixie-detail">▼</span>
+      </div>
+      <div class="card-detail-body" id="body-pixie-detail">
+        <div style="padding-top:1.5rem;">
+          <p class="personal-desc" style="margin-bottom:1.25rem;">
+            PIXIE is a custom encoder multiplexing bridge — three RP2350 nodes capture all encoder signals locally and transmit position data over a single 12-conductor cable using the PSYNC source-synchronous protocol, then regenerate bit-for-bit identical A/B quadrature outputs at the servo drives. The drives see no change. 68 wires become 36. As a side effect, each arm assembly becomes a Lemo quick-disconnect module that swaps in minutes instead of hours.
+          </p>
+          <p class="personal-desc" style="margin-bottom:1.5rem;">
+            This is a PoC being developed independently — the intent is to validate the concept at small scale and demonstrate a transferable reliability solution for complex multi-axis animatronic figures.
+          </p>
+          <div class="case-block">
+          <div class="case-item">
+            <div class="case-label">The Problem</div>
+            <div class="case-text">On complex animatronic figures, wire damage and flex fatigue are the primary cause of downtime. 17 motors across a figure's arms and neck require 68 encoder wires threading through joint cavities that flex continuously during every show cycle. More wires through those tight paths means more break locations, harder fault isolation, and longer repair windows — all reactive, all in-situ, all unscheduled.</div>
+          </div>
+          <div class="case-item">
+            <div class="case-label">The Solution</div>
+            <div class="case-text">Three PIXIE nodes — left arm (5 motors), right arm (5 motors), neck (7 motors) — reduce 68 wires to 36. Each node captures all encoder A/B signals via RP2350 PIO state machines, serializes position deltas over the PSYNC protocol across three RS-422 differential pairs, and a remote board reconstructs identical quadrature outputs for the servo drives. 47% wire reduction. Zero drive reconfiguration required. Transparent emulation by design.</div>
+          </div>
+          <div class="case-item">
+            <div class="case-label">How It Works</div>
+            <div class="case-text">PSYNC is a source-synchronous serial protocol — clock and data transmitted together, no baud negotiation, deterministic timing. Each 42-byte frame carries 8 axes of int32 position deltas, Hamming SECDED error correction, and CRC-16/CCITT. On receive, a second RP2350 decodes the frame, corrects single-bit errors in-place, and steps PIO-driven A/B quadrature outputs by the delta count per axis. RP2350 PIO runs all encoder capture and signal regeneration independent of the CPU — zero interrupt jitter.</div>
+          </div>
+          <div class="case-item">
+            <div class="case-label">Current Status</div>
+            <div class="case-text">Working prototype confirmed transmitting live encoder data between nodes at 5 Mbit/s source-synchronous serial. 4-channel PIO quadrature decode verified, position deltas propagating master to slave in real time. 92% packet success on bare GPIO jumper wires without ECC active — expected to improve substantially on a proper PCB with Hamming correction applied. Latency under 2 ms end-to-end. Qt5 HMI running on Pi Zero 2 W: live counts, velocity sparklines, PSYNC link health, BiSS-C status, and per-axis zeroing. Next step: connect the regenerated BiSS-C output to a live servo drive and confirm the drive accepts the signal without configuration changes.</div>
+          </div>
+          <div class="case-item">
+            <div class="case-label">Roadmap</div>
+            <div class="case-text">
+              <strong style="color:var(--gold-light);">Phase 1 — PoC Protocol Validation (Current)</strong><br>
+              PSYNC encode/decode on Pi Pico 2, PIO quadrature capture, node-to-node data transmission confirmed. ECC and CRC framing implemented in firmware.<br><br>
+              <strong style="color:var(--gold-light);">Phase 2 — Servo Drive Integration</strong><br>
+              Connect regenerated BiSS-C output to a live servo drive. Confirm the drive accepts the signal with zero firmware or configuration changes — transparent emulation validated end-to-end. Expand to 3-node stress test: left arm (5), right arm (5), neck (7), all 17 encoders live.<br><br>
+              <strong style="color:var(--gold-light);">Phase 3 — Custom FPGA PCB</strong><br>
+              Migrate from Pi Pico 2 to a purpose-built PCB centered on an FPGA. The PSYNC protocol and frame format carry over unchanged — FPGA buys hardware determinism and true parallel logic, not higher speed. Pure fabric logic means no firmware stack, no interrupt jitter, no edge cases. Board will integrate RS-422 transceivers, FPGA, power conditioning, and Lemo quick-disconnect connectors into a single compact node. PCB design in Altium Designer.<br><br>
+              <strong style="color:var(--gold-light);">Phase 4 — Modular PM Cycle</strong><br>
+              With custom nodes installed, each arm assembly connects via two Lemo connectors: motor power harness and PIXIE node cable. A second set of pre-built arms held as hot-swap spares enables scheduled swaps in minutes — removed arm goes to shop for full rebuild and inspection. Reactive in-cavity repair replaced by proactive scheduled rotation.
+            </div>
+          </div>
+
+          <!-- ── PIXIE ATTACHMENT ──────────────────────────────────────── -->
+          <div style="margin-top:1.5rem;margin-bottom:0.5rem;">
+            <a href="assets/pixie/PIXIE_PSYNC_Technical_Brief.pptx"
+               download
+               style="display:inline-flex;align-items:center;gap:0.6rem;
+                      padding:0.55rem 1.1rem;
+                      background:rgba(255,200,80,0.07);
+                      border:1px solid var(--gold-dim);
+                      border-radius:6px;
+                      color:var(--gold-light);
+                      font-family:'DM Mono',monospace;
+                      font-size:0.75rem;
+                      letter-spacing:0.08em;
+                      text-decoration:none;
+                      transition:background 0.2s,border-color 0.2s;"
+               onmouseover="this.style.background='rgba(255,200,80,0.14)';this.style.borderColor='var(--gold-light)'"
+               onmouseout="this.style.background='rgba(255,200,80,0.07)';this.style.borderColor='var(--gold-dim)'">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><polyline points="9 15 12 18 15 15"/>
+              </svg>
+              PIXIE · PSYNC Technical Brief.pptx
+            </a>
+          </div>
+
+          <!-- ── PIXIE HMI SIMULATOR LAUNCH ───────────────────────────────── -->
+          <div style="margin-top:2rem;">
+            <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:0.75rem;">
+              Live Demo · PSYNC / BiSS-C HMI Simulator
+            </div>
+            <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;">
+              Interactive mockup of the Qt5 HMI running on the Pi Zero 2 W touchscreen — encoder data, PSYNC link status, BiSS-C axis monitoring, and the zeroing interface.
+            </div>
+            <button onclick="document.getElementById('hmiModal').style.display='flex'" style="
+              display:inline-flex;align-items:center;gap:0.75rem;
+              padding:0.65rem 1.4rem;
+              background:rgba(0,180,220,0.07);
+              border:1px solid rgba(0,180,220,0.35);
+              border-radius:4px;
+              color:#7ed4e8;
+              font-family:'DM Mono',monospace;
+              font-size:0.75rem;
+              letter-spacing:0.12em;
+              text-transform:uppercase;
+              cursor:pointer;
+              transition:background 0.2s, border-color 0.2s;
+            " onmouseover="this.style.background='rgba(0,180,220,0.14)';this.style.borderColor='rgba(0,180,220,0.6)'"
+               onmouseout="this.style.background='rgba(0,180,220,0.07)';this.style.borderColor='rgba(0,180,220,0.35)'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              Launch HMI Simulator
+            </button>
+          </div>
+
+          <!-- ── PIXIE MEDIA ────────────────────────────────────────────────
+               Drop files into: assets/pixie/
+               Slots: pixie_01.jpg … pixie_08.jpg  (grid fills automatically)
+               Good candidates: bench setup, OLED/HMI screenshots, oscilloscope
+               captures, PCB renders, block diagram photos, Pico wiring shots
+          ────────────────────────────────────────────────────────────── -->
+          <div id="pixieGallery" style="margin-top:0.5rem;"></div>
+          <script>
+          (function(){
+            var imgs = [
+              'assets/pixie/pixie_01.jpg',
+              'assets/pixie/pixie_02.jpg',
+              'assets/pixie/pixie_03.jpg',
+              'assets/pixie/pixie_04.jpg',
+              'assets/pixie/pixie_05.jpg',
+              'assets/pixie/pixie_06.jpg',
+              'assets/pixie/pixie_07.jpg',
+              'assets/pixie/pixie_08.jpg',
+            ];
+            var wrap = document.getElementById('pixieGallery');
+            var grid = document.createElement('div');
+            grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;';
+            var loaded = 0;
+            imgs.forEach(function(src){
+              var img = new Image();
+              img.onload = function(){
+                var a = document.createElement('a');
+                a.href = src; a.target = '_blank';
+                a.style.cssText = 'display:block;overflow:hidden;border-radius:6px;';
+                var i = document.createElement('img');
+                i.src = src;
+                i.style.cssText = 'width:100%;height:130px;object-fit:cover;display:block;cursor:pointer;transition:transform 0.2s;';
+                i.onmouseover = function(){ this.style.transform='scale(1.04)'; };
+                i.onmouseout  = function(){ this.style.transform='scale(1)'; };
+                a.appendChild(i); grid.appendChild(a);
+                if(++loaded === 1) wrap.appendChild(grid);
+              };
+              img.src = src;
+            });
+          })();
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <div class="personal-card fade-up">
+      <div class="personal-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2v6M9 4l3-2 3 2M6 9h12M6 9l-2 11h16L18 9"/><path d="M9 14h6M10 17h4"/></svg>
+      </div>
+      <div class="personal-name">Custom CNC Mill</div>
+      <p class="personal-desc">Designed, built, and commissioned a custom CNC milling machine capable of machining aluminum. Full mechanical design, motion control system integration, and toolpath programming — built from first principles.</p>
+      <div class="project-tags" style="margin-top: 1rem;">
+        <span class="tag">CNC</span><span class="tag">Motion Control</span><span class="tag">Aluminum Machining</span>
+      </div>
+      <div class="card-detail-trigger" onclick="toggleInit('cnc-detail')" id="trigger-cnc-detail">
+        <span>Expand Details</span>
+        <span class="sub-init-chevron" id="chevron-cnc-detail">▼</span>
+      </div>
+      <div class="card-detail-body" id="body-cnc-detail">
+        <div style="padding-top:1.25rem;">
+          <!-- ── CNC MEDIA ──────────────────────────────────────────────────
+               Drop files into: assets/cnc/
+               Slots: cnc_01.jpg … cnc_08.jpg  (grid fills automatically)
+               Supported: JPG, PNG
+          ──────────────────────────────────────────────────────────────── -->
+          <div id="cncGallery"></div>
+          <script>
+          (function(){
+            var imgs = [
+              'assets/cnc/cnc_01.jpg',
+              'assets/cnc/cnc_02.jpg',
+              'assets/cnc/cnc_03.jpg',
+              'assets/cnc/cnc_04.jpg',
+              'assets/cnc/cnc_05.jpg',
+              'assets/cnc/cnc_06.jpg',
+              'assets/cnc/cnc_07.jpg',
+              'assets/cnc/cnc_08.jpg',
+            ];
+            var wrap = document.getElementById('cncGallery');
+            var grid = document.createElement('div');
+            grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;';
+            var loaded = 0;
+            imgs.forEach(function(src){
+              var img = new Image();
+              img.onload = function(){
+                var a = document.createElement('a');
+                a.href = src; a.target = '_blank';
+                a.style.cssText = 'display:block;overflow:hidden;border-radius:6px;';
+                var i = document.createElement('img');
+                i.src = src;
+                i.style.cssText = 'width:100%;height:130px;object-fit:cover;display:block;cursor:pointer;transition:transform 0.2s;';
+                i.onmouseover = function(){ this.style.transform='scale(1.04)'; };
+                i.onmouseout  = function(){ this.style.transform='scale(1)'; };
+                a.appendChild(i); grid.appendChild(a);
+                if(++loaded === 1) wrap.appendChild(grid);
+              };
+              img.src = src;
+            });
+          })();
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <div class="personal-card fade-up">
+      <div class="personal-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 6V4M10 6V4M14 6V4M18 6V4M6 18v2M10 18v2M14 18v2M18 18v2M2 10h2M2 14h2M20 10h2M20 14h2"/></svg>
+      </div>
+      <div class="personal-name">Custom PCB Design</div>
+      <p class="personal-desc">Designing and fabricating custom printed circuit boards for electronics projects — schematic capture, layout design, component selection, and assembly. Full hardware development from concept to working board.</p>
+      <div class="project-tags" style="margin-top: 1rem;">
+        <span class="tag">PCB Layout</span><span class="tag">Schematic Design</span><span class="tag">Altium Designer</span><span class="tag">Embedded Systems</span><span class="tag">RP2350</span>
+      </div>
+      <div class="card-detail-trigger" onclick="toggleInit('pcb-detail')" id="trigger-pcb-detail">
+        <span>Expand Details</span>
+        <span class="sub-init-chevron" id="chevron-pcb-detail">▼</span>
+      </div>
+      <div class="card-detail-body" id="body-pcb-detail">
+        <div style="padding-top:1.25rem;">
+          <!-- ── PCB MEDIA ────────────────────────────────────────────────
+               Drop files into: assets/pcb/
+               Each board gets a subfolder entry below.
+               Format: { label, schematic, board, extra[] }
+          ──────────────────────────────────────────────────────────────── -->
+          <div id="pcbGallery" style="display:flex;flex-direction:column;gap:1.5rem;"></div>
+
+          <script>
+          (function(){
+            var boards = [
+              {
+                label:      'Logic Analyzer',
+                desc:       'RP2350-based logic analyzer — schematic capture in Altium Designer.',
+                schematic:  'assets/pcb/logic-analyzer/schematic.jpg',
+                board:      'assets/pcb/logic-analyzer/board.jpg',
+                extra: [
+                  'assets/pcb/logic-analyzer/detail_01.jpg',
+                  'assets/pcb/logic-analyzer/detail_02.jpg',
+                ]
+              },
+              /* ── Add more boards here ──
+              {
+                label:     'Board Name',
+                desc:      'Short description.',
+                schematic: 'assets/pcb/board-name/schematic.jpg',
+                board:     'assets/pcb/board-name/board.jpg',
+                extra: []
+              },
+              */
+            ];
+
+            var wrap = document.getElementById('pcbGallery');
+
+            boards.forEach(function(b) {
+              var section = document.createElement('div');
+
+              // Board title
+              var title = document.createElement('div');
+              title.textContent = b.label;
+              title.style.cssText = 'font-family:"DM Mono",monospace;font-size:0.68rem;letter-spacing:0.16em;color:var(--gold);text-transform:uppercase;margin-bottom:0.3rem;';
+              section.appendChild(title);
+
+              // Description
+              if (b.desc) {
+                var desc = document.createElement('div');
+                desc.textContent = b.desc;
+                desc.style.cssText = 'font-size:0.8rem;color:var(--muted);margin-bottom:0.75rem;line-height:1.6;';
+                section.appendChild(desc);
+              }
+
+              // Image grid
+              var grid = document.createElement('div');
+              grid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;';
+
+              var allImgs = [];
+              if (b.schematic) allImgs.push({ src: b.schematic, caption: 'Schematic' });
+              if (b.board)     allImgs.push({ src: b.board,     caption: 'Board Layout' });
+              (b.extra || []).forEach(function(s){ allImgs.push({ src: s, caption: '' }); });
+
+              allImgs.forEach(function(item) {
+                var cell = document.createElement('div');
+                cell.style.cssText = 'position:relative;';
+                var img = new Image();
+                img.onload = function() {
+                  img.style.cssText = 'width:100%;border-radius:4px;display:block;cursor:pointer;';
+                  img.title = item.caption;
+                  img.onclick = function(){ window.open(item.src,'_blank'); };
+                  if (item.caption) {
+                    var cap = document.createElement('div');
+                    cap.textContent = item.caption;
+                    cap.style.cssText = 'font-size:0.65rem;color:var(--gold-dim);text-align:center;margin-top:0.2rem;font-family:"DM Mono",monospace;letter-spacing:0.1em;';
+                    cell.appendChild(img);
+                    cell.appendChild(cap);
+                  } else {
+                    cell.appendChild(img);
+                  }
+                  grid.appendChild(cell);
+                };
+                img.src = item.src;
+              });
+
+              section.appendChild(grid);
+              wrap.appendChild(section);
+            });
+          })();
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <div class="personal-card fade-up">
+      <div class="personal-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="personal-name">Rapid Prototyping / 3D Printing</div>
+      <p class="personal-desc">Leveraging 3D printing as a rapid prototyping tool for mechanical components, custom brackets, animatronic parts, and engineering concepts. Design in CAD, iterate fast, validate before committing to machined or fabricated parts.</p>
+      <div class="project-tags" style="margin-top: 1rem;">
+        <span class="tag">FDM / SLA</span><span class="tag">CAD Design</span><span class="tag">Rapid Iteration</span>
+      </div>
+      <div class="card-detail-trigger" onclick="toggleInit('print-detail')" id="trigger-print-detail">
+        <span>Expand Details</span>
+        <span class="sub-init-chevron" id="chevron-print-detail">▼</span>
+      </div>
+      <div class="card-detail-body" id="body-print-detail">
+        <div style="padding-top:1.25rem;">
+          <!-- ── 3D PRINTING MEDIA ─────────────────────────────────────────
+               Drop files into: assets/3d-printing/
+               Slots: print_01.jpg … print_08.jpg  (grid fills automatically)
+               Supported: JPG, PNG
+          ──────────────────────────────────────────────────────────────── -->
+          <div id="printGallery"></div>
+          <script>
+          (function(){
+            var imgs = [
+              'assets/3d-printing/print_01.jpg',
+              'assets/3d-printing/print_02.jpg',
+              'assets/3d-printing/print_03.jpg',
+              'assets/3d-printing/print_04.jpg',
+              'assets/3d-printing/print_05.jpg',
+              'assets/3d-printing/print_06.jpg',
+              'assets/3d-printing/print_07.jpg',
+              'assets/3d-printing/print_08.jpg',
+            ];
+            var wrap = document.getElementById('printGallery');
+            var grid = document.createElement('div');
+            grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;';
+            var loaded = 0;
+            imgs.forEach(function(src){
+              var img = new Image();
+              img.onload = function(){
+                var a = document.createElement('a');
+                a.href = src; a.target = '_blank';
+                a.style.cssText = 'display:block;overflow:hidden;border-radius:6px;';
+                var i = document.createElement('img');
+                i.src = src;
+                i.style.cssText = 'width:100%;height:130px;object-fit:cover;display:block;cursor:pointer;transition:transform 0.2s;';
+                i.onmouseover = function(){ this.style.transform='scale(1.04)'; };
+                i.onmouseout  = function(){ this.style.transform='scale(1)'; };
+                a.appendChild(i); grid.appendChild(a);
+                if(++loaded === 1) wrap.appendChild(grid);
+              };
+              img.src = src;
+            });
+          })();
+          </script>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── SKILLS STRIP ── -->
+<div class="skills-section" id="skills">
+  <div class="skills-inner">
+    <div class="section-label">Capabilities</div>
+    <h2 class="section-title" style="margin-bottom: 0;">Technical Skills</h2>
+    <div class="skills-grid">
+      <div>
+        <div class="skill-group-title">Ride & Attraction</div>
+        <ul class="skill-list">
+          <li>Animatronic diagnostics & repair</li>
+          <li>Ride control systems</li>
+          <li>Show effects integration</li>
+          <li>Commissioning & test</li>
+          <li>System integration</li>
+        </ul>
+      </div>
+      <div>
+        <div class="skill-group-title">Controls & Automation</div>
+        <ul class="skill-list">
+          <li>Rockwell (Studio 5000)</li>
+          <li>Siemens (TIA Portal)</li>
+          <li>Beckhoff (TwinCAT)</li>
+          <li>EtherNet/IP · ProfiNet · Modbus</li>
+          <li>HMI / SCADA systems</li>
+        </ul>
+      </div>
+      <div>
+        <div class="skill-group-title">AI & Engineering</div>
+        <ul class="skill-list">
+          <li>ML predictive maintenance</li>
+          <li>Agentic workflow design</li>
+          <li>AI-assisted diagnostics</li>
+          <li>Prompt engineering</li>
+          <li>LLM-augmented troubleshooting</li>
+        </ul>
+      </div>
+      <div>
+        <div class="skill-group-title">Fabrication & Design</div>
+        <ul class="skill-list">
+          <li>CNC machining (aluminum)</li>
+          <li>Custom PCB design</li>
+          <li>3D printing / rapid prototyping</li>
+          <li>AutoCAD · SolidWorks · Revit</li>
+          <li>ESP32 · Arduino · Raspberry Pi</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONTACT ── -->
+<section id="contact" style="text-align: center;">
+  <div class="section-label" style="justify-content: center;">Get in Touch</div>
+  <h2 class="section-title" style="margin-bottom: 1rem;">Let's Build Something.</h2>
+  <p style="color: var(--muted); max-width: 480px; margin: 0 auto 2.5rem; font-size: 0.95rem; line-height: 1.8;">
+    Currently at Walt Disney World, Magic Kingdom West and pursuing a B.S. in Engineering at UCF through the Disney Aspire Program.
+  </p>
+  <div class="cta-row" style="justify-content: center;">
+    <a href="mailto:reywsoto@gmail.com" class="hero-cta">reywsoto@gmail.com →</a>
+    <a href="assets/Rey_Soto_Resume_Imagineering_v2.docx" download class="hero-cta-ghost">Download Resume ↓</a>
+  </div>
+</section>
+
+<footer>
+  <strong>Rey Soto</strong> · Ride & Attraction Systems Engineer · Deltona, FL · (407) 491-5445
+</footer>
+
+<script>
+  const allSkills = [
+    { name: "Animatronic Diagnostics & Repair",
+      proof: "Current role at Walt Disney World focused on complex animatronic figure diagnostics and repair — hydraulic, pneumatic, and servo-driven figures. Root-cause analysis across electrical, mechanical, and control system failure modes in a live guest-facing environment.",
+      cat: "attraction" },
+    { name: "Ride Control Systems",
+      proof: "Commissioning & Test on VelociCoaster — integration, electrical validation, and full system verification from early commissioning through guest-ready operation.",
+      cat: "attraction" },
+    { name: "Hydraulic Motion Systems",
+      proof: "Primary technician on hydraulic motion-base simulator attractions at Universal: Despicable Me, The Simpsons, and Transformers. Fluid power, servo valve control, and motion sequence diagnostics.",
+      cat: "attraction" },
+    { name: "Show Coordination & Scene Timing",
+      proof: "Maintained and diagnosed multi-cue show sequences on Transformers: The Ride — synchronizing scene props, practical effects, lighting, audio, and motion to exact timing windows.",
+      cat: "attraction" },
+    { name: "Commissioning & Test",
+      proof: "Formal C&T role at Universal partnering with Design Engineering to validate attraction systems against specification — from first integration through guest-ready sign-off.",
+      cat: "attraction" },
+    { name: "Rockwell / Studio 5000",
+      proof: "Used across GE and attraction-adjacent controls work. PLC programming, fault diagnostics, and drive integration on industrial and entertainment systems.",
+      cat: "controls" },
+    { name: "Siemens S7 / TIA Portal",
+      proof: "Led company-wide migration to Siemens S7 hardware across 10 Insteel plants. PLC programming, hardware commissioning, and network integration.",
+      cat: "controls" },
+    { name: "Beckhoff TwinCAT",
+      proof: "Applied in precision motion and control contexts. EtherCAT axis configuration, soft-motion programming, and real-time task management.",
+      cat: "controls" },
+    { name: "Industrial Protocols",
+      proof: "Deployed across multiple platforms: EtherNet/IP, ProfiNet, Modbus TCP/RTU, BiSS-C. Protocol-level debugging and custom implementation (PSYNC/PIXIE).",
+      cat: "controls" },
+    { name: "HMI / SCADA Development",
+      proof: "Designed and deployed company-wide SCADA system at Insteel — first real-time production visibility in company history. Executive and operations dashboards across 10 facilities.",
+      cat: "controls" },
+    { name: "ML Predictive Maintenance",
+      proof: "Built end-to-end pipeline fusing vibration, oil analysis, and live machine data. ML model predicted failure probability and auto-generated IBM Maximo work orders across 10 plants.",
+      cat: "ai" },
+    { name: "AI-Assisted Diagnostics",
+      proof: "Actively applying AI tooling to fault isolation and engineering research workflows. Agentic design patterns for multi-step diagnostic reasoning.",
+      cat: "ai" },
+    { name: "Embedded Systems & Firmware",
+      proof: "RP2350 PIO state machines for BiSS-C and PSYNC protocol output. Custom encoder multiplexing hardware with Hamming SECDED ECC and CRC-16 framing.",
+      cat: "ai" },
+    { name: "CNC Machining",
+      proof: "Home-built CNC mill used for all structural aluminum fabrication — animatronic mounts, linkage components, and precision brackets. Full CAM workflow from SolidWorks to G-code.",
+      cat: "fabrication" },
+    { name: "Custom PCB Design",
+      proof: "Designed PIXIE encoder multiplexer PCB. Schematic capture, layout, and bring-up. Multi-node serial bus with ECC, CRC error checking, and source-synchronous clocking.",
+      cat: "fabrication" },
+    { name: "3D Printing / Rapid Prototyping",
+      proof: "FDM prototyping for organic shapes and mechanism concepts. Used extensively on Jolly Roger skull, Wall-E body panels, and iterative mechanical linkage development.",
+      cat: "fabrication" },
+    { name: "SolidWorks / CAD",
+      proof: "Full mechanical design workflow: parametric part modeling, assemblies, and drawings for machined and printed components across animatronics and electronics enclosure projects.",
+      cat: "fabrication" },
+  ];
+
+  // ── Sub-initiative accordion ─────────────────────────────
+  function toggleInit(id) {
+    var body    = document.getElementById('body-' + id);
+    var header  = body.previousElementSibling;
+    var chevron = document.getElementById('chevron-' + id);
+    var isOpen  = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    header.classList.toggle('open', !isOpen);
+  }
+
+  let activeCategory = 'all';
+
+  function filterSkills(cat) {
+    activeCategory = cat;
+    document.querySelectorAll('.skill-cat-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    renderSkills();
+  }
+
+  const domainLabels = {
+    attraction:  'Ride & Attraction',
+    controls:    'Controls & PLC',
+    ai:          'AI & Engineering',
+    fabrication: 'Fabrication',
+  };
+
+  function renderSkills() {
+    const container = document.getElementById('skillsBars');
+    const filtered = activeCategory === 'all' ? allSkills : allSkills.filter(s => s.cat === activeCategory);
+    container.innerHTML = '';
+    filtered.forEach((skill, i) => {
+      const card = document.createElement('div');
+      card.className = 'skill-card';
+      card.dataset.cat = skill.cat;
+      card.innerHTML = `
+        <div class="skill-card-domain">${domainLabels[skill.cat]}</div>
+        <div class="skill-card-name">${skill.name}</div>
+        <div class="skill-card-proof">${skill.proof}</div>
+      `;
+      container.appendChild(card);
+      setTimeout(() => card.classList.add('show'), i * 40);
+    });
+  }
+
+  renderSkills();
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 120);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+<!-- ── HMI SIMULATOR MODAL ── -->
+<div id="hmiModal" style="
+  display:none;position:fixed;inset:0;z-index:8888;
+  background:rgba(2,4,12,0.88);
+  backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;
+" onclick="if(event.target===this)this.style.display='none'">
+  <div style="
+    position:relative;
+    background:#02040c;
+    border:1px solid rgba(0,180,220,0.25);
+    border-radius:10px;
+    box-shadow:0 0 60px rgba(0,120,200,0.3), 0 40px 80px rgba(0,0,0,0.8);
+    overflow:hidden;
+    max-width:95vw;
+    max-height:95vh;
+  ">
+    <!-- close button -->
+    <button onclick="document.getElementById('hmiModal').style.display='none'" style="
+      position:absolute;top:0.6rem;right:0.75rem;z-index:10;
+      background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+      border-radius:4px;color:rgba(255,255,255,0.5);
+      font-size:0.85rem;width:1.8rem;height:1.8rem;
+      cursor:pointer;line-height:1;
+      transition:background 0.15s, color 0.15s;
+    " onmouseover="this.style.background='rgba(255,255,255,0.12)';this.style.color='#fff'"
+       onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='rgba(255,255,255,0.5)'">✕</button>
+    <iframe
+      src="assets/pixie/hmi_simulator_v2.html"
+      style="width:780px;height:860px;max-width:90vw;max-height:88vh;border:none;display:block;"
+      title="PSYNC / BiSS-C HMI Simulator"
+    ></iframe>
+  </div>
+</div>
+
+<!-- ── EASTER EGG: Three-circle silhouette ── -->
+<img id="easterEgg" src="assets/sprites/mouse.png" alt="..." title="...">
+<div id="eggBubble">hey, check me out —<br>I might be something interesting 👀</div>
+
+<!-- ── RIDDLE OVERLAY ── -->
+<div id="riddleOverlay">
+  <div id="riddleBox">
+    <button id="riddleClose" onclick="closeRiddle()">✕</button>
+    <div class="r-eyebrow">// hidden level unlocked</div>
+    <div class="r-title">Let's see if you know your Imagineering.</div>
+    <div class="r-riddle">
+      I don't move. I don't make a sound.<br>
+      I have no motor, no circuit, no mechanism at all.<br>
+      Yet the moment guests step through the gate,<br>
+      I pull them forward without saying a word.<br><br>
+      Walt borrowed my name from a cookout.<br>
+      Every great park is built around me.<br><br>
+      <em>What am I?</em>
+    </div>
+    <input id="riddleInput" type="text" placeholder="your answer..." maxlength="40" />
+    <button id="riddleSubmit" onclick="checkAnswer()">Submit →</button>
+    <div id="riddleHint"></div>
+  </div>
+</div>
+
+<script>
+  // ── Prevent iOS pinch-to-zoom ───────────────────────────────
+  (function() {
+    // Block pinch gesture on the document (iOS Safari)
+    document.addEventListener('gesturestart',  function(e){ e.preventDefault(); }, { passive: false });
+    document.addEventListener('gesturechange', function(e){ e.preventDefault(); }, { passive: false });
+    document.addEventListener('gestureend',    function(e){ e.preventDefault(); }, { passive: false });
+
+    // Also block multi-touch zoom via touchmove
+    var lastTouchEnd = 0;
+    document.addEventListener('touchmove', function(e){
+      // Allow all touch inside model-viewer (3D orbit + zoom)
+      if(e.target.closest && e.target.closest('model-viewer')) return;
+      // Block multi-touch zoom everywhere else
+      if(e.touches.length > 1) e.preventDefault();
+    }, { passive: false });
+
+    // Lock page scroll while touching model-viewer
+    document.addEventListener('touchstart', function(e){
+      if(e.target.closest && e.target.closest('model-viewer')){
+        document.body.style.overflow = 'hidden';
+        document.body.style.touchAction = 'none';
+      }
+    }, { passive: true });
+    document.addEventListener('touchend', function(e){
+      // Restore scroll when all fingers lift
+      if(!e.touches.length){
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+      }
+    }, { passive: true });
+
+    // Block double-tap zoom
+    document.addEventListener('touchend', function(e){
+      var now = Date.now();
+      if(now - lastTouchEnd < 300) e.preventDefault();
+      lastTouchEnd = now;
+    }, { passive: false });
+  })();
+
+  // Easter egg
+  const egg    = document.getElementById('easterEgg');
+  const bubble = document.getElementById('eggBubble');
+  const overlay = document.getElementById('riddleOverlay');
+  let attempts = 0;
+
+  // ── Shake: fires at 18s, 36s, 54s (every 18s for the first minute)
+  function doShake() {
+    egg.classList.add('shaking');
+    // shaking class runs 3× 0.55s = 1.65s, then remove
+    setTimeout(() => egg.classList.remove('shaking'), 1700);
+  }
+  setTimeout(doShake, 18000);
+  setTimeout(doShake, 36000);
+  setTimeout(doShake, 54000);
+
+  // ── Speech bubble: appears at 70s, auto-hides after 6s
+  //    Re-appears every 90s if the riddle hasn't been opened yet
+  function showBubble() {
+    if (overlay.classList.contains('open')) return;
+    bubble.classList.add('visible');
+    setTimeout(() => bubble.classList.remove('visible'), 6000);
+  }
+  setTimeout(showBubble, 70000);
+  setInterval(showBubble, 90000);
+
+  // Hide bubble & stop shaking when egg is clicked
+  function openRiddle() {
+    bubble.classList.remove('visible');
+    egg.classList.remove('shaking');
+    attempts = 0;
+    const input  = document.getElementById('riddleInput');
+    const submit = document.getElementById('riddleSubmit');
+    input.value = '';
+    input.disabled = false;
+    input.classList.remove('wrong', 'correct');
+    submit.disabled = false;
+    document.getElementById('riddleHint').textContent = '';
+    document.getElementById('riddleHint').style.color = '';
+    overlay.classList.add('open');
+    setTimeout(() => input.focus(), 120);
+  }
+
+  egg.addEventListener('click', openRiddle);
+
+  function closeRiddle() {
+    overlay.classList.remove('open');
+  }
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeRiddle();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeRiddle();
+    if (e.key === 'Enter' && overlay.classList.contains('open')) checkAnswer();
+  });
+
+  const ANSWERS = ['weenie','the weenie','visual weenie','wienie'];
+
+  function grantAccess(msg) {
+    const input = document.getElementById('riddleInput');
+    const hint  = document.getElementById('riddleHint');
+    input.classList.remove('wrong');
+    input.classList.add('correct');
+    hint.textContent = msg;
+    hint.style.color = '#44bb44';
+    document.getElementById('riddleSubmit').disabled = true;
+    setTimeout(() => {
+      closeRiddle();
+      window.location.href='assets/the_wranglers_code.html';
+    }, 1800);
+  }
+
+  function checkAnswer() {
+    const val   = document.getElementById('riddleInput').value.trim().toLowerCase();
+    const input = document.getElementById('riddleInput');
+    const hint  = document.getElementById('riddleHint');
+    attempts++;
+
+    if (ANSWERS.some(a => val.includes(a))) {
+      grantAccess('✓ Access granted. Launching...');
+      return;
+    }
+
+    // 3rd failed attempt — reveal answer and let them in
+    if (attempts >= 3) {
+      hint.style.color = '#C8962E';
+      hint.innerHTML = 'The answer: <strong>Weenie</strong>. Walt\'s term for the visual anchor that pulls every guest forward. You think like an Imagineer. Launching...';
+      input.classList.remove('wrong');
+      input.disabled = true;
+      document.getElementById('riddleSubmit').disabled = true;
+      setTimeout(() => {
+        closeRiddle();
+        window.location.href='assets/the_wranglers_code.html';
+      }, 2200);
+      return;
+    }
+
+    input.classList.remove('correct');
+    input.classList.add('wrong');
+    setTimeout(() => input.classList.remove('wrong'), 400);
+    const hints = [
+      'Hint: think about what your eyes go to the instant you step onto Main Street U.S.A...',
+      'Hint: Walt\'s idea — you dangle it in front to make something move toward it. What\'s the Imagineering term?',
+    ];
+    hint.style.color = '';
+    hint.textContent = `Attempt ${attempts}/3 — ` + hints[attempts - 1];
+  }
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FAIRY  —  PNG sprite sheet (15 frames) + sparkle trail
+     Asset : assets/fairy/fairy_sheet.png  (swap to restyle)
+     States: HIDDEN → WANDER ↔ FOLLOW → FLEE → HIDDEN (loop)
+             INTRO_ARC: flies across name reveal, z-index elevated
+═══════════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  'use strict';
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  if(window.matchMedia('(pointer:coarse)').matches) return;  /* desktop only */
+
+  /* ── Sprite sheet ─────────────────────────────────────────── */
+  var SHEET_SRC = 'assets/fairy/fairy_sheet.png';
+  var FRAMES = 15;
+  var PFW = 102, PFH = 126, DFW = 34, DFH = 42, ANIM_FPS = 12;
+  var fairyImg = new Image(); fairyImg.src = SHEET_SRC;
+  var frameIdx = 0, frameAcc = 0;
+
+  /* ── Speech bubble ────────────────────────────────────────── */
+  var bubSty = document.createElement('style');
+  bubSty.textContent =
+    '#fairy-bubble{position:fixed;pointer-events:none;z-index:9002;'
+    +'background:rgba(255,255,255,0.96);color:#2A1800;'
+    +'font-family:"DM Sans",sans-serif;font-size:0.78rem;font-weight:600;'
+    +'padding:5px 11px;border-radius:12px;white-space:nowrap;'
+    +'border:1.5px solid rgba(200,150,46,0.7);'
+    +'box-shadow:0 3px 10px rgba(0,0,0,0.18);'
+    +'transition:opacity 0.25s,transform 0.25s;opacity:0;transform:scale(0.7);}'
+    +'#fairy-bubble.show{opacity:1;transform:scale(1);}'
+    +'#fairy-bubble::after{content:"";position:absolute;bottom:-7px;left:50%;'
+    +'transform:translateX(-50%);border:7px solid transparent;'
+    +'border-bottom:none;border-top-color:rgba(255,255,255,0.96);}'
+    +'#fairy-bubble::before{content:"";position:absolute;bottom:-9px;left:50%;'
+    +'transform:translateX(-50%);border:8px solid transparent;'
+    +'border-bottom:none;border-top-color:rgba(200,150,46,0.7);}';
+  document.head.appendChild(bubSty);
+  var bub = document.createElement('div');
+  bub.id = 'fairy-bubble';
+  document.body.appendChild(bub);
+  var bubTimer = null;
+  var clickCount = 0;
+
+  /* Tinkerbell escalation — index = click number */
+  var TINK_LINES = [
+    "HEY! that tickles!",
+    "Hehe... okay, ONCE was quite enough!",
+    "I am WARNING you. I know pixie dust.",
+    "Do you MIND?! These wings are extremely delicate!",
+    "I'll tell Peter! Stop itttttt.",
+    "PETER!! COME GET THIS PERSON!!",
+    "That is COMPLETELY unacceptable. I mean it!",
+    "You know what?! I don't even LIKE you!",
+    "\u2726 PIXIE DUST: REVOKED \u2726",
+    "I am SO done with you right now.",
+    "I SAID STOP IT!!",
+  ];
+
+  function showBubble(){
+    var line = clickCount < TINK_LINES.length
+      ? TINK_LINES[clickCount]
+      : "I MEAN IT. S T O P.";
+    clickCount++;
+
+    /* angry styling kicks in at click 4 */
+    var angry = (clickCount > 4);
+    bub.style.borderColor  = angry ? 'rgba(210,50,30,0.85)' : 'rgba(200,150,46,0.7)';
+    bub.style.color        = angry ? '#8B1A00' : '#2A1800';
+    /* update ::before tail colour via a CSS var hack — just restyle element */
+    bubSty.textContent = bubSty.textContent
+      .replace(/border-top-color:rgba\([^)]+\);}$/, 'border-top-color:'
+        +(angry?'rgba(210,50,30,0.85)':'rgba(200,150,46,0.7)')+';}'
+      );
+
+    bub.textContent = line;
+    bub.style.left = (fx - 80) + 'px';
+    bub.style.top  = (fy - 60) + 'px';
+    bub.classList.add('show');
+    if(bubTimer) clearTimeout(bubTimer);
+    bubTimer = setTimeout(function(){ bub.classList.remove('show'); }, 2400);
+  }
+
+  document.addEventListener('click', function(e){
+    if(state === 'HIDDEN') return;
+    var dx = e.clientX - fx, dy = e.clientY - fy;
+    if(Math.sqrt(dx*dx + dy*dy) < 34) showBubble();
+  });
+
+  /* ── Canvas ───────────────────────────────────────────────── */
+  var cvs = document.createElement('canvas');
+  cvs.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9000;';
+  document.body.appendChild(cvs);
+  var ctx = cvs.getContext('2d');
+  function resizeCvs(){ cvs.width=window.innerWidth; cvs.height=window.innerHeight; }
+  resizeCvs();
+  window.addEventListener('resize', resizeCvs);
+
+  /* ── State ────────────────────────────────────────────────── */
+  var W=window.innerWidth, H=window.innerHeight;
+  var fx=W/2, fy=H/2, vx=0, vy=0;
+  var tx=W/2, ty=H/2, mx=W/2, my=H/2;
+  var facing=1;
+  var state='HIDDEN', stateMs=rnd(3000,8000), wanderMs=0;
+  var bobAngle=0, sparkles=[], lastTs=0;
+  var arcT=0, arcDur=1680;      /* half speed                            */
+
+  /* ── Arc trail (persists until dismiss, then wipes L→R) ──── */
+  var arcTrail = [];
+  var ARC_TRAIL_LIFE = 2000;    /* ms each point fades after wipe front reaches it  */
+  var trailFading  = false;
+  var fadeStartMs  = 0;
+  var FADE_SWEEP   = 1500;      /* ms for wipe front to travel L→R (1.5+2=3.5s)    */
+
+  window.addEventListener('resize', function(){ W=window.innerWidth; H=window.innerHeight; resizeCvs(); });
+  document.addEventListener('mousemove', function(e){ mx=e.clientX; my=e.clientY; });
+
+  /* ── Helpers ──────────────────────────────────────────────── */
+  function rnd(a,b){ return a+Math.random()*(b-a); }
+  function pickWander(){ tx=rnd(130,W-130); ty=rnd(100,H-100); wanderMs=rnd(1800,3400); }
+  function pickFlee(){
+    var e=Math.floor(Math.random()*4);
+    if(e===0){tx=-70;ty=rnd(0,H);}else if(e===1){tx=W+70;ty=rnd(0,H);}
+    else if(e===2){tx=rnd(0,W);ty=-70;}else{tx=rnd(0,W);ty=H+70;}
+  }
+  function reenter(){
+    var e=Math.floor(Math.random()*4);
+    if(e===0){      fx=-30; fy=rnd(80,H-80); vx= rnd(1.2,2.5); vy=rnd(-.4,.4);}
+    else if(e===1){ fx=W+30;fy=rnd(80,H-80); vx=-rnd(1.2,2.5); vy=rnd(-.4,.4);}
+    else if(e===2){ fx=rnd(80,W-80);fy=-30;  vy= rnd(1.2,2.5); vx=rnd(-.4,.4);}
+    else{           fx=rnd(80,W-80);fy=H+30; vy=-rnd(1.2,2.5); vx=rnd(-.4,.4);}
+  }
+
+  /* ── State machine ────────────────────────────────────────── */
+  function nextState(){
+    if(state==='INTRO_ARC'){
+      /* keep z-index at 10000 — trail must stay above overlay until dismiss */
+      state='HIDDEN'; stateMs=99999; return;
+    }
+    if(state==='FLEE'){
+      if(Math.random()<0.65){ state='HIDDEN'; stateMs=rnd(15000,40000); }
+      else{ reenter(); state='WANDER'; pickWander(); stateMs=rnd(9000,16000); }
+      return;
+    }
+    if(state==='HIDDEN'){ reenter(); state='WANDER'; pickWander(); stateMs=rnd(7000,14000); return; }
+    var r=Math.random();
+    if     (r<0.28){ state='WANDER'; pickWander(); stateMs=rnd(7000,14000); }
+    else if(r<0.53){ state='FOLLOW'; stateMs=rnd(8000,17000); }
+    else if(r<0.76){ state='AVOID';  stateMs=rnd(6000,12000); }
+    else if(r<0.88){ state='FLEE';   pickFlee(); stateMs=99999; }
+    else           { state='HIDDEN'; stateMs=rnd(12000,30000); }
+  }
+
+  /* ── Intro trigger ────────────────────────────────────────── */
+  window.triggerFairyIntro = function(){
+    arcT=0; arcTrail=[]; sparkles=[]; trailFading=false;
+    fx=-60; fy=H*0.93; vx=0; vy=0; facing=1;   /* start bottom-left */
+    state='INTRO_ARC'; stateMs=99999;
+    cvs.style.zIndex='10000';
+  };
+
+  /* called by fireworks dismiss() — starts trail fade, lowers canvas */
+  window.fadeArcTrail = function(){
+    trailFading=true; fadeStartMs=0;
+    cvs.style.zIndex='9000';
+    if(state==='HIDDEN') stateMs=0;
+  };
+
+  /* ── Sparkle pools ────────────────────────────────────────── */
+  var COLS  = ['#FFD700','#FFFFFF','#FFE566','#C8962E','#BBEEFF','#FFB8F0','#CCFFCC'];
+  var DRIFT = ['#FFFFFF','#E3F2FD','#B3E5FC','#90CAF9','#E8EAF6','#80D8FF','#CCE5FF'];
+
+  function spawnSparkle(x,y,burst){
+    var a=Math.random()*Math.PI*2, s=burst?rnd(2.5,5.5):rnd(0.6,2.5);
+    sparkles.push({ x:x,y:y, vx:Math.cos(a)*s, vy:Math.sin(a)*s-rnd(0.5,1.4),
+      sz:rnd(1.5,burst?5:3.2), life:1, decay:rnd(0.013,0.030),
+      col:COLS[Math.floor(Math.random()*COLS.length)], star:Math.random()<0.45 });
+  }
+  /* wand-tip burst during the sweep */
+  function spawnTip(x,y){
+    var a=Math.random()*Math.PI*2, s=rnd(1.0,3.5);
+    var c=['#FFFFFF','#B3E5FC','#FFD700','#80D8FF'];
+    sparkles.push({ x:x,y:y, vx:Math.cos(a)*s, vy:Math.sin(a)*s-rnd(0.5,1.5),
+      sz:rnd(1.0,3.0), life:1, decay:rnd(0.012,0.025),
+      col:c[Math.floor(Math.random()*c.length)], star:Math.random()<0.55 });
+  }
+  /* particles that drift off the sustained trail */
+  function spawnDrift(x,y){
+    var a=-Math.PI*0.5+rnd(-1.0,1.0), s=rnd(0.2,1.4);
+    sparkles.push({ x:x,y:y, vx:Math.cos(a)*s, vy:Math.sin(a)*s,
+      sz:rnd(0.5,2.2), life:1, decay:rnd(0.006,0.016),
+      col:DRIFT[Math.floor(Math.random()*DRIFT.length)], star:Math.random()<0.4 });
+  }
+
+  /* ── Arc trail renderer — 3-layer glow stroke ─────────────── */
+  function drawArcTrail(){
+    if(arcTrail.length < 2) return;
+    /* outer deep-blue glow → inner light-blue → white core */
+    var passes=[
+      {blur:28, w:12, r:20,  g:80,  b:255, a:0.35},
+      {blur:10, w: 5, r:80,  g:180, b:255, a:0.60},
+      {blur: 3, w:1.5,r:220, g:240, b:255, a:0.88}
+    ];
+    for(var pi=0;pi<passes.length;pi++){
+      var pass=passes[pi];
+      for(var i=1;i<arcTrail.length;i++){
+        var p0=arcTrail[i-1], p1=arcTrail[i];
+        var age=(p0.age+p1.age)*0.5;
+        var t=Math.max(0, 1-age/ARC_TRAIL_LIFE);
+        var alpha=Math.pow(t,1.3)*pass.a;
+        if(alpha<0.01) continue;
+        ctx.save();
+        ctx.globalAlpha=alpha;
+        ctx.shadowColor='rgb('+pass.r+','+pass.g+','+pass.b+')';
+        ctx.shadowBlur=pass.blur;
+        ctx.strokeStyle='rgb('+pass.r+','+pass.g+','+pass.b+')';
+        ctx.lineWidth=pass.w; ctx.lineCap='round';
+        ctx.beginPath(); ctx.moveTo(p0.x,p0.y); ctx.lineTo(p1.x,p1.y);
+        ctx.stroke(); ctx.restore();
+      }
+    }
+  }
+
+  function drawSparkle(p){
+    ctx.save();
+    ctx.globalAlpha=p.life*p.life; ctx.fillStyle=p.col;
+    ctx.shadowColor=p.col; ctx.shadowBlur=8;
+    if(p.star){
+      var R=p.sz, r=R*0.36; ctx.beginPath();
+      for(var i=0;i<8;i++){
+        var ang=(i*Math.PI/4)-(Math.PI/8), len=(i%2===0)?R:r;
+        if(i===0) ctx.moveTo(p.x+len*Math.cos(ang),p.y+len*Math.sin(ang));
+        else      ctx.lineTo(p.x+len*Math.cos(ang),p.y+len*Math.sin(ang));
+      }
+      ctx.closePath();
+    } else { ctx.beginPath(); ctx.arc(p.x,p.y,p.sz*0.55,0,Math.PI*2); }
+    ctx.fill(); ctx.restore();
+  }
+
+  /* ── Update ───────────────────────────────────────────────── */
+  function update(dt){
+    frameAcc+=dt;
+    while(frameAcc>=1000/ANIM_FPS){ frameIdx=(frameIdx+1)%FRAMES; frameAcc-=1000/ANIM_FPS; }
+
+    /* age sparkles */
+    for(var i=sparkles.length-1;i>=0;i--){
+      var p=sparkles[i];
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.045; p.vx*=0.97; p.life-=p.decay;
+      if(p.life<=0) sparkles.splice(i,1);
+    }
+
+    /* trail: wipe L→R on dismiss, always shed 3× drift particles */
+    if(arcTrail.length>0){
+      if(trailFading){
+        fadeStartMs+=dt;
+        /* fade front sweeps left-to-right across screen */
+        var fadeFront=-60+(W+120)*(fadeStartMs/FADE_SWEEP);
+        for(var j=arcTrail.length-1;j>=0;j--){
+          if(arcTrail[j].x<=fadeFront){
+            arcTrail[j].age+=dt;
+            if(arcTrail[j].age>ARC_TRAIL_LIFE) arcTrail.splice(j,1);
+          }
+        }
+      }
+      /* 3× drift particles off the trail */
+      if(arcTrail.length>0){
+        var pt=arcTrail[Math.floor(Math.random()*arcTrail.length)];
+        spawnDrift(pt.x+rnd(-5,5), pt.y+rnd(-4,4));
+        spawnDrift(pt.x+rnd(-5,5), pt.y+rnd(-4,4));
+        spawnDrift(pt.x+rnd(-5,5), pt.y+rnd(-4,4));
+      }
+    }
+
+    stateMs-=dt;
+    if(state==='HIDDEN'){ if(stateMs<=0) nextState(); return; }
+
+    bobAngle+=dt*0.004;
+
+    /* ── INTRO_ARC ── */
+    if(state==='INTRO_ARC'){
+      arcT+=dt/arcDur;
+      if(arcT>=1){ arcT=1; nextState(); return; }
+      fx=-60+(W+120)*arcT;
+      fy=H*0.93-H*0.87*Math.sin(arcT*Math.PI); /* bottom-left → near top → bottom-right */
+      vx=0; vy=0; facing=1;
+      arcTrail.push({x:fx, y:fy, age:0});
+      /* 6 wand-tip burst sparks per frame (3×) */
+      spawnTip(fx+rnd(-4,4), fy+rnd(-4,4));
+      spawnTip(fx+rnd(-4,4), fy+rnd(-4,4));
+      spawnTip(fx+rnd(-4,4), fy+rnd(-4,4));
+      spawnTip(fx+rnd(-4,4), fy+rnd(-4,4));
+      spawnTip(fx+rnd(-4,4), fy+rnd(-4,4));
+      spawnTip(fx+rnd(-4,4), fy+rnd(-4,4));
+      return;
+    }
+
+    /* ── Normal roaming ── */
+    wanderMs-=dt;
+    if(state==='WANDER'){
+      if(wanderMs<=0) pickWander();
+      var dx=tx-fx, dy=ty-fy;
+      vx+=dx*0.003; vy+=dy*0.003; vx*=0.91; vy*=0.91;
+      if(stateMs<=0) nextState();
+    } else if(state==='FOLLOW'){
+      var dx2=mx-fx, dy2=my-fy;
+      if(Math.sqrt(dx2*dx2+dy2*dy2)>40){ vx+=dx2*0.007; vy+=dy2*0.007; }
+      vx*=0.85; vy*=0.85; if(stateMs<=0) nextState();
+    } else if(state==='AVOID'){
+      /* repel from mouse — force stronger when closer */
+      var adx=fx-mx, ady=fy-my;
+      var adist=Math.sqrt(adx*adx+ady*ady)||1;
+      var aforce=Math.min(220/adist, 2.2);
+      vx+=adx/adist*aforce*0.006; vy+=ady/adist*aforce*0.006;
+      /* soft screen-edge bounce */
+      if(fx<80) vx+=0.55; if(fx>W-80) vx-=0.55;
+      if(fy<80) vy+=0.55; if(fy>H-80) vy-=0.55;
+      vx*=0.88; vy*=0.88;
+      if(stateMs<=0) nextState();
+    } else if(state==='FLEE'){
+      var dx3=tx-fx, dy3=ty-fy;
+      vx+=dx3*0.012; vy+=dy3*0.012; vx*=0.94; vy*=0.94;
+      if(fx<-65||fx>W+65||fy<-65||fy>H+65) nextState();
+    }
+    vy+=Math.sin(bobAngle)*0.07; fx+=vx; fy+=vy;
+    if(vx>0.4) facing=1; if(vx<-0.4) facing=-1;
+    var rate=(state==='FLEE')?0.72:0.32;
+    if(Math.random()<rate){
+      spawnSparkle(fx+rnd(-7,7),fy+rnd(-5,5),state==='FLEE');
+      spawnSparkle(fx+rnd(-7,7),fy+rnd(-5,5),state==='FLEE');
+      spawnSparkle(fx+rnd(-7,7),fy+rnd(-5,5),state==='FLEE');
+    }
+  }
+
+  /* ── Draw ─────────────────────────────────────────────────── */
+  function draw(){
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+    if(bub.classList.contains('show')){
+      bub.style.left = (fx - 68) + 'px';
+      bub.style.top  = (fy - 58) + 'px';
+    }
+    // drawArcTrail();                        /* arc hidden — uncomment to restore */
+    for(var i=0;i<sparkles.length;i++) drawSparkle(sparkles[i]);
+    if(state!=='HIDDEN' && fairyImg.complete && fairyImg.naturalWidth>0){
+      ctx.save();
+      ctx.translate(fx,fy); ctx.scale(facing,1);
+      ctx.shadowColor='rgba(255,215,0,0.85)'; ctx.shadowBlur=14;
+      ctx.drawImage(fairyImg,frameIdx*PFW,0,PFW,PFH,-DFW/2,-DFH/2,DFW,DFH);
+      ctx.restore();
+    }
+  }
+
+  /* ── RAF loop ─────────────────────────────────────────────── */
+  function loop(ts){
+    var dt=Math.min(ts-lastTs,50); lastTs=ts;
+    update(dt); draw(); requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(function(ts){ lastTs=ts; requestAnimationFrame(loop); });
+
+})();
+</script>
+</body>
+</html>

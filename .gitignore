@@ -1,0 +1,9 @@
+node_modules/
+dist/
+files.zip
+main.js
+package.json
+package-lock.json
+rey_soto_portfolio.html
+*.zip
+.claude/

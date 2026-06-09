@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PSYNC / BiSS-C HMI — Pi Zero 2 W Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060f; --panel:#0d1530; --panel2:#070d1e;
+  --border:#1a2550; --border-hi:#00d4ff;
+  --text:#c8d8f0; --text-dim:#4a5a80;
+  --cyan:#00d4ff; --cyan2:#0090b8;
+  --lime:#76ff03; --yellow:#ffd600; --amber:#ff9100;
+  --red:#ff1744; --green:#00e676;
+  --tab-active-bg:#0a1535; --tab-active-fg:#ffd600;
+  --tab-idle-bg:#060c1e; --tab-idle-fg:#4a5a80;
+  --w:640px; --h:480px;
+  --topbar:34px; --tabbar:48px;
+  --content:calc(var(--h) - var(--topbar) - var(--tabbar) - 1px);
+}
+body{
+  background:#02040c;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  min-height:100vh;
+  font-family:'Share Tech Mono',monospace;
+  color:var(--text);
+  padding:40px 20px;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%,rgba(0,150,220,.12) 0%,transparent 70%),
+    repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(0,80,180,.04) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(0,80,180,.04) 40px);
+}
+
+/* ── Page chrome ──────────────────────────────────────────────── */
+.page-header{text-align:center;margin-bottom:20px}
+.page-header h1{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;
+  letter-spacing:6px;color:var(--cyan);margin-bottom:4px}
+.page-header p{font-family:'Rajdhani',sans-serif;font-size:11px;
+  letter-spacing:3px;color:var(--text-dim);text-transform:uppercase}
+
+/* ── Device shell ────────────────────────────────────────────── */
+.shell{
+  background:linear-gradient(145deg,#161c38,#08091a);
+  border-radius:14px;
+  padding:14px 16px 16px;
+  box-shadow:0 0 0 1px rgba(0,212,255,.15),
+             0 0 50px rgba(0,100,220,.25),
+             0 30px 80px rgba(0,0,0,.8),
+             inset 0 1px 0 rgba(255,255,255,.05);
+  position:relative;
+}
+.shell::before{content:'';position:absolute;top:7px;left:18px;right:18px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,.25),transparent)}
+.device-meta{display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:8px;padding:0 2px}
+.device-meta span{font-family:'Orbitron',monospace;font-size:8px;
+  letter-spacing:2px;color:rgba(0,212,255,.35)}
+.dev-led{width:8px;height:8px;border-radius:50%;background:var(--lime);
+  box-shadow:0 0 8px var(--lime);animation:led 2s ease-in-out infinite}
+@keyframes led{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ── LCD bezel ───────────────────────────────────────────────── */
+.bezel{background:#000;border-radius:5px;padding:2px;
+  box-shadow:0 0 0 1px rgba(0,212,255,.18),inset 0 0 18px rgba(0,0,0,.5);
+  position:relative;overflow:hidden}
+.bezel::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:200;
+  background:linear-gradient(135deg,rgba(255,255,255,.025) 0%,transparent 55%);border-radius:3px}
+
+/* ── Screen ──────────────────────────────────────────────────── */
+#screen{width:var(--w);height:var(--h);background:var(--bg);
+  position:relative;overflow:hidden;border-radius:3px;cursor:default}
+
+/* ── Splash ──────────────────────────────────────────────────── */
+#splash{position:absolute;inset:0;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:50;transition:opacity .4s}
+#splash h2{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;
+  color:var(--cyan);letter-spacing:3px;text-shadow:0 0 25px var(--cyan);margin-bottom:10px}
+#splash .sub{font-size:14px;color:var(--text);letter-spacing:2px;margin-bottom:5px}
+#splash .proj{font-size:10px;color:var(--text-dim);letter-spacing:2px;margin-bottom:28px}
+.splash-bar{width:260px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.splash-fill{height:100%;width:0%;border-radius:2px;
+  background:linear-gradient(90deg,var(--cyan2),var(--cyan));transition:width .08s linear}
+#splash .ver{font-size:9px;color:var(--text-dim);letter-spacing:2px;margin-top:14px}
+
+/* ── App ─────────────────────────────────────────────────────── */
+#app{position:absolute;inset:0;display:none;flex-direction:column}
+
+/* ── Top bar ─────────────────────────────────────────────────── */
+#topbar{
+  height:var(--topbar);
+  background:var(--panel2);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 12px;gap:10px;flex-shrink:0;
+}
+#topbar .title{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
+  color:var(--cyan);letter-spacing:2px}
+#topbar .spacer{flex:1}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--lime);
+  box-shadow:0 0 8px var(--lime);flex-shrink:0;transition:all .3s}
+.dot.off{background:var(--red);box-shadow:0 0 8px var(--red)}
+#st-label{font-size:9px;color:var(--lime);letter-spacing:1px;transition:color .3s}
+#st-label.off{color:var(--red)}
+#clock{font-size:9px;color:var(--text-dim);letter-spacing:1px;margin-left:16px}
+
+/* ── Content ─────────────────────────────────────────────────── */
+#content{height:var(--content);position:relative;overflow:hidden;flex-shrink:0}
+
+/* ── Screens ─────────────────────────────────────────────────── */
+.screen{position:absolute;inset:0;display:none;
+  padding:10px 12px 8px;background:var(--bg);flex-direction:column;gap:6px}
+.screen.active{display:flex}
+
+.scr-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;
+  color:var(--cyan);letter-spacing:2px;flex-shrink:0}
+.hline{width:100%;height:1px;background:var(--border);flex-shrink:0}
+
+/* ── ENCODERS ────────────────────────────────────────────────── */
+.enc-header{display:grid;grid-template-columns:44px 1fr 100px 100px;
+  gap:4px;font-size:8px;color:var(--text-dim);letter-spacing:1px;
+  padding:2px 4px;border-bottom:1px solid var(--border);flex-shrink:0}
+.enc-header span{text-align:center}
+.enc-row{display:grid;grid-template-columns:44px 1fr 100px 100px;
+  gap:4px;align-items:center;flex:1}
+.enc-axis{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;
+  text-align:center}
+.enc-cnt{
+  background:var(--panel2);border:1px solid var(--border);border-radius:3px;
+  padding:3px 10px;font-size:17px;font-weight:700;text-align:right;
+  letter-spacing:1px;height:100%;display:flex;align-items:center;justify-content:flex-end;
+  transition:border-color .2s;font-family:'Share Tech Mono',monospace;
+}
+.enc-cnt.flash{border-color:var(--cyan);box-shadow:0 0 8px rgba(0,212,255,.4)}
+.enc-cnt.zero{color:var(--text-dim)!important}
+.enc-z{background:var(--panel2);border:1px solid var(--border);border-radius:3px;
+  padding:3px 8px;font-size:15px;color:var(--yellow);text-align:right;
+  height:100%;display:flex;align-items:center;justify-content:flex-end}
+.spark-wrap{background:var(--panel2);border:1px solid var(--border);border-radius:3px;
+  height:100%;overflow:hidden}
+canvas.spark{display:block;width:100%;height:100%}
+
+/* ── PSYNC ───────────────────────────────────────────────────── */
+.psync-banner{
+  background:var(--panel);border:1px solid var(--border);border-radius:5px;
+  display:flex;align-items:center;gap:12px;padding:8px 14px;flex-shrink:0;height:48px;
+}
+.p-dot{width:14px;height:14px;border-radius:50%;background:var(--lime);
+  box-shadow:0 0 10px var(--lime);flex-shrink:0;transition:all .3s}
+.p-dot.dn{background:var(--red);box-shadow:0 0 10px var(--red)}
+.p-link{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;
+  color:var(--lime);transition:color .3s}
+.p-link.dn{color:var(--red)}
+.psync-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;flex:1}
+.vcard{background:var(--panel);border:1px solid var(--border);border-radius:4px;
+  padding:7px 10px;display:flex;flex-direction:column;gap:2px}
+.vc-lbl{font-size:8px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
+.vc-val{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;text-align:right}
+.vc-bar{height:3px;background:var(--border);border-radius:2px;margin-top:3px;overflow:hidden}
+.vc-bar-fill{height:100%;background:var(--lime);border-radius:2px;width:0%;transition:width .5s,background .5s}
+.psync-proto{background:var(--panel2);border:1px solid var(--border);border-radius:4px;
+  padding:8px 12px;display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;flex-shrink:0}
+.pp-row{display:flex;gap:8px;align-items:center}
+.pp-k{font-size:8px;color:var(--text-dim);letter-spacing:1px;white-space:nowrap}
+.pp-v{font-size:8px;color:var(--text)}
+
+/* ── BiSS-C ──────────────────────────────────────────────────── */
+.biss-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+  gap:7px;flex:1}
+.biss-card{background:var(--panel);border-radius:5px;padding:10px 12px;
+  display:flex;flex-direction:column;gap:4px;border:1px solid;position:relative;overflow:hidden}
+.biss-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.biss-top{display:flex;justify-content:space-between;align-items:center}
+.biss-ax{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:var(--text-dim)}
+.biss-st{font-size:8px;font-weight:700;letter-spacing:1px;padding:2px 6px;
+  border-radius:2px;border:1px solid;transition:all .3s}
+.biss-plbl{font-size:8px;color:var(--text-dim);letter-spacing:1px}
+.biss-pval{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;
+  color:var(--amber);text-align:right}
+.clk-bar{height:4px;background:var(--panel2);border-radius:2px;overflow:hidden;position:relative}
+.clk-sweep{position:absolute;top:0;left:-60%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,var(--clk-color,#00d4ff),transparent);
+  animation:clksweep 1.1s linear infinite}
+@keyframes clksweep{from{left:-60%}to{left:110%}}
+.biss-info{display:flex;justify-content:space-between}
+.biss-info span{font-size:7px;color:var(--text-dim)}
+
+/* ── ZERO ────────────────────────────────────────────────────── */
+.zero-desc{font-size:9px;color:var(--text-dim);flex-shrink:0}
+.zero-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;flex-shrink:0}
+.z-btn{
+  background:var(--panel);border:1px solid var(--border);border-radius:5px;
+  padding:12px 8px;cursor:pointer;text-align:center;transition:all .15s;
+  display:flex;flex-direction:column;gap:4px;user-select:none;
+}
+.z-btn:hover{background:#1a3080;border-color:var(--border-hi)}
+.z-btn:active{transform:scale(.97)}
+.z-btn-label{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:var(--text)}
+.z-btn-sub{font-size:8px;color:var(--text-dim);letter-spacing:1px}
+.z-all{
+  background:#200a0a;border:2px solid var(--amber);border-radius:5px;
+  padding:11px;cursor:pointer;text-align:center;transition:all .15s;user-select:none;
+  font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--amber);
+  letter-spacing:2px;flex-shrink:0;
+}
+.z-all:hover{box-shadow:0 0 14px rgba(255,145,0,.35);border-color:var(--red);color:var(--red)}
+.z-all:active{transform:scale(.98)}
+.zero-msg{font-family:'Orbitron',monospace;font-size:10px;text-align:center;
+  letter-spacing:2px;height:22px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0}
+
+/* Confirm overlay */
+.confirm-overlay{
+  position:absolute;inset:0;background:rgba(0,0,0,.78);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;z-index:30;backdrop-filter:blur(3px);animation:fadeIn .15s ease-out
+}
+@keyframes fadeIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.conf-box{background:var(--panel);border:2px solid var(--amber);border-radius:8px;
+  padding:22px 28px;display:flex;flex-direction:column;align-items:center;gap:12px;min-width:300px}
+.conf-title{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--amber)}
+.conf-msg{font-size:9px;color:var(--text);text-align:center;line-height:1.5}
+.conf-msg em{color:var(--amber);font-style:normal}
+.conf-btns{display:flex;gap:10px}
+.conf-yes{background:#0a2010;color:var(--green);border:1px solid var(--green);
+  border-radius:4px;padding:8px 22px;cursor:pointer;font-family:'Orbitron',monospace;
+  font-size:9px;font-weight:700;letter-spacing:2px;transition:all .15s}
+.conf-yes:hover{box-shadow:0 0 10px rgba(0,230,118,.4)}
+.conf-no{background:#200a0a;color:var(--red);border:1px solid var(--red);
+  border-radius:4px;padding:8px 22px;cursor:pointer;font-family:'Orbitron',monospace;
+  font-size:9px;font-weight:700;letter-spacing:2px;transition:all .15s}
+.conf-no:hover{box-shadow:0 0 10px rgba(255,23,68,.4)}
+
+/* ── SYSTEM ──────────────────────────────────────────────────── */
+.sys-frame{background:var(--panel);border:1px solid var(--border);border-radius:5px;
+  padding:10px 14px;display:grid;grid-template-columns:140px 1fr;gap:5px 14px;flex:1;
+  align-content:start}
+.sys-k{font-size:8px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase}
+.sys-v{font-size:8px;color:var(--text)}
+
+/* ── Tab bar ─────────────────────────────────────────────────── */
+#tabbar{
+  height:var(--tabbar);background:var(--panel2);
+  border-top:1px solid var(--border);
+  display:flex;flex-shrink:0;
+}
+.tab{flex:1;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-family:'Orbitron',monospace;font-size:8px;font-weight:700;
+  letter-spacing:1px;color:var(--tab-idle-fg);background:var(--tab-idle-bg);
+  border-top:2px solid transparent;transition:all .15s;user-select:none}
+.tab:hover{background:#0a1228;color:var(--text)}
+.tab.active{background:var(--tab-active-bg);color:var(--tab-active-fg);border-top-color:var(--tab-active-fg)}
+.tab:active{transform:scale(.97)}
+
+/* ═══════ CONTROLS PANEL ═══════════════════════════════════════ */
+.ctrls{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.ctrl-card{background:rgba(13,21,48,.85);border:1px solid rgba(0,212,255,.14);
+  border-radius:8px;padding:10px 14px;display:flex;flex-direction:column;gap:7px;min-width:150px}
+.ctrl-head{font-family:'Orbitron',monospace;font-size:7px;letter-spacing:3px;
+  color:var(--cyan);text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:5px}
+.ctrl-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ctrl-lbl{font-size:9px;color:var(--text-dim);letter-spacing:1px}
+.tog{display:flex;gap:3px}
+.tog-opt{background:var(--border);border:1px solid var(--text-dim);border-radius:3px;
+  padding:3px 8px;cursor:pointer;font-size:8px;color:var(--text-dim);transition:all .15s}
+.tog-opt.on{background:rgba(0,212,255,.18);border-color:var(--cyan);color:var(--cyan)}
+.c-btn{background:rgba(0,41,121,.5);border:1px solid var(--border);border-radius:4px;
+  padding:4px 10px;cursor:pointer;font-family:'Share Tech Mono',monospace;
+  font-size:9px;color:var(--cyan);letter-spacing:1px;transition:all .15s}
+.c-btn:hover{border-color:var(--cyan);box-shadow:0 0 7px rgba(0,212,255,.2)}
+.sc-row{display:flex;gap:4px}
+.sc-btn{flex:1;background:var(--border);border:1px solid var(--text-dim);border-radius:3px;
+  padding:4px 6px;cursor:pointer;font-size:8px;color:var(--text-dim);
+  text-align:center;transition:all .15s}
+.sc-btn.on{background:rgba(0,212,255,.15);border-color:var(--cyan);color:var(--cyan)}
+.sim-tag{background:rgba(255,145,0,.12);border:1px solid rgba(255,145,0,.3);
+  border-radius:4px;padding:3px 8px;font-size:8px;color:var(--amber);
+  letter-spacing:2px;font-family:'Orbitron',monospace}
+.footer{margin-top:14px;font-size:8px;color:var(--text-dim);
+  letter-spacing:2px;text-align:center;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>PSYNC / BiSS-C ENCODER SYSTEM</h1>
+  <p>Animatronic Figure System · Pi Zero 2 W · Qt5 HMI · Simulator</p>
+</div>
+
+<div class="shell">
+  <div class="device-meta">
+    <span>RASPBERRY PI ZERO 2 W  ·  WAVESHARE 3.5" DPI IPS 640×480  ·  Qt5</span>
+    <div class="dev-led"></div>
+  </div>
+  <div class="bezel">
+    <div id="screen">
+
+      <!-- SPLASH -->
+      <div id="splash">
+        <h2>PSYNC / BiSS-C</h2>
+        <div class="sub">ENCODER SYSTEM HMI</div>
+        <div class="proj">Multi-Axis Animatronic Figure · Entertainment Systems</div>
+        <div class="splash-bar"><div class="splash-fill" id="sfill"></div></div>
+        <div class="ver">v1.0  INITIALISING...</div>
+      </div>
+
+      <!-- APP -->
+      <div id="app">
+
+        <!-- Top bar -->
+        <div id="topbar">
+          <span class="title">PSYNC / BiSS-C  ·  ENCODER DIAGNOSTIC HMI</span>
+          <div class="spacer"></div>
+          <div class="dot" id="st-dot"></div>
+          <span id="st-label">ONLINE</span>
+          <span id="clock">00:00:00</span>
+        </div>
+
+        <!-- Content -->
+        <div id="content">
+
+          <!-- ENCODERS -->
+          <div class="screen active" id="s0">
+            <div class="scr-title">ENCODER POSITIONS</div>
+            <div class="hline"></div>
+            <div class="enc-header">
+              <span>AXIS</span><span style="text-align:right;padding-right:10px">POSITION COUNT</span>
+              <span>Z-INDEX</span><span>VELOCITY</span>
+            </div>
+            <div id="enc-rows" style="display:flex;flex-direction:column;gap:5px;flex:1"></div>
+          </div>
+
+          <!-- PSYNC -->
+          <div class="screen" id="s1">
+            <div class="scr-title">PSYNC LINK STATUS</div>
+            <div class="hline"></div>
+            <div class="psync-banner">
+              <div class="p-dot" id="p-dot"></div>
+              <span class="p-link" id="p-link">LINK UP</span>
+              <div style="flex:1"></div>
+              <span style="font-size:8px;color:var(--text-dim);letter-spacing:1px">UPTIME</span>
+              <span id="p-uptime" style="font-size:12px;color:var(--cyan);margin-left:6px;font-family:'Orbitron',monospace">00:00:00</span>
+              <span style="font-size:8px;color:var(--text-dim);margin-left:18px;letter-spacing:1px">SPEED</span>
+              <span style="font-size:11px;color:var(--text);margin-left:6px">5 Mbit/s</span>
+            </div>
+            <div class="psync-grid">
+              <div class="vcard"><div class="vc-lbl">PACKETS RX</div><div class="vc-val" id="p-pkts" style="color:var(--cyan)">0</div></div>
+              <div class="vcard"><div class="vc-lbl">ERRORS</div><div class="vc-val" id="p-errs" style="color:var(--lime)">0</div></div>
+              <div class="vcard">
+                <div class="vc-lbl">ERROR RATE</div>
+                <div class="vc-val" id="p-rate" style="color:var(--lime)">0.0000%</div>
+                <div class="vc-bar"><div class="vc-bar-fill" id="p-bar"></div></div>
+              </div>
+              <div class="vcard"><div class="vc-lbl">ECC CORRECTIONS</div><div class="vc-val" id="p-corr" style="color:var(--amber)">0</div></div>
+            </div>
+            <div class="psync-proto">
+              <div class="pp-row"><span class="pp-k">PREAMBLE</span><span class="pp-v">0xAA · 0x10</span></div>
+              <div class="pp-row"><span class="pp-k">PACKET</span><span class="pp-v">52 bytes</span></div>
+              <div class="pp-row"><span class="pp-k">ECC</span><span class="pp-v">Hamming(12,8)</span></div>
+              <div class="pp-row"><span class="pp-k">CRC</span><span class="pp-v">CRC-16/CCITT</span></div>
+              <div class="pp-row"><span class="pp-k">TRANSPORT</span><span class="pp-v">RS-485 MAX3485</span></div>
+              <div class="pp-row"><span class="pp-k">PHY CLOCK</span><span class="pp-v">10 MHz PIO</span></div>
+            </div>
+          </div>
+
+          <!-- BiSS-C -->
+          <div class="screen" id="s2">
+            <div class="scr-title">BiSS-C OUTPUT STATUS</div>
+            <div class="hline"></div>
+            <div class="biss-grid" id="biss-grid"></div>
+          </div>
+
+          <!-- ZERO -->
+          <div class="screen" id="s3">
+            <div class="scr-title">ZERO AXES</div>
+            <div class="hline"></div>
+            <div class="zero-desc">Reset encoder position count to zero. Z-index counter is also cleared.</div>
+            <div class="zero-grid" id="zero-grid"></div>
+            <div class="z-all" id="z-all-btn">⚠  ZERO ALL AXES</div>
+            <div class="zero-msg" id="zero-msg"></div>
+            <div id="confirm-area"></div>
+          </div>
+
+          <!-- SYSTEM -->
+          <div class="screen" id="s4">
+            <div class="scr-title">SYSTEM INFORMATION</div>
+            <div class="hline"></div>
+            <div class="sys-frame">
+              <span class="sys-k">PROJECT</span>     <span class="sys-v">Animatronic Figure System</span>
+              <span class="sys-k">SYSTEM</span>      <span class="sys-v">PSYNC-1 / BiSS-C Encoder Bridge</span>
+              <span class="sys-k">VERSION</span>     <span class="sys-v">PoC v1.0</span>
+              <span class="sys-k">HMI</span>         <span class="sys-v">Pi Zero 2 W · Qt5 · DPI 640×480 IPS</span>
+              <span class="sys-k">MASTER</span>      <span class="sys-v">Pico 2 W (RP2350) · MicroPython v1.27</span>
+              <span class="sys-k">SLAVE</span>       <span class="sys-v">Pico 2 W (RP2350) · MicroPython v1.27</span>
+              <span class="sys-k">ENCODERS</span>    <span class="sys-v">4× FHA-C Harmonic Drive · RS-422</span>
+              <span class="sys-k">DRIVES</span>      <span class="sys-v">4× Servo Drive · BiSS-C 32-bit</span>
+              <span class="sys-k">LINK</span>        <span class="sys-v">RS-485 MAX3485 · 5 Mbit/s PSYNC-1</span>
+              <span class="sys-k">ECC</span>         <span class="sys-v">Hamming(12,8) + CRC-16/CCITT</span>
+              <span class="sys-k">HMI UART</span>    <span class="sys-v">/dev/serial0 · 115200 baud · 8N1</span>
+              <span class="sys-k">WIRING</span>       <span class="sys-v">GPIO14(TX)→SlaveGP9  GPIO15(RX)←SlaveGP8</span>
+            </div>
+          </div>
+
+        </div><!-- /content -->
+
+        <!-- Tab bar -->
+        <div id="tabbar">
+          <div class="tab active" data-i="0">ENCODERS</div>
+          <div class="tab" data-i="1">PSYNC</div>
+          <div class="tab" data-i="2">BiSS-C</div>
+          <div class="tab" data-i="3">ZERO</div>
+          <div class="tab" data-i="4">SYSTEM</div>
+        </div>
+
+      </div><!-- /app -->
+    </div><!-- /screen -->
+  </div><!-- /bezel -->
+</div><!-- /shell -->
+
+<!-- Controls -->
+<div class="ctrls">
+  <div class="ctrl-card">
+    <div class="ctrl-head">Simulation</div>
+    <div class="ctrl-row">
+      <span class="ctrl-lbl">Motion</span>
+      <div class="tog">
+        <div class="tog-opt on" id="motOn" onclick="setMotion(true)">ON</div>
+        <div class="tog-opt" id="motOff" onclick="setMotion(false)">OFF</div>
+      </div>
+    </div>
+    <div class="ctrl-row">
+      <span class="ctrl-lbl">Link</span>
+      <div class="tog">
+        <div class="tog-opt on" id="lnkUp" onclick="setLink(true)">UP</div>
+        <div class="tog-opt" id="lnkDn" onclick="setLink(false)">DOWN</div>
+      </div>
+    </div>
+  </div>
+  <div class="ctrl-card">
+    <div class="ctrl-head">Fault Injection</div>
+    <div class="ctrl-row"><span class="ctrl-lbl">CRC Error</span>
+      <div class="c-btn" onclick="injectErr()">INJECT</div></div>
+    <div class="ctrl-row"><span class="ctrl-lbl">BiSS Drop</span>
+      <div class="c-btn" onclick="dropBiss()">INJECT</div></div>
+  </div>
+  <div class="ctrl-card">
+    <div class="ctrl-head">Scenario</div>
+    <div class="sc-row">
+      <div class="sc-btn" id="scIdle" onclick="scenario('idle')">Idle</div>
+      <div class="sc-btn on" id="scSlow" onclick="scenario('slow')">Slow</div>
+      <div class="sc-btn" id="scFast" onclick="scenario('fast')">Fast</div>
+    </div>
+    <div class="ctrl-row" style="margin-top:4px">
+      <div class="sim-tag">SIMULATOR</div>
+    </div>
+  </div>
+</div>
+<div class="footer">Click tabs on device · use controls to inject faults &amp; change scenarios</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// State machine
+// ═══════════════════════════════════════════════════════════
+const SIM = {
+  counts: [0,0,0,0], z: [0,0,0,0],
+  link: true, pkts: 0, errs: 0, corr: 0,
+  biss: [true,true,true,true],
+  motion: true, speed: [1200,-800,2400,400],
+  startTime: Date.now(), activeTab: 0,
+  zeroMsg:'', zeroMsgTime:0,
+};
+
+// Per-axis prev counts for velocity sparklines
+const prevCounts = [0,0,0,0];
+const sparkData  = [[],[],[],[]].map(()=>Array(48).fill(0));
+
+// ═══════════════════════════════════════════════════════════
+// Build encoder rows
+// ═══════════════════════════════════════════════════════════
+const AX_COLORS = ['#76ff03','#00d4ff','#ff9100','#00e676'];
+const encRows = document.getElementById('enc-rows');
+const cntEls=[], zEls=[], sparkCanvases=[];
+
+for(let i=0;i<4;i++){
+  const row = document.createElement('div');
+  row.className = 'enc-row';
+  row.style.height = '100%';
+  row.innerHTML = `
+    <div class="enc-axis" style="color:${AX_COLORS[i]}">AX${i}</div>
+    <div class="enc-cnt zero" id="cnt${i}" style="color:${AX_COLORS[i]}">             0</div>
+    <div class="enc-z" id="zidx${i}">     0</div>
+    <div class="spark-wrap"><canvas class="spark" id="spark${i}"></canvas></div>`;
+  encRows.appendChild(row);
+  cntEls.push(document.getElementById(`cnt${i}`));
+  zEls.push(document.getElementById(`zidx${i}`));
+  sparkCanvases.push(document.getElementById(`spark${i}`));
+}
+
+// ═══════════════════════════════════════════════════════════
+// Build BiSS-C cards
+// ═══════════════════════════════════════════════════════════
+const bissGrid = document.getElementById('biss-grid');
+const bissCards = [];
+for(let i=0;i<4;i++){
+  const c = document.createElement('div');
+  c.className = 'biss-card';
+  c.id = `bc${i}`;
+  c.style.cssText = `border-color:${AX_COLORS[i]}`;
+  c.style.setProperty('--clk-color', AX_COLORS[i]);
+  c.innerHTML = `
+    <div class="biss-top">
+      <span class="biss-ax">AXIS ${i}</span>
+      <span class="biss-st" id="bst${i}" style="color:${AX_COLORS[i]};border-color:${AX_COLORS[i]};background:rgba(0,0,0,.15)">● ACTIVE</span>
+    </div>
+    <div class="biss-plbl">LAST POSITION</div>
+    <div class="biss-pval" id="bpos${i}">0x00000000</div>
+    <div class="clk-bar"><div class="clk-sweep" id="bclk${i}"></div></div>
+    <div class="biss-info">
+      <span>BITS: 42  CRC6: 0x43  POLY: x⁶+x⁴+x²+x+1</span>
+      <span>RS-422</span>
+    </div>`;
+  bissGrid.appendChild(c);
+  bissCards.push(c);
+}
+
+// ═══════════════════════════════════════════════════════════
+// Build zero buttons
+// ═══════════════════════════════════════════════════════════
+const zeroGrid = document.getElementById('zero-grid');
+for(let i=0;i<4;i++){
+  const btn = document.createElement('div');
+  btn.className = 'z-btn';
+  btn.innerHTML = `<div class="z-btn-label" style="color:${AX_COLORS[i]}">ZERO AXIS ${i}</div>
+    <div class="z-btn-sub">Axis ${i} position reset</div>`;
+  btn.onclick = ()=>requestZero(String(i));
+  zeroGrid.appendChild(btn);
+}
+document.getElementById('z-all-btn').onclick = ()=>requestZero('A');
+
+// ═══════════════════════════════════════════════════════════
+// Tab switching
+// ═══════════════════════════════════════════════════════════
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    const i = +t.dataset.i;
+    SIM.activeTab = i;
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelectorAll('.screen').forEach((s,j)=>
+      s.classList.toggle('active',j===i));
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// Splash
+// ═══════════════════════════════════════════════════════════
+let sp=0;
+const sfill = document.getElementById('sfill');
+const splashT = setInterval(()=>{
+  sp = Math.min(100,sp+2);
+  sfill.style.width = sp+'%';
+  if(sp>=100){
+    clearInterval(splashT);
+    setTimeout(()=>{
+      const splash=document.getElementById('splash');
+      splash.style.opacity='0';
+      setTimeout(()=>{
+        splash.style.display='none';
+        const app=document.getElementById('app');
+        app.style.display='flex';
+        startSim();
+      },400);
+    },250);
+  }
+},28);
+
+// ═══════════════════════════════════════════════════════════
+// Clock
+// ═══════════════════════════════════════════════════════════
+setInterval(()=>{
+  const n=new Date();
+  document.getElementById('clock').textContent =
+    String(n.getHours()).padStart(2,'0')+':'+
+    String(n.getMinutes()).padStart(2,'0')+':'+
+    String(n.getSeconds()).padStart(2,'0');
+},1000);
+
+// ═══════════════════════════════════════════════════════════
+// Simulation ticks
+// ═══════════════════════════════════════════════════════════
+function startSim(){
+  setInterval(simTick,  100);
+  setInterval(uiUpdate, 100);
+}
+
+function simTick(){
+  if(!SIM.link) return;
+  if(SIM.motion){
+    for(let i=0;i<4;i++){
+      SIM.counts[i] += SIM.speed[i] + Math.floor((Math.random()-.5)*60);
+      if(SIM.counts[i]>2147483647)  SIM.counts[i]-=4294967296;
+      if(SIM.counts[i]<-2147483648) SIM.counts[i]+=4294967296;
+      const zThresh = 1600000;
+      const pz = Math.floor(Math.abs(prevCounts[i])/zThresh);
+      const nz = Math.floor(Math.abs(SIM.counts[i])/zThresh);
+      if(nz!==pz) SIM.z[i]++;
+    }
+  }
+  SIM.pkts++;
+  if(Math.random()<.0007) SIM.errs++;
+}
+
+function uiUpdate(){
+  updateTopBar();
+  if(SIM.activeTab===0) updateEncoders();
+  else if(SIM.activeTab===1) updatePsync();
+  else if(SIM.activeTab===2) updateBiss();
+  else if(SIM.activeTab===3) updateZero();
+  updateUptime();
+}
+
+// ─── Top bar ───────────────────────────────────────────────
+function updateTopBar(){
+  const dot = document.getElementById('st-dot');
+  const lbl = document.getElementById('st-label');
+  if(SIM.link){
+    dot.classList.remove('off'); lbl.classList.remove('off');
+    lbl.textContent='ONLINE';
+  } else {
+    dot.classList.add('off'); lbl.classList.add('off');
+    lbl.textContent='OFFLINE';
+  }
+}
+
+// ─── Encoders ──────────────────────────────────────────────
+function updateEncoders(){
+  for(let i=0;i<4;i++){
+    const c = SIM.counts[i];
+    const vel = c - prevCounts[i];
+    prevCounts[i] = c;
+    sparkData[i].push(vel);
+    if(sparkData[i].length>48) sparkData[i].shift();
+
+    // Count
+    const el = cntEls[i];
+    el.textContent = c.toLocaleString('en-US').padStart(16,' ');
+    el.classList.toggle('zero', c===0);
+
+    // Z
+    zEls[i].textContent = String(SIM.z[i]).padStart(6,' ');
+
+    // Sparkline
+    drawSpark(sparkCanvases[i], sparkData[i], AX_COLORS[i]);
+  }
+}
+
+function drawSpark(canvas, data, color){
+  const dpr = window.devicePixelRatio||1;
+  const w = canvas.offsetWidth;
+  const h = canvas.offsetHeight;
+  if(canvas.width!==w*dpr){canvas.width=w*dpr;canvas.height=h*dpr;}
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  // bg
+  ctx.fillStyle='#070d1e';
+  ctx.fillRect(0,0,w,h);
+  // zero line
+  ctx.strokeStyle='#1a2550';ctx.lineWidth=1;ctx.setLineDash([2,3]);
+  ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();
+  ctx.setLineDash([]);
+  // data
+  const mx = Math.max(...data.map(Math.abs))||1;
+  ctx.strokeStyle=color;ctx.lineWidth=1.5;
+  ctx.beginPath();
+  data.forEach((v,i)=>{
+    const x=i*w/(data.length-1);
+    const y=h/2-(v/mx)*(h/2-3);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+}
+
+// ─── PSYNC ─────────────────────────────────────────────────
+function updatePsync(){
+  const link = SIM.link;
+  const pdot = document.getElementById('p-dot');
+  const plnk = document.getElementById('p-link');
+  pdot.classList.toggle('dn',!link);
+  plnk.classList.toggle('dn',!link);
+  plnk.textContent = link?'LINK UP':'LINK DOWN';
+
+  document.getElementById('p-pkts').textContent = SIM.pkts.toLocaleString();
+
+  const errEl = document.getElementById('p-errs');
+  errEl.textContent = SIM.errs;
+  errEl.style.color = SIM.errs===0?'var(--lime)':SIM.errs<10?'var(--amber)':'var(--red)';
+
+  const rate = SIM.pkts>0?(SIM.errs/SIM.pkts*100):0;
+  const rateEl = document.getElementById('p-rate');
+  rateEl.textContent = rate.toFixed(4)+'%';
+  rateEl.style.color = rate<.01?'var(--lime)':rate<.1?'var(--amber)':'var(--red)';
+
+  const bar = document.getElementById('p-bar');
+  bar.style.width = Math.min(100,rate/.01*100)+'%';
+  bar.style.background = rate<.01?'var(--lime)':rate<.1?'var(--amber)':'var(--red)';
+
+  document.getElementById('p-corr').textContent = SIM.corr;
+}
+
+function updateUptime(){
+  const e = Math.floor((Date.now()-SIM.startTime)/1000);
+  const h=String(Math.floor(e/3600)).padStart(2,'0');
+  const m=String(Math.floor((e%3600)/60)).padStart(2,'0');
+  const s=String(e%60).padStart(2,'0');
+  document.getElementById('p-uptime').textContent = `${h}:${m}:${s}`;
+}
+
+// ─── BiSS-C ────────────────────────────────────────────────
+function updateBiss(){
+  for(let i=0;i<4;i++){
+    const active = SIM.biss[i] && SIM.link;
+    const card   = document.getElementById(`bc${i}`);
+    const st     = document.getElementById(`bst${i}`);
+    const pos    = document.getElementById(`bpos${i}`);
+    const clk    = document.getElementById(`bclk${i}`);
+    if(active){
+      st.textContent='● ACTIVE';
+      st.style.color=AX_COLORS[i];st.style.borderColor=AX_COLORS[i];
+      card.style.borderColor=AX_COLORS[i];
+      card.style.background='var(--panel)';
+      clk.style.animationPlayState='running';
+    } else {
+      st.textContent='○ IDLE';
+      st.style.color='var(--text-dim)';st.style.borderColor='var(--border)';
+      card.style.borderColor='var(--border)';
+      card.style.background='var(--panel2)';
+      clk.style.animationPlayState='paused';
+    }
+    pos.textContent='0x'+(SIM.counts[i]>>>0).toString(16).toUpperCase().padStart(8,'0');
+  }
+}
+
+// ─── Zero ──────────────────────────────────────────────────
+let zeroMsgTimer=null;
+function updateZero(){
+  if(SIM.zeroMsg && Date.now()-SIM.zeroMsgTime>2500){
+    SIM.zeroMsg='';
+    document.getElementById('zero-msg').textContent='';
+  }
+}
+
+function requestZero(target){
+  showConfirm(target);
+}
+
+function showConfirm(target){
+  const label = target==='A'?'ALL AXES':`AXIS ${target}`;
+  const area  = document.getElementById('confirm-area');
+  area.innerHTML=`<div class="confirm-overlay">
+    <div class="conf-box">
+      <div class="conf-title">CONFIRM ZERO</div>
+      <div class="conf-msg">Zero <em>${label}</em>?<br>This resets the encoder count to 0.</div>
+      <div class="conf-btns">
+        <div class="conf-yes" onclick="executeZero('${target}')">CONFIRM</div>
+        <div class="conf-no"  onclick="cancelZero()">CANCEL</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function executeZero(t){
+  document.getElementById('confirm-area').innerHTML='';
+  if(t==='A'){
+    for(let i=0;i<4;i++){SIM.counts[i]=SIM.z[i]=0;}
+    showZeroMsg('ALL AXES ZEROED',true);
+  } else {
+    const i=+t; SIM.counts[i]=SIM.z[i]=0;
+    prevCounts[i]=0;
+    showZeroMsg(`AXIS ${t} ZEROED`,true);
+  }
+  prevCounts.fill(0);
+}
+
+function cancelZero(){
+  document.getElementById('confirm-area').innerHTML='';
+  showZeroMsg('CANCELLED',false);
+}
+
+function showZeroMsg(msg,ok){
+  SIM.zeroMsg=msg; SIM.zeroMsgTime=Date.now();
+  const el=document.getElementById('zero-msg');
+  el.textContent=msg;
+  el.style.color=ok?'var(--lime)':'var(--red)';
+}
+
+// ═══════════════════════════════════════════════════════════
+// External controls
+// ═══════════════════════════════════════════════════════════
+function setMotion(on){
+  SIM.motion=on;
+  document.getElementById('motOn').classList.toggle('on',on);
+  document.getElementById('motOff').classList.toggle('on',!on);
+}
+function setLink(up){
+  SIM.link=up;
+  document.getElementById('lnkUp').classList.toggle('on',up);
+  document.getElementById('lnkDn').classList.toggle('on',!up);
+}
+function injectErr(){
+  SIM.errs+=Math.floor(Math.random()*5)+1;
+  SIM.corr+=Math.floor(Math.random()*3);
+}
+function dropBiss(){
+  const i=Math.floor(Math.random()*4);
+  SIM.biss[i]=false;
+  setTimeout(()=>SIM.biss[i]=true,2200);
+}
+function scenario(s){
+  ['Idle','Slow','Fast'].forEach((n,j)=>{
+    document.getElementById('sc'+n.charAt(0).toUpperCase()+n.slice(1)).classList.toggle('on',
+      s===n.toLowerCase());
+  });
+  if(s==='idle'){setMotion(false);}
+  else if(s==='slow'){SIM.speed=[400,-200,600,150];setMotion(true);}
+  else if(s==='fast'){SIM.speed=[8000,-6400,14000,3200];setMotion(true);}
+}
+// init scenario buttons correctly
+document.getElementById('scIdle').classList.remove('on');
+document.getElementById('scSlow').classList.add('on');
+document.getElementById('scFast').classList.remove('on');
+</script>
+</body>
+</html>
