@@ -1275,9 +1275,10 @@
 
   // ── Colour palette ────────────────────────────────────────
   var PAL = [
-    [200,150, 46],[224,176, 80],[245,240,232],[255,255,255],
-    [ 90,170,255],[255,160, 50],[255,220, 90],[160,220,255],
-    [255,100,130],[120,255,180],[255,80, 80],[80,220,255],
+    [255,180, 40],[255,220,110],[245,240,232],[255,255,255],
+    [100,185,255],[255,140, 40],[255,240,100],[160,225,255],
+    [255,110,150],[100,255,185],[255,90, 90],[80,235,255],
+    [210,120,255],[255,210,255],[130,255,140],[255,170,60],
   ];
   function rc(){ return PAL[Math.floor(Math.random()*PAL.length)]; }
   function rn(a,b){ return a+Math.random()*(b-a); }
@@ -1289,134 +1290,203 @@
   }
   window.addEventListener('resize', resize); resize();
 
-  // ── Particle ──────────────────────────────────────────────
-  function Particle(x,y,c,vx,vy,sz,dc){
+  var smokes = [];
+
+  // ── Glow sprite cache ─────────────────────────────────────
+  // Pre-render one soft radial-gradient disc per colour. Drawing a
+  // cached canvas with drawImage is GPU-cheap; shadowBlur is not.
+  var SPR = 32, glowCache = {};
+  function glowSprite(c){
+    var key = c[0]+'_'+c[1]+'_'+c[2];
+    var s = glowCache[key];
+    if(s) return s;
+    s = document.createElement('canvas');
+    s.width = s.height = SPR;
+    var o = s.getContext('2d');
+    var g = o.createRadialGradient(SPR/2,SPR/2,0,SPR/2,SPR/2,SPR/2);
+    g.addColorStop(0,   'rgba('+c[0]+','+c[1]+','+c[2]+',1)');
+    g.addColorStop(0.35,'rgba('+c[0]+','+c[1]+','+c[2]+',0.55)');
+    g.addColorStop(1,   'rgba('+c[0]+','+c[1]+','+c[2]+',0)');
+    o.fillStyle = g; o.fillRect(0,0,SPR,SPR);
+    glowCache[key] = s;
+    return s;
+  }
+  // Draw a glow disc of radius r centred at x,y with opacity a.
+  function glow(c,x,y,r,a){
+    if(a<=0||r<=0) return;
+    ctx.globalAlpha = a>1?1:a;
+    ctx.drawImage(glowSprite(c), x-r, y-r, r*2, r*2);
+    ctx.globalAlpha = 1;
+  }
+
+  // ── Star Particle ─────────────────────────────────────────
+  // No manual trails: the motion-blur overlay in the loop turns
+  // each moving particle into a fading streak for free.
+  function Particle(x,y,c,vx,vy,sz,dc,opts){
+    opts=opts||{};
     this.x=x; this.y=y; this.c=c;
     this.vx=vx; this.vy=vy;
-    this.alpha=1; this.decay=dc||rn(0.008,0.017);
-    this.grav=rn(0.05,0.09); this.r=sz||rn(1.8,3.2);
-    this.drag=0.968; this.trail=[];
+    this.alpha=1; this.decay=dc||rn(0.009,0.018);
+    this.grav=opts.grav!==undefined?opts.grav:rn(0.04,0.085);
+    this.r=sz||rn(1.8,3.2);
+    this.drag=opts.drag||0.968;
+    this.wind=opts.wind||rn(-0.010,0.010);
+    this.twinkle=opts.twinkle||false;
+    this.twinklePhase=Math.random()*TP;
   }
   Particle.prototype.tick=function(){
-    this.trail.push([this.x,this.y]);
-    if(this.trail.length>10) this.trail.shift();
     this.vx*=this.drag; this.vy*=this.drag;
-    this.vy+=this.grav; this.x+=this.vx; this.y+=this.vy;
+    this.vy+=this.grav; this.vx+=this.wind;
+    this.x+=this.vx; this.y+=this.vy;
     this.alpha-=this.decay;
+    if(this.twinkle) this.twinklePhase+=0.38;
   };
   Particle.prototype.draw=function(){
-    for(var i=0;i<this.trail.length;i++){
-      var t=this.trail[i], a=(i/this.trail.length)*this.alpha*0.38;
-      ctx.beginPath(); ctx.arc(t[0],t[1],this.r*0.5,0,TP);
-      ctx.fillStyle=rgba(this.c,a); ctx.fill();
-    }
-    ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,TP);
-    ctx.fillStyle=rgba(this.c,this.alpha); ctx.fill();
+    var a=this.alpha;
+    if(this.twinkle) a*=0.45+0.55*Math.abs(Math.sin(this.twinklePhase));
+    glow(this.c, this.x, this.y, this.r*(0.9+1.6*this.alpha), a);
   };
 
-  // ── Tiny glitter sparkle (no trail, fast fade) ────────────
+  // ── Willow Particle (long drooping cascade) ───────────────
+  function WillowParticle(x,y,c,vx,vy){
+    this.x=x; this.y=y; this.c=c;
+    this.vx=vx*0.82; this.vy=vy*0.82;
+    this.alpha=1; this.decay=rn(0.004,0.009);
+    this.grav=rn(0.055,0.11); this.drag=0.980;
+    this.r=rn(1.4,2.6);
+    this.wind=rn(-0.012,0.012);
+    this.twinkle=false;
+    this.twinklePhase=Math.random()*TP;
+  }
+  WillowParticle.prototype.tick=Particle.prototype.tick;
+  WillowParticle.prototype.draw=function(){
+    glow(this.c, this.x, this.y, this.r*(0.8+1.4*this.alpha), this.alpha*0.95);
+  };
+
+  // ── Glitter (fast-fade sparkle) ───────────────────────────
   function Glitter(x,y,c){
     this.x=x; this.y=y; this.c=c;
-    this.vx=rn(-4,4); this.vy=rn(-5,1);
-    this.alpha=1; this.decay=rn(0.025,0.055); this.r=rn(0.7,1.8);
+    this.vx=rn(-5,5); this.vy=rn(-6,0.5);
+    this.alpha=1; this.decay=rn(0.022,0.048); this.r=rn(0.7,2.0);
+    this.grav=rn(0.03,0.07); this.drag=0.95;
   }
   Glitter.prototype.tick=function(){
-    this.vx*=0.93; this.vy+=0.06;
+    this.vx*=this.drag; this.vy+=this.grav;
     this.x+=this.vx; this.y+=this.vy; this.alpha-=this.decay;
   };
   Glitter.prototype.draw=function(){
+    glow(this.c, this.x, this.y, this.r*1.8, this.alpha);
+  };
+
+  // ── Smoke Puff ────────────────────────────────────────────
+  function Smoke(x,y){
+    this.x=x; this.y=y;
+    this.vx=rn(-0.25,0.25); this.vy=rn(-0.7,-0.15);
+    this.alpha=rn(0.06,0.15); this.decay=rn(0.0018,0.004);
+    this.r=rn(3,8);
+  }
+  Smoke.prototype.tick=function(){
+    this.x+=this.vx; this.y+=this.vy;
+    this.r+=0.12; this.alpha-=this.decay;
+  };
+  Smoke.prototype.draw=function(){
     ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,TP);
-    ctx.fillStyle=rgba(this.c,this.alpha); ctx.fill();
+    ctx.fillStyle='rgba(160,165,180,'+this.alpha+')'; ctx.fill();
   };
 
   // ── Burst helpers ─────────────────────────────────────────
-  function ring(x,y,c,n,spd,sz,dc){
+  function ring(x,y,c,n,spd,sz,dc,opts){
     for(var i=0;i<n;i++){
       var a=(i/n)*TP, s=spd*rn(0.88,1.12);
-      particles.push(new Particle(x,y,c,Math.cos(a)*s,Math.sin(a)*s,sz,dc));
+      particles.push(new Particle(x,y,c,Math.cos(a)*s,Math.sin(a)*s,sz,dc,opts));
     }
   }
-  function scatter(x,y,c,n,maxS){
+  function scatter(x,y,c,n,maxS,opts){
     for(var i=0;i<n;i++){
-      var a=Math.random()*TP, s=rn(1.2,maxS);
-      particles.push(new Particle(x,y,c,Math.cos(a)*s,Math.sin(a)*s));
+      var a=Math.random()*TP, s=rn(1.4,maxS);
+      particles.push(new Particle(x,y,c,Math.cos(a)*s,Math.sin(a)*s,rn(1.8,3.2),null,opts));
+    }
+  }
+  function willow(x,y,c,n,spd){
+    for(var i=0;i<n;i++){
+      var a=(i/n)*TP, s=spd*rn(0.85,1.15);
+      particles.push(new WillowParticle(x,y,c,Math.cos(a)*s,Math.sin(a)*s));
     }
   }
   function glitter(x,y,c,n){
     for(var i=0;i<n;i++) particles.push(new Glitter(x,y,c));
   }
   function flash(x,y,r){
+    ctx.globalCompositeOperation='source-over';
     var g=ctx.createRadialGradient(x,y,0,x,y,r);
-    g.addColorStop(0,'rgba(255,255,255,0.95)');
-    g.addColorStop(0.25,'rgba(255,230,140,0.55)');
+    g.addColorStop(0,'rgba(255,255,255,0.98)');
+    g.addColorStop(0.22,'rgba(255,230,140,0.65)');
     g.addColorStop(1,'rgba(255,220,80,0)');
     ctx.beginPath(); ctx.arc(x,y,r,0,TP);
     ctx.fillStyle=g; ctx.fill();
+    ctx.globalCompositeOperation='lighter';
   }
 
   // ── Explosion types ────────────────────────────────────────
   function explode(x,y,type){
-    var c1=rc(), c2=rc(), W2=[255,255,255], gold=[200,150,46];
-    flash(x,y,26);
+    var c1=rc(), c2=rc(), W2=[255,255,255], gold=[220,160,40];
+    flash(x,y,32);
 
     if(type==='radial'){
-      scatter(x,y,c1,140,8); scatter(x,y,W2,30,5);
-      glitter(x,y,c2,55); glitter(x,y,W2,25);
+      scatter(x,y,c1,180,9,{twinkle:true});
+      scatter(x,y,W2,45,5.5);
+      glitter(x,y,c2,70); glitter(x,y,W2,35);
 
     }else if(type==='ring'){
-      ring(x,y,c1,130,6.5,2.8,0.008);
-      ring(x,y,W2,35,4,1.8,0.012);
-      glitter(x,y,c1,45);
+      ring(x,y,c1,160,7,3,0.007,{twinkle:true,maxTrail:16});
+      ring(x,y,W2,45,4.5,1.8,0.011,{twinkle:true});
+      glitter(x,y,c1,55);
 
     }else if(type==='star'){
-      for(var i=0;i<100;i++){
-        var a=(i/100)*TP, s=(i%2===0)?rn(6,8.5):rn(2.5,4);
-        particles.push(new Particle(x,y,c1,Math.cos(a)*s,Math.sin(a)*s,rn(2,3.5)));
+      for(var i=0;i<130;i++){
+        var a=(i/130)*TP, s=(i%2===0)?rn(7,10):rn(2.5,4.5);
+        particles.push(new Particle(x,y,c1,Math.cos(a)*s,Math.sin(a)*s,rn(2,3.8),rn(0.007,0.013),{twinkle:i%2===0}));
       }
-      glitter(x,y,W2,45); glitter(x,y,c2,25);
+      glitter(x,y,W2,60); glitter(x,y,c2,35);
 
     }else if(type==='mickey'){
-      // ── Mickey head: large ring ──
-      ring(x,y,c1,120,7,3,0.008);
-      glitter(x,y,W2,30);
-
-      // Ear centres offset up-left / up-right — ey is 20% higher than ex
+      ring(x,y,c1,150,7.5,3.2,0.007,{twinkle:true});
+      glitter(x,y,W2,45);
       var ex=52, ey=63;
-      // ── Left ear ──
-      flash(x-ex, y-ey, 14);
-      ring(x-ex,y-ey,c2,75,4.5,2.2,0.009);
-      glitter(x-ex,y-ey,c1,20);
-
-      // ── Right ear ──
-      flash(x+ex, y-ey, 14);
-      ring(x+ex,y-ey,c2,75,4.5,2.2,0.009);
-      glitter(x+ex,y-ey,c1,20);
-
-      // gold rain between the three circles
-      for(var j=0;j<60;j++){
-        var ga=rn(-Math.PI,0), gs=rn(2,9);
-        particles.push(new Particle(x,y,gold,
-          Math.cos(ga)*gs,Math.sin(ga)*gs,rn(1.5,2.5),rn(0.009,0.016)));
+      flash(x-ex,y-ey,18); flash(x+ex,y-ey,18);
+      ring(x-ex,y-ey,c2,90,5,2.2,0.009,{twinkle:true});
+      glitter(x-ex,y-ey,c1,28);
+      ring(x+ex,y-ey,c2,90,5,2.2,0.009,{twinkle:true});
+      glitter(x+ex,y-ey,c1,28);
+      for(var j=0;j<90;j++){
+        var ga=rn(-Math.PI,0), gs=rn(2.5,10);
+        particles.push(new Particle(x,y,gold,Math.cos(ga)*gs,Math.sin(ga)*gs,rn(1.5,2.8),rn(0.008,0.015)));
       }
 
     }else if(type==='double'){
-      ring(x,y,c1,90,8,3,0.007);
-      ring(x,y,c2,70,4.5,2,0.009);
-      scatter(x,y,W2,25,3.5); glitter(x,y,c1,40);
+      ring(x,y,c1,110,9,3.5,0.006,{twinkle:true,maxTrail:15});
+      ring(x,y,c2,80,5,2,0.009,{twinkle:true});
+      scatter(x,y,W2,35,4); glitter(x,y,c1,55);
 
     }else if(type==='chrysanthemum'){
-      ring(x,y,c1,160,6.5,1.8,0.006);
-      scatter(x,y,c2,70,5); scatter(x,y,W2,35,3);
-      glitter(x,y,[255,220,80],65); glitter(x,y,W2,30);
+      ring(x,y,c1,200,7,2,0.005,{twinkle:true,grav:0.03,drag:0.975,maxTrail:22});
+      scatter(x,y,c2,90,5.5,{twinkle:true});
+      scatter(x,y,W2,50,3.5);
+      glitter(x,y,[255,220,80],90); glitter(x,y,W2,45);
 
     }else if(type==='comet'){
-      // Several long bright comets fanning upward
-      for(var k=0;k<14;k++){
-        var ca=rn(-Math.PI*0.9,-Math.PI*0.1), cs=rn(9,14);
-        var p=new Particle(x,y,c1,Math.cos(ca)*cs,Math.sin(ca)*cs,rn(2,4),0.006);
-        p.drag=0.992; p.grav=0.04; particles.push(p);
+      for(var k=0;k<20;k++){
+        var ca=rn(-Math.PI*0.88,-Math.PI*0.12), cs=rn(10,16);
+        var p=new Particle(x,y,c1,Math.cos(ca)*cs,Math.sin(ca)*cs,rn(2.5,4.5),0.005,{drag:0.993,grav:0.03,maxTrail:24});
+        particles.push(p);
       }
-      scatter(x,y,c2,80,6); glitter(x,y,W2,50);
+      scatter(x,y,c2,100,7,{twinkle:true}); glitter(x,y,W2,65);
+
+    }else if(type==='willow'){
+      willow(x,y,c1,160,7.5);
+      willow(x,y,gold,70,5.5);
+      scatter(x,y,W2,40,4);
+      glitter(x,y,W2,55);
     }
   }
 
@@ -1424,31 +1494,21 @@
   function Rocket(rx,type){
     this.x=rx!==null?rx:W*0.12+Math.random()*W*0.76;
     this.y=H+12;
-    this.targetY=H*0.05+Math.random()*H*0.44;
-    this.vy=-(11+Math.random()*9);
-    this.type=type||['radial','ring','star','mickey','double','chrysanthemum','comet'][Math.floor(Math.random()*7)];
-    this.trail=[]; this.exploded=false;
+    this.targetY=H*0.05+Math.random()*H*0.42;
+    this.vy=-(12+Math.random()*10);
+    this.vx=rn(-0.25,0.25);
+    this.type=type||['radial','ring','star','mickey','double','chrysanthemum','comet','willow'][Math.floor(Math.random()*8)];
+    this.exploded=false;
   }
   Rocket.prototype.tick=function(){
-    this.trail.push([this.x,this.y]);
-    if(this.trail.length>22) this.trail.shift();
-    this.vy*=0.983; this.y+=this.vy;
-    // Explode on target OR if momentum is spent (prevents floating yellow dots)
+    this.vy*=0.983; this.x+=this.vx; this.y+=this.vy;
+    if(Math.random()<0.45) smokes.push(new Smoke(this.x+rn(-2,2),this.y+rn(-2,2)));
     if(this.y<=this.targetY || Math.abs(this.vy)<0.5) this.exploded=true;
   };
+  // Motion-blur overlay turns the head into a fading streak — no trail array.
   Rocket.prototype.draw=function(){
-    for(var i=0;i<this.trail.length;i++){
-      var t=this.trail[i], a=(i/this.trail.length)*0.9, r=3*(i/this.trail.length);
-      ctx.beginPath(); ctx.arc(t[0],t[1],r,0,TP);
-      ctx.fillStyle='rgba(255,200,55,'+a+')'; ctx.fill();
-    }
-    ctx.beginPath(); ctx.arc(this.x,this.y,4,0,TP);
-    ctx.fillStyle='#fff'; ctx.fill();
-    var g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,14);
-    g.addColorStop(0,'rgba(255,235,100,0.55)');
-    g.addColorStop(1,'rgba(255,200,50,0)');
-    ctx.beginPath(); ctx.arc(this.x,this.y,14,0,TP);
-    ctx.fillStyle=g; ctx.fill();
+    glow([255,200,55], this.x, this.y, 9, 0.85);   // warm ember halo
+    glow([255,255,255], this.x, this.y, 3.2, 1);    // bright core
   };
 
   // ── Launch schedule — 44 rockets over 32 s ───────────────
@@ -1461,7 +1521,7 @@
     // ── Phase 1: Slow opener ──────────────────────────────
     [    0,  0.50, 'mickey'        ],
     [ 2000,  0.28, 'chrysanthemum' ],
-    [ 4000,  0.72, 'ring'          ],
+    [ 4000,  0.72, 'willow'        ],
     [ 6000,  0.40, 'star'          ],
     [ 8000,  0.60, 'comet'         ],
     [10000,  0.50, 'double'        ],
@@ -1471,12 +1531,12 @@
     [12000,  0.78, 'radial'        ],
     [13200,  0.50, 'chrysanthemum' ],
     [14200,  0.33, 'mickey'        ],
-    [14200,  0.67, 'ring'          ],
+    [14200,  0.67, 'willow'        ],
     [15200,  0.50, 'star'          ],
     [16000,  0.18, 'comet'         ],
     [16000,  0.82, 'comet'         ],
     [16900,  0.42, 'double'        ],
-    [17700,  0.58, 'chrysanthemum' ],
+    [17700,  0.58, 'willow'        ],
     [18500,  0.30, 'radial'        ],
     [19200,  0.70, 'ring'          ],
 
@@ -1484,12 +1544,12 @@
     [21000,  0.50, 'mickey'        ],
     [21500,  0.25, 'chrysanthemum' ],
     [21500,  0.75, 'chrysanthemum' ],
-    [22200,  0.40, 'star'          ],
+    [22200,  0.40, 'willow'        ],
     [22200,  0.60, 'star'          ],
     [22900,  0.50, 'double'        ],
     [23500,  0.32, 'mickey'        ],
     [23500,  0.68, 'mickey'        ],
-    [24200,  0.50, 'chrysanthemum' ],
+    [24200,  0.50, 'willow'        ],
     [25000,  0.20, 'comet'         ],
     [25000,  0.80, 'comet'         ],
 
@@ -1497,20 +1557,20 @@
     [27000,  0.50, 'mickey'        ],
     [27000,  0.28, 'chrysanthemum' ],
     [27200,  0.72, 'chrysanthemum' ],
-    [27400,  0.38, 'star'          ],
-    [27400,  0.62, 'star'          ],
+    [27400,  0.38, 'willow'        ],
+    [27400,  0.62, 'willow'        ],
     [27600,  0.50, 'mickey'        ],
     [27800,  0.22, 'ring'          ],
     [27800,  0.78, 'ring'          ],
     [28000,  0.50, 'chrysanthemum' ],
     [28200,  0.35, 'mickey'        ],
     [28200,  0.65, 'mickey'        ],
-    [28400,  0.50, 'double'        ],
+    [28400,  0.50, 'willow'        ],
     [28700,  0.28, 'chrysanthemum' ],
     [28700,  0.72, 'chrysanthemum' ],
     [29000,  0.50, 'mickey'        ],
     [29500,  0.40, 'star'          ],
-    [29500,  0.60, 'star'          ],
+    [29500,  0.60, 'willow'        ],
     [30000,  0.50, 'chrysanthemum' ],
   ];
   var launched=0, startTime=null, textShown=false, dismissing=false, fairyTriggered=false;
@@ -1576,8 +1636,22 @@
       launched++;
     }
 
-    // Clear fully transparent — castle always visible behind canvas
-    ctx.clearRect(0,0,W,H);
+    // Motion blur on a TRANSPARENT canvas: destination-out fades the
+    // existing pixels toward transparent (trails linger + decay) while
+    // empty areas stay fully see-through so the castle shows behind.
+    ctx.globalCompositeOperation='destination-out';
+    ctx.fillStyle='rgba(0,0,0,0.30)';
+    ctx.fillRect(0,0,W,H);
+
+    // Smoke behind everything else
+    for(var si=smokes.length-1;si>=0;si--){
+      smokes[si].tick();
+      if(smokes[si].alpha<=0){ smokes.splice(si,1); continue; }
+      smokes[si].draw();
+    }
+
+    // Additive blending for all glow/particle rendering
+    ctx.globalCompositeOperation='lighter';
 
     for(var ri=rockets.length-1;ri>=0;ri--){
       var rk=rockets[ri];
@@ -1590,6 +1664,8 @@
       if(p.alpha<=0){ particles.splice(pi,1); continue; }
       p.draw();
     }
+
+    ctx.globalCompositeOperation='source-over';
 
     if(!fairyTriggered && el>24500){
       fairyTriggered=true;
