@@ -1579,8 +1579,166 @@
   var fwPrompt = document.getElementById('fwPrompt');
   var fwSkip   = document.getElementById('fwSkip');
 
+  // ── Synthesized firework SFX (layers over the music track) ──
+  // Booms + shimmering crackle generated live with Web Audio so each
+  // sound is synced to a real explosion and panned to its screen x.
+  var actx=null, fxMaster=null, noiseBuf=null, reverbIn=null;
+  function initAudioFX(){
+    if(actx) return;
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      actx = new AC();
+      if(actx.state==='suspended') actx.resume();
+      fxMaster = actx.createGain();
+      fxMaster.gain.value = 0.0001;
+      fxMaster.connect(actx.destination);
+      fxMaster.gain.exponentialRampToValueAtTime(0.32, actx.currentTime+0.8);
+      // Space bus — CONVOLUTION reverb (smooth decaying-noise tail).
+      // A feedback delay combs and rings metallically; a convolver gives
+      // a diffuse, dark "distant valley" tail with no resonant pitch.
+      reverbIn = actx.createGain();
+      var irSec = 2.4, irLen = Math.floor(actx.sampleRate*irSec);
+      var ir = actx.createBuffer(2, irLen, actx.sampleRate);
+      for(var ch=0; ch<2; ch++){
+        var id = ir.getChannelData(ch);
+        for(var j=0;j<irLen;j++) id[j] = (Math.random()*2-1)*Math.pow(1-j/irLen, 3.2);
+      }
+      var conv = actx.createConvolver(); conv.buffer = ir;
+      var rlp = actx.createBiquadFilter(); rlp.type='lowpass'; rlp.frequency.value = 520;
+      var wet = actx.createGain(); wet.gain.value = 0.6;
+      reverbIn.connect(conv); conv.connect(rlp); rlp.connect(wet); wet.connect(fxMaster);
+      var len = Math.floor(actx.sampleRate*2);
+      noiseBuf = actx.createBuffer(1, len, actx.sampleRate);
+      var d = noiseBuf.getChannelData(0);
+      for(var i=0;i<len;i++) d[i] = Math.random()*2-1;
+    }catch(e){ actx=null; }
+  }
+  // Panner feeding both the dry master and the wet (echo) bus.
+  function fxOut(x, wetAmt){
+    var p = actx.createStereoPanner ? actx.createStereoPanner() : actx.createGain();
+    if(p.pan) p.pan.value = Math.max(-0.9,Math.min(0.9,(x/W)*2-1));
+    p.connect(fxMaster);
+    var send = actx.createGain(); send.gain.value = wetAmt;
+    p.connect(send); send.connect(reverbIn);
+    return p;
+  }
+  function noiseSrc(rate){
+    var s = actx.createBufferSource();
+    s.buffer = noiseBuf; s.loop = true;
+    s.playbackRate.value = rate || (0.8 + Math.random()*0.5);
+    return s;
+  }
+  // Distant deep boom: soft low thump + dark body + deep sub + long rumble.
+  // No bright transient — air absorbs highs over distance, so it reads as
+  // a chest-felt "thud" rolling across, not a tinny crack.
+  // `cut` = overall low-pass ceiling (kept low for darkness).
+  function boom(out, power, t, cut){
+    // Overall distance low-pass — everything routes through it.
+    var dlp = actx.createBiquadFilter(); dlp.type='lowpass';
+    dlp.frequency.value = cut; dlp.Q.value = 0.4;
+    dlp.connect(out);
+
+    // 1) Thump onset — soft low-passed noise burst (the leading edge of
+    //    the thud). Low cutoff so there's body, no tinny snap.
+    var ts = noiseSrc(0.7+Math.random()*0.3);
+    var tlp = actx.createBiquadFilter(); tlp.type='lowpass';
+    tlp.frequency.setValueAtTime(420+Math.random()*180, t);
+    tlp.frequency.exponentialRampToValueAtTime(120, t+0.12);
+    var tg = actx.createGain();
+    tg.gain.setValueAtTime(0.0001, t);
+    tg.gain.exponentialRampToValueAtTime(0.6*power, t+0.010);
+    tg.gain.exponentialRampToValueAtTime(0.0001, t+0.16+Math.random()*0.06);
+    ts.connect(tlp); tlp.connect(tg); tg.connect(dlp);
+    ts.start(t); ts.stop(t+0.3);
+
+    // 2) Body — dark lowpass-swept noise (already low; the thud's weight)
+    var bLen = 0.45+Math.random()*0.35;
+    var src = noiseSrc();
+    var lp = actx.createBiquadFilter(); lp.type='lowpass';
+    lp.frequency.setValueAtTime(300+Math.random()*160, t);
+    lp.frequency.exponentialRampToValueAtTime(70+Math.random()*35, t+bLen*0.8);
+    var g = actx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.85*power, t+0.014);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+bLen);
+    src.connect(lp); lp.connect(g); g.connect(dlp);
+    src.start(t); src.stop(t+bLen+0.05);
+
+    // 3) Sub thump — deep sine core, low pitch
+    var f0 = 80+Math.random()*40;
+    var osc = actx.createOscillator(); osc.type='sine';
+    osc.frequency.setValueAtTime(f0, t);
+    osc.frequency.exponentialRampToValueAtTime(34+Math.random()*12, t+0.34);
+    var og = actx.createGain();
+    og.gain.setValueAtTime(0.0001, t);
+    og.gain.exponentialRampToValueAtTime(0.95*power, t+0.012);
+    og.gain.exponentialRampToValueAtTime(0.0001, t+0.34+Math.random()*0.18);
+    osc.connect(og); og.connect(dlp);
+    osc.start(t); osc.stop(t+0.6);
+
+    // 4) Rumble tail — long, very-low filtered noise that rolls away
+    var rLen = 0.9+Math.random()*1.0;
+    var rs = noiseSrc(0.45+Math.random()*0.25);
+    var rlp = actx.createBiquadFilter(); rlp.type='lowpass'; rlp.frequency.value = 95+Math.random()*45;
+    var rg = actx.createGain();
+    rg.gain.setValueAtTime(0.0001, t+0.02);
+    rg.gain.exponentialRampToValueAtTime(0.34*power, t+0.10);
+    rg.gain.exponentialRampToValueAtTime(0.0001, t+rLen);
+    rs.connect(rlp); rlp.connect(rg); rg.connect(dlp);
+    rs.start(t); rs.stop(t+rLen+0.05);
+  }
+  // Distant crackle — soft, low, muffled pops rolling in after the thud.
+  // Kept dark and quiet; over distance you hear faint patter, not sizzle.
+  function crackle(out, dur, intensity, t0){
+    var n = Math.floor(intensity*11);
+    for(var i=0;i<n;i++){
+      var t = t0 + 0.10 + Math.random()*dur;
+      var loud = Math.random()<0.12;            // occasional standout pop
+      var src = noiseSrc(0.7+Math.random()*0.5);
+      var bp = actx.createBiquadFilter(); bp.type='bandpass';
+      bp.frequency.value = 700 + Math.random()*1400;   // low/muffled, not tinny
+      bp.Q.value = loud ? 1.2 : 2.0;
+      var g = actx.createGain();
+      var ln = loud ? (0.04+Math.random()*0.06) : (0.015+Math.random()*0.04);
+      var peak = loud ? 0.075 : 0.038;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(peak, t+0.004);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+ln);
+      src.connect(bp); bp.connect(g); g.connect(out);
+      src.start(t); src.stop(t+ln+0.02);
+    }
+  }
+  function burstSound(type, x, y){
+    if(!actx || !fxMaster) return;
+    var power=1, dur=1.0, inten=1;
+    if(type==='mickey'){ power=1.2; dur=1.3; inten=1.4; }
+    else if(type==='chrysanthemum'){ power=1.1; dur=1.5; inten=1.7; }
+    else if(type==='willow'){ power=0.95; dur=1.9; inten=1.3; }
+    else if(type==='comet'){ power=0.8; dur=0.8; inten=0.7; }
+    else if(type==='double'){ power=1.05; dur=1.1; inten=1.2; }
+
+    // Distance model — viewer stands below/in front of the castle.
+    var vx=W/2, vy=H*1.25, diag=Math.sqrt(W*W+H*H);
+    var dist=Math.sqrt((x-vx)*(x-vx)+(y-vy)*(y-vy))/diag;     // ~0.4..1
+    var d01=Math.max(0,Math.min(1,(dist-0.3)/0.7));
+    var delay=0.16 + d01*0.45 + Math.random()*0.05;          // sound lags the flash
+    var cut=900 - d01*420;                                    // far = darker (deep thud)
+    var gainScale=1 - d01*0.28;
+    var wet=0.40 + d01*0.50;                                  // far = more distant space
+
+    var t=actx.currentTime + delay;
+    var o=fxOut(x, wet);
+    boom(o, power*gainScale, t, cut);
+    crackle(o, dur, inten*gainScale, t);
+  }
+
   // ── Fade audio out then stop ──────────────────────────────
   function stopAudio(){
+    if(actx && fxMaster){
+      try{ fxMaster.gain.cancelScheduledValues(actx.currentTime);
+           fxMaster.gain.setValueAtTime(fxMaster.gain.value, actx.currentTime);
+           fxMaster.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+1.0); }catch(e){}
+    }
     if(!fwAudio || fwAudio.paused) return;
     var vol  = fwAudio.volume;
     var step = vol / (1200 / 16);
@@ -1611,6 +1769,7 @@
 
     // Play audio — inside a click handler so browser always allows it
     if(fwAudio){ fwAudio.volume=0.72; fwAudio.play().catch(function(){}); }
+    initAudioFX();  // start the synthesized SFX engine (needs the user gesture)
 
     // Fade prompt out (reveals canvas + castle underneath)
     fwPrompt.style.opacity = '0';
@@ -1655,7 +1814,7 @@
 
     for(var ri=rockets.length-1;ri>=0;ri--){
       var rk=rockets[ri];
-      if(rk.exploded){ explode(rk.x,rk.y,rk.type); rockets.splice(ri,1); }
+      if(rk.exploded){ explode(rk.x,rk.y,rk.type); burstSound(rk.type,rk.x,rk.y); rockets.splice(ri,1); }
       else { rk.tick(); rk.draw(); }
     }
 
