@@ -1,14 +1,339 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b2e4a"><title>Animatronic Maintenance Intelligence</title><style>
-:root{--n:#0b2e4a;--c:#00a6b2;--bg:#eef3f6;--w:#fff;--l:#d7e1e8;--t:#18344c;--m:#607588;--g:#24a866;--a:#d99a2b;--r:#d9534f}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:14px system-ui,-apple-system,sans-serif}.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}.side{background:linear-gradient(#0b2e4a,#071f32);color:#fff;padding:24px 14px;position:sticky;top:0;height:100vh}.brand{font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:13px}.brand small{display:block;color:#a9bdcc;font-weight:400;text-transform:none;letter-spacing:0;margin-top:4px}.nav{display:grid;gap:5px;margin-top:25px}.nav button{border:0;background:0;color:#bdd0dc;padding:11px;border-radius:8px;text-align:left}.nav button.active,.nav button:hover{background:#0d5364;color:#fff}.main{padding:24px 28px}.eye{color:var(--c);font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}h1{font-size:27px;margin:5px 0;color:var(--n)}.muted{color:var(--m);font-size:12px}.grid{display:grid;gap:13px}.g4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.card{background:#fff;border:1px solid var(--l);border-radius:12px;padding:15px;box-shadow:0 10px 26px #0b2e4a12}.label{font-size:9px;color:var(--m);text-transform:uppercase;letter-spacing:.08em}.value{font-size:27px;font-weight:800;color:var(--n);margin-top:4px}.good{color:var(--g)}.warn{color:var(--a)}.bad{color:var(--r)}.sec{margin:21px 0 9px}.sec h2{font-size:15px;margin:0;color:var(--n)}.sec p{margin:3px 0;color:var(--m);font-size:11px}.health{display:flex;gap:13px;align-items:center}.ring{width:96px;height:96px;border-radius:50%;background:conic-gradient(var(--a) 72%,#e6edf1 0);display:grid;place-items:center;position:relative}.ring:after{content:"";position:absolute;inset:9px;background:#fff;border-radius:50%}.ring b{z-index:1;font-size:26px}.bar{height:8px;background:#e6edf1;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:var(--a)}.row{margin-top:11px}.rh{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px}.task{padding:11px 0;border-bottom:1px solid #e6edf1}.badge{display:inline-block;padding:4px 7px;border-radius:20px;font-size:9px;font-weight:800}.inspect{background:#fff0ef;color:var(--r)}.watch{background:#fff7e8;color:#ae7314}.verify{background:#eaf6f7;color:#087f88}.task p,.item small{font-size:10px;color:var(--m);line-height:1.45}.list{display:grid;gap:8px;margin-top:10px}.item{border:1px solid var(--l);border-radius:9px;padding:10px;background:#fbfcfd}.item small{display:block;margin-top:3px}.view{display:none}.view.active{display:block}.menu{display:none;background:#fff;border:1px solid var(--l);padding:8px;border-radius:8px}@media(max-width:800px){.app{display:block}.side{position:fixed;z-index:9;width:270px;left:0;transform:translateX(-105%);transition:.2s}.side.open{transform:none}.menu{display:block}.main{padding:15px}.g4,.g2{grid-template-columns:1fr 1fr}}@media(max-width:520px){.g4,.g2{grid-template-columns:1fr}h1{font-size:22px}}
-</style></head><body><div class="app"><aside class="side" id="side"><div class="brand">Maintenance Intelligence<small>Animatronic health platform</small></div><div class="nav" id="nav"><button class="active" data-v="health">Figure Health</button><button data-v="tasks">Maintenance Tasks</button><button data-v="cable">Harness / Cable</button><button data-v="home">Homing Health</button><button data-v="vib">Vibration</button></div></aside><main class="main"><button class="menu" id="menu">Sections</button><div class="eye">Figure 07 · production health</div><h1 id="title">Overall Figure Health</h1><div class="muted">Interactive showcase · simulated telemetry</div>
-<section id="health" class="view active"><div class="grid g4" style="margin-top:18px"><div class="card"><div class="label">Overall health</div><div class="value">84 /100</div><small class="warn">↓ 3 / 30 days</small></div><div class="card"><div class="label">Open maintenance</div><div class="value">3</div><small class="bad">1 inspection</small></div><div class="card"><div class="label">Harness watch</div><div class="value">2</div><small class="warn">H-14 highest</small></div><div class="card"><div class="label">Verified repairs</div><div class="value">18</div><small class="good">94% recovery</small></div></div><div class="sec"><h2>Right Shoulder Health</h2><p>Matched-motion condition indicators.</p></div><div class="grid g2"><div class="card"><div class="health"><div class="ring"><b>72</b></div><div><h3>Right Shoulder</h3><b class="warn">DEGRADING</b><p class="muted">Effort, settling and vibration are rising together.</p></div></div><div class="row"><div class="rh"><span>Motion Effort</span><span>+18%</span></div><div class="bar"><i style="width:78%"></i></div></div><div class="row"><div class="rh"><span>Following Error</span><span>+9%</span></div><div class="bar"><i style="width:64%"></i></div></div><div class="row"><div class="rh"><span>Settling Time</span><span>+22%</span></div><div class="bar"><i style="width:82%"></i></div></div><div class="row"><div class="rh"><span>Vibration</span><span>+31%</span></div><div class="bar"><i style="width:88%;background:var(--r)"></i></div></div></div><div class="card"><h3>Likely contributors</h3><div class="list"><div class="item"><b>1. Mechanical looseness</b><small>Vibration + settling signature</small></div><div class="item"><b>2. Drivetrain compliance</b><small>Reversal / residual pattern</small></div><div class="item"><b>3. Bearing / gearbox wear</b><small>Effort + spectral evidence</small></div></div></div></div></section>
-<section id="tasks" class="view"><div class="sec"><h2>Maintenance Tasks</h2><p>Evidence becomes an actionable task.</p></div><div class="card"><span class="badge inspect">INSPECT</span><h3>Right shoulder feedback path · H-14</h3><div class="task"><b>Evidence</b><p>Feedback disturbances are 4× baseline and cluster at 55°–65° shoulder pitch. Current and torque remain normal.</p></div><div class="task"><b>Action</b><p>Inspect mapped flex zone, strain relief and connector terminations before retuning or replacing the drive.</p></div><div class="task"><b>Verify</b><p>Run matched post-repair exposure and confirm event rate returns to baseline.</p></div></div></section>
-<section id="cable" class="view"><div class="sec"><h2>Harness / Cable Health</h2><p>Exposure plus early electrical evidence.</p></div><div class="grid g4"><div class="card"><div class="label">Flex cycles</div><div class="value">1.48M</div></div><div class="card"><div class="label">Direction changes</div><div class="value">2.75M</div></div><div class="card"><div class="label">Harness age</div><div class="value">14 mo</div></div><div class="card"><div class="label">Exposure percentile</div><div class="value warn">88%</div></div></div><div class="card" style="margin-top:13px"><h3>Early-warning diagnostic loop</h3><p class="muted">Sacrificial/witness conductors follow the same flex environment. Resistance trend and transient continuity events are correlated with operational feedback symptoms before generating a targeted harness inspection.</p></div></section>
-<section id="home" class="view"><div class="sec"><h2>Homing Health</h2><p>Repeatable diagnostic behavior.</p></div><div class="grid g4"><div class="card"><div class="label">Repeatability σ</div><div class="value warn">0.11°</div><small>baseline .04°</small></div><div class="card"><div class="label">Search time</div><div class="value">1.82s</div><small class="warn">+16%</small></div><div class="card"><div class="label">Retries</div><div class="value">2</div></div><div class="card"><div class="label">Search effort</div><div class="value">+8%</div></div></div></section>
-<section id="vib" class="view"><div class="sec"><h2>Vibration Health</h2><p>Matched spectra corroborate mechanical degradation.</p></div><div class="grid g2"><div class="card"><h3>Healthy joint</h3><pre>30 Hz  ████████
-60 Hz  ██
-90 Hz  █</pre></div><div class="card"><h3>Degrading joint</h3><pre>30 Hz  ████████
-60 Hz  █████
-90 Hz  ████
-120 Hz ███</pre></div></div></section>
-</main></div><script>const side=document.getElementById('side'),menu=document.getElementById('menu');menu.onclick=()=>side.classList.toggle('open');document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(b.dataset.v).classList.add('active');document.querySelectorAll('[data-v]').forEach(x=>x.classList.remove('active'));b.classList.add('active');side.classList.remove('open')});</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b2e4a">
+<title>Animatronic Maintenance Intelligence</title>
+<style>
+:root{
+  --navy:#0b2e4a;--navy2:#071f33;--teal:#00a6b2;--teal2:#dff5f6;
+  --bg:#eef3f6;--white:#fff;--line:#d7e1e8;--text:#18344c;--muted:#607588;
+  --green:#24a866;--amber:#d99a2b;--red:#d9534f;--blue:#4d79b8;--violet:#7467b8;
+  --shadow:0 10px 28px rgba(11,46,74,.09)
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button{font:inherit}.app{display:grid;grid-template-columns:245px minmax(0,1fr);min-height:100vh}
+.side{background:linear-gradient(180deg,var(--navy),var(--navy2));color:#fff;padding:22px 15px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{padding:4px 8px 18px;border-bottom:1px solid rgba(255,255,255,.12)}.brand strong{display:block;font-size:14px;letter-spacing:.08em;text-transform:uppercase}.brand span{color:#a9bdcc;font-size:11px}
+.nav{display:grid;gap:4px;margin-top:18px}.nav button{border:0;background:transparent;color:#bfd0db;text-align:left;padding:10px 11px;border-radius:8px;cursor:pointer;display:flex;gap:9px;align-items:center}.nav button:before{content:"";width:6px;height:6px;border-radius:50%;background:#648397}.nav button:hover,.nav button.active{background:#0d5364;color:#fff}.nav button.active:before{background:#64e1e8;box-shadow:0 0 8px #64e1e8}
+.sidefoot{margin-top:20px;padding:14px 8px;border-top:1px solid rgba(255,255,255,.12);font-size:10px;color:#9eb4c2}.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#43d780;margin-right:6px;box-shadow:0 0 8px #43d780}
+.mobile-nav{display:none}.main{min-width:0;padding:23px 28px 40px}.top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}.eyebrow{font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--teal)}h1{font-size:28px;line-height:1.12;margin:5px 0 4px;color:var(--navy)}.top p{margin:0;color:var(--muted);font-size:12px}.top-right{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.pill,.btn{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:8px;padding:8px 10px;font-size:11px}.btn{cursor:pointer}.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}.pill.live{color:#167d4c}.pill.live:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:6px}
+.view{display:none}.view.active{display:block}.grid{display:grid;gap:13px}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.span2{grid-column:span 2}.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px;box-shadow:var(--shadow);min-width:0}.card.dark{background:var(--navy);color:#fff;border-color:var(--navy)}.card h2,.card h3,.section h2{color:var(--navy)}.card.dark h2,.card.dark h3{color:#fff}.card h3{font-size:13px;margin:0 0 4px}.sub{font-size:10px;color:var(--muted)}.dark .sub{color:#aec2cf}
+.metric .label{font-size:9px;color:var(--muted);letter-spacing:.09em;text-transform:uppercase}.metric .value{font-size:27px;font-weight:800;letter-spacing:-.03em;color:var(--navy);margin-top:3px}.metric .delta{font-size:10px;margin-top:3px}.good{color:var(--green)!important}.warn{color:var(--amber)!important}.bad{color:var(--red)!important}.info{color:var(--teal)!important}
+.section{margin:21px 0 9px;display:flex;justify-content:space-between;gap:10px;align-items:end}.section h2{font-size:15px;margin:0}.section p{margin:2px 0 0;color:var(--muted);font-size:10px}
+.live-layout{display:grid;grid-template-columns:360px minmax(0,1fr);gap:13px}.figure-card{position:relative;min-height:520px;overflow:hidden;background:linear-gradient(180deg,#fff,#eef5f7)}.figure-stage{height:425px;position:relative}.figure-stage:before{content:"";position:absolute;inset:35px 65px;border-radius:50%;background:radial-gradient(circle,rgba(0,166,178,.16),rgba(0,166,178,.02) 60%,transparent 72%)}.figure-stage img{display:block!important;position:absolute;left:50%;bottom:8px;transform:translateX(-50%);height:390px;max-width:78%;object-fit:contain;z-index:1;filter:drop-shadow(0 15px 20px rgba(11,46,74,.17))}
+.figure-node{position:absolute;z-index:2;background:rgba(255,255,255,.94);border:1px solid #cbd9e1;border-radius:8px;padding:6px 8px;font-size:9px;box-shadow:0 5px 16px rgba(11,46,74,.08)}.figure-node b{display:block;font-size:10px;color:var(--navy)}.figure-node:after{content:"";position:absolute;right:6px;top:6px;width:6px;height:6px;border-radius:50%;background:var(--green)}.figure-node.warn:after{background:var(--amber)}.node-head{left:8px;top:28px}.node-shoulder{right:8px;top:100px}.node-elbow{right:8px;top:195px}.node-torso{left:8px;top:165px}.node-hand{right:8px;top:295px}.node-base{left:8px;bottom:20px}
+.live-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:7px}.live-box{background:#f5f8fa;border:1px solid #e0e7eb;border-radius:8px;padding:8px}.live-box label{display:block;font-size:8px;color:var(--muted);text-transform:uppercase}.live-box b{font-size:14px;color:var(--navy)}
+.chart{height:225px;position:relative}.chart.sm{height:175px}.chart.lg{height:280px}canvas{width:100%;height:100%;display:block}.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:7px;color:var(--muted);font-size:9px}.legend i{display:inline-block;width:9px;height:3px;border-radius:3px;margin-right:4px;vertical-align:middle}
+.axis-table{width:100%;border-collapse:collapse;font-size:10px}.axis-table th{text-align:left;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.07em;padding:7px;border-bottom:1px solid var(--line)}.axis-table td{padding:8px 7px;border-bottom:1px solid #edf1f3}.axis-table tr:last-child td{border-bottom:0}.status{display:inline-flex;align-items:center;gap:5px}.status:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green)}
+.health-ring{--p:84;--c:var(--green);width:104px;height:104px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--p)*1%),#e5ecef 0);position:relative}.health-ring:after{content:"";position:absolute;inset:9px;border-radius:50%;background:#fff}.health-ring b{z-index:1;font-size:27px;color:var(--navy)}.health-flex{display:flex;gap:14px;align-items:center}.progress{margin-top:11px}.progress .head{display:flex;justify-content:space-between;font-size:10px;margin-bottom:5px}.bar{height:8px;background:#e7edf1;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;border-radius:20px;background:var(--teal)}.bar.warn i{background:var(--amber)}.bar.bad i{background:var(--red)}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:20px;font-size:9px;font-weight:800}.badge:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}.inspect{color:var(--red);background:#fff0ef}.watch{color:#a96f13;background:#fff7e8}.verify{color:#147b83;background:#eaf7f7}.healthy{color:#23784c;background:#eaf7ef}
+.task{display:grid;grid-template-columns:82px minmax(0,1fr) auto;gap:12px;padding:13px 0;border-bottom:1px solid #e9eef1;align-items:start}.task:last-child{border-bottom:0}.task h4{font-size:11px;color:var(--navy);margin:0 0 3px}.task p{font-size:10px;color:var(--muted);margin:0}.meta{display:flex;gap:12px;flex-wrap:wrap;font-size:9px;color:#7890a0;margin-top:6px}
+.callout{border-left:3px solid var(--teal);background:#f2fbfb;padding:11px 12px;border-radius:0 8px 8px 0;font-size:10px;color:#466273}.callout strong{color:var(--navy)}
+.kv{display:grid;grid-template-columns:1fr auto;gap:7px;font-size:10px;margin-top:10px}.kv div:nth-child(odd){color:var(--muted)}.kv div:nth-child(even){text-align:right;font-weight:700}
+.hypo{border:1px solid var(--line);border-radius:9px;padding:10px;margin-top:8px;display:grid;grid-template-columns:1fr 72px;gap:8px}.hypo h4{font-size:10px;margin:0;color:var(--navy)}.hypo p{font-size:9px;color:var(--muted);margin:4px 0 0}.hypo .score{text-align:right;font-size:18px;font-weight:800;color:var(--navy)}
+.timeline{border-left:2px solid #d7e3e8;margin:13px 0 0 7px;padding-left:15px}.event{position:relative;margin-bottom:12px}.event:before{content:"";position:absolute;left:-20px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--teal);border:2px solid #fff}.event b{font-size:10px}.event span{display:block;font-size:9px;color:var(--muted)}
+.pipeline{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.pipe{background:#fff;border:1px solid var(--line);border-top:4px solid var(--teal);border-radius:9px;padding:11px}.pipe b{font-size:10px;color:var(--navy)}.pipe span{display:block;font-size:9px;color:var(--muted);margin-top:5px}
+.spectrum-row{display:grid;grid-template-columns:48px 1fr 38px;gap:7px;align-items:center;font-size:9px;margin:8px 0}.spec{height:9px;background:#e8eef1;border-radius:3px;overflow:hidden}.spec i{display:block;height:100%;background:var(--teal)}
+.footer{margin-top:24px;text-align:center;color:#7c8f9e;font-size:9px}
+@media(max-width:1100px){.live-layout{grid-template-columns:300px 1fr}.g4{grid-template-columns:repeat(2,1fr)}.pipeline{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:820px){
+ .app{display:block}.side{display:none}.mobile-nav{display:flex;position:sticky;top:0;z-index:20;background:var(--navy);overflow-x:auto;gap:4px;padding:8px max(9px,env(safe-area-inset-left));-webkit-overflow-scrolling:touch}.mobile-nav button{flex:0 0 auto;border:0;background:transparent;color:#bcd0db;border-radius:7px;padding:9px 10px;font-size:10px}.mobile-nav button.active{background:#0d5364;color:#fff}
+ .main{padding:14px 12px 28px}.top{display:block}.top-right{justify-content:flex-start;margin-top:10px}.live-layout{grid-template-columns:1fr}.figure-card{min-height:0}.figure-stage{height:410px}.figure-stage img{height:375px;max-width:76%}
+ .g2,.g3{grid-template-columns:1fr}.g4{grid-template-columns:repeat(2,1fr)}.span2{grid-column:auto}.task{grid-template-columns:1fr}.pipeline{grid-template-columns:repeat(2,1fr)}.chart{height:205px}.chart.lg{height:230px}
+}
+@media(max-width:480px){
+ h1{font-size:22px}.main{padding-left:10px;padding-right:10px}.g4{grid-template-columns:1fr 1fr}.metric .value{font-size:22px}.figure-stage{height:385px}.figure-stage img{height:350px;max-width:82%}.figure-node{font-size:8px;padding:5px 6px}.node-head{left:3px}.node-shoulder{right:3px}.node-elbow{right:3px}.node-torso{left:3px}.node-hand{right:3px}.node-base{left:3px}.live-strip{grid-template-columns:repeat(3,1fr)}.live-box b{font-size:12px}.pipeline{grid-template-columns:1fr}.chart{height:190px}.top-right .pill{font-size:9px;padding:6px 8px}
+}
+</style>
+</head>
+<body>
+<div class="mobile-nav" id="mnav">
+ <button class="active" data-view="live">Live Figure</button><button data-view="health">Health</button><button data-view="tasks">Tasks</button><button data-view="cable">Cable</button><button data-view="encoder">Encoder</button><button data-view="home">Homing</button><button data-view="vib">Vibration</button><button data-view="trouble">Troubleshoot</button><button data-view="models">Models</button><button data-view="architecture">Architecture</button>
+</div>
+<div class="app">
+<aside class="side">
+ <div class="brand"><strong>Maintenance Intelligence</strong><span>Animatronic ML maintenance platform</span></div>
+ <div class="nav" id="nav">
+  <button class="active" data-view="live">Live Figure</button><button data-view="health">Figure Health</button><button data-view="tasks">Maintenance Tasks</button><button data-view="cable">Harness / Cable</button><button data-view="encoder">Encoder Health</button><button data-view="home">Homing Health</button><button data-view="vib">Vibration</button><button data-view="trouble">Troubleshoot</button><button data-view="models">Model Evidence</button><button data-view="architecture">Architecture</button>
+ </div>
+ <div class="sidefoot"><div><span class="live-dot"></span>Simulated figure online</div><div>Figure 07 · baseline v3.4</div><div>Advisory maintenance layer</div></div>
+</aside>
+<main class="main">
+ <div class="top">
+  <div><div class="eyebrow">Figure 07 · production health</div><h1 id="pageTitle">Live Figure Intelligence</h1><p id="pageDesc">Simulated real-time TwinCAT / Elmo telemetry and maintenance health.</p></div>
+  <div class="top-right"><span class="pill live" id="runState">SHOW RUNNING</span><span class="pill" id="animName">Animation: A17</span><span class="pill" id="frameRead">Frame 0000</span><button class="btn" id="pauseBtn">Pause demo</button></div>
+ </div>
+
+ <section id="live" class="view active">
+  <div class="grid g4">
+   <div class="card metric"><div class="label">Overall figure health</div><div class="value">84<span style="font-size:12px"> /100</span></div><div class="delta warn">Right shoulder degrading</div></div>
+   <div class="card metric"><div class="label">Active axes</div><div class="value" id="activeAxes">6</div><div class="delta good">Motion valid</div></div>
+   <div class="card metric"><div class="label">Show cycle</div><div class="value" id="cycleRead">18,442</div><div class="delta">Move 42 · outbound</div></div>
+   <div class="card metric"><div class="label">Open intelligence</div><div class="value">3</div><div class="delta bad">1 inspect · 1 watch · 1 verify</div></div>
+  </div>
+  <div class="section"><div><h2>Live Figure HMI</h2><p>The figure is simulated as active and moving so the dashboard can demonstrate real-time condition intelligence.</p></div></div>
+  <div class="live-layout">
+   <div class="card figure-card">
+    <div class="figure-stage">
+     <img src="assets/figure.png" alt="Animatronic figure">
+     <div class="figure-node node-head"><b>Head / Neck</b><span id="nHead">+2.4°</span></div>
+     <div class="figure-node warn node-shoulder"><b>Right Shoulder</b><span id="nShoulder">57.2°</span></div>
+     <div class="figure-node node-elbow"><b>Right Elbow</b><span id="nElbow">31.0°</span></div>
+     <div class="figure-node node-torso"><b>Torso</b><span id="nTorso">-4.1°</span></div>
+     <div class="figure-node node-hand"><b>Right Hand</b><span id="nHand">12.2°</span></div>
+     <div class="figure-node node-base"><b>Motion Base</b><span id="nBase">0.18 m</span></div>
+    </div>
+    <div class="live-strip">
+     <div class="live-box"><label>Shoulder velocity</label><b id="velLive">18.4°/s</b></div>
+     <div class="live-box"><label>Motor current</label><b id="curLive">4.8 A</b></div>
+     <div class="live-box"><label>Following error</label><b id="errLive">0.34°</b></div>
+    </div>
+   </div>
+   <div class="grid g2">
+    <div class="card span2"><h3>Right Shoulder · commanded vs actual position</h3><div class="sub">Cycle-synchronous illustrative servo data · rolling 12 seconds</div><div class="chart"><canvas id="positionChart"></canvas></div><div class="legend"><span><i style="background:#00a6b2"></i>Commanded</span><span><i style="background:#0b2e4a"></i>Actual</span></div></div>
+    <div class="card"><h3>Effort · current and torque</h3><div class="sub">Same move, continuously evaluated against expected effort</div><div class="chart sm"><canvas id="effortChart"></canvas></div></div>
+    <div class="card"><h3>Following error</h3><div class="sub">Waveform health matters more than a single peak</div><div class="chart sm"><canvas id="errorChart"></canvas></div></div>
+    <div class="card span2"><h3>Live axis state</h3><table class="axis-table"><thead><tr><th>Axis</th><th>Position</th><th>Velocity</th><th>Current</th><th>Health</th></tr></thead><tbody id="axisRows"></tbody></table></div>
+   </div>
+  </div>
+ </section>
+
+ <section id="health" class="view">
+  <div class="grid g4">
+   <div class="card metric"><div class="label">Overall</div><div class="value">84</div><div class="delta warn">-3 / 30 days</div></div>
+   <div class="card metric"><div class="label">Cable health</div><div class="value warn">67</div><div class="delta">H-14 drives risk</div></div>
+   <div class="card metric"><div class="label">Motion health</div><div class="value">88</div><div class="delta good">Mostly stable</div></div>
+   <div class="card metric"><div class="label">Homing health</div><div class="value warn">79</div><div class="delta">Repeatability drifting</div></div>
+  </div>
+  <div class="section"><div><h2>Overall Figure Health HMI</h2><p>Scores summarize explainable evidence while preserving the underlying measurements.</p></div></div>
+  <div class="grid g2">
+   <div class="card"><div class="health-flex"><div class="health-ring" style="--p:72;--c:var(--amber)"><b>72</b></div><div><h3>Right Shoulder</h3><b class="warn">DEGRADING</b><div class="sub">Matched-motion effort, settling and vibration are rising together.</div></div></div>
+    <div class="progress"><div class="head"><span>Motion Effort</span><span>+18%</span></div><div class="bar warn"><i style="width:78%"></i></div></div>
+    <div class="progress"><div class="head"><span>Following Error</span><span>+9%</span></div><div class="bar warn"><i style="width:64%"></i></div></div>
+    <div class="progress"><div class="head"><span>Settling Time</span><span>+22%</span></div><div class="bar warn"><i style="width:82%"></i></div></div>
+    <div class="progress"><div class="head"><span>Vibration</span><span>+31%</span></div><div class="bar bad"><i style="width:88%"></i></div></div>
+   </div>
+   <div class="card"><h3>30-day health trend</h3><div class="sub">Figure, cable and right-shoulder condition index</div><div class="chart"><canvas id="healthTrend"></canvas></div></div>
+   <div class="card"><h3>Likely contributors · Right Shoulder</h3><div class="kv"><div>Mechanical looseness</div><div>72%</div><div>Increasing drivetrain compliance</div><div>61%</div><div>Bearing / gearbox wear</div><div>49%</div><div>Feedback-path electrical</div><div>18%</div></div><div class="callout" style="margin-top:12px"><strong>Maintenance action:</strong> inspect fasteners, joint mounting, coupler/reducer interfaces and bearing condition before changing tuning.</div></div>
+   <div class="card"><h3>Subsystem health</h3><table class="axis-table"><tbody><tr><td>Head / neck</td><td><span class="badge healthy">92 stable</span></td></tr><tr><td>Torso</td><td><span class="badge healthy">91 stable</span></td></tr><tr><td>Right shoulder</td><td><span class="badge watch">72 degrading</span></td></tr><tr><td>Right elbow</td><td><span class="badge healthy">88 stable</span></td></tr><tr><td>Right hand</td><td><span class="badge healthy">86 stable</span></td></tr><tr><td>Motion base</td><td><span class="badge healthy">89 stable</span></td></tr></tbody></table></div>
+  </div>
+ </section>
+
+ <section id="tasks" class="view">
+  <div class="section"><div><h2>Prioritized Maintenance Work</h2><p>Every task includes evidence, physical target, next action and repair verification.</p></div></div>
+  <div class="card">
+   <div class="task"><div><span class="badge inspect">INSPECT</span></div><div><h4>Right shoulder feedback path · H-14</h4><p>Feedback disturbances are 4× matched baseline and cluster at 55–65° shoulder pitch. Current and torque remain normal.</p><div class="meta"><span>Confidence 86%</span><span>Flex exposure 88th percentile</span><span>Connector J4 mapped</span></div></div><button class="btn primary" data-view="trouble">Troubleshoot</button></div>
+   <div class="task"><div><span class="badge watch">WATCH</span></div><div><h4>Right shoulder mechanical condition</h4><p>Effort +18%, settling +22% and vibration +31% across matched animation executions.</p><div class="meta"><span>Health 72/100</span><span>Trend 21 days</span></div></div><button class="btn" data-view="vib">Evidence</button></div>
+   <div class="task"><div><span class="badge verify">VERIFY</span></div><div><h4>Neck harness repair</h4><p>Post-repair dropout signature returned to baseline. Validation exposure is 2,400 / 3,000 required cycles.</p></div><button class="btn" data-view="encoder">Review</button></div>
+  </div>
+  <div class="grid g2" style="margin-top:13px">
+   <div class="card"><h3>Generated task · H-14 feedback path</h3><div class="timeline"><div class="event"><b>Review event captures</b><span>Confirm move 42 / pose 55–65° and data validity.</span></div><div class="event"><b>Inspect physical flex zone</b><span>Routing, over-bend, clamp stress, abrasion, strain relief.</span></div><div class="event"><b>Inspect connector J4</b><span>Feedback pins, retention and termination.</span></div><div class="event"><b>Approved isolated electrical test</b><span>Continuity / resistance / flex test where procedure permits.</span></div><div class="event"><b>Repair + validate</b><span>Capture actual defect and run matched post-repair exposure.</span></div></div></div>
+   <div class="card"><h3>Why this is smarter than an alarm</h3><div class="callout"><strong>The task is generated from correlated evidence:</strong> feedback discontinuity + pose clustering + normal mechanical effort + clean EtherCAT diagnostics. That points maintenance toward the feedback conductor path without pretending the model knows the exact broken wire.</div></div>
+  </div>
+ </section>
+
+ <section id="cable" class="view">
+  <div class="grid g4">
+   <div class="card metric"><div class="label">Flex cycles</div><div class="value">1.48M</div><div class="delta">H-14 instance</div></div>
+   <div class="card metric"><div class="label">Direction changes</div><div class="value">2.75M</div><div class="delta">Qualified reversals</div></div>
+   <div class="card metric"><div class="label">Harness age</div><div class="value">14 mo</div><div class="delta">Routing rev C</div></div>
+   <div class="card metric"><div class="label">Exposure percentile</div><div class="value warn">88%</div><div class="delta">Fleet-matched peers</div></div>
+  </div>
+  <div class="section"><div><h2>Harness / Cable Health</h2><p>Motion exposure becomes useful when combined with observable electrical precursors and repair history.</p></div></div>
+  <div class="grid g2">
+   <div class="card"><h3>Pose-conditioned feedback anomaly density</h3><div class="sub">Events per 1,000 valid traversals; hotspot identifies where the harness is stressed.</div><div class="chart"><canvas id="poseChart"></canvas></div></div>
+   <div class="card"><h3>Feedback anomaly rate · 30 days</h3><div class="sub">Normalized by opportunities, not clock time.</div><div class="chart"><canvas id="harnessTrend"></canvas></div></div>
+   <div class="card"><h3>Early-warning sacrificial conductor</h3><div class="sub">Diagnostic loop routed through the same moving bundle.</div><div class="chart"><canvas id="witnessChart"></canvas></div><div class="kv"><div>Baseline resistance</div><div>0.84 Ω</div><div>Current compensated resistance</div><div class="warn">0.92 Ω</div><div>Transient continuity events</div><div class="warn">3 / 10k cycles</div></div></div>
+   <div class="card"><h3>Harness action logic</h3><div class="callout"><strong>WATCH:</strong> high exposure alone raises inspection priority but does not predict a break.</div><div class="callout" style="margin-top:8px"><strong>INSPECT:</strong> exposure + rising event rate + pose localization produces a targeted harness task.</div><div class="callout" style="margin-top:8px"><strong>PLAN REPLACEMENT:</strong> only after field failures establish a validated exposure / degradation relationship.</div></div>
+  </div>
+ </section>
+
+ <section id="encoder" class="view">
+  <div class="grid g4">
+   <div class="card metric"><div class="label">Dropouts / 10k moves</div><div class="value bad">4.0</div><div class="delta">Baseline 1.0</div></div>
+   <div class="card metric"><div class="label">Position steps</div><div class="value">11</div><div class="delta">30-day window</div></div>
+   <div class="card metric"><div class="label">Pose correlation</div><div class="value warn">81%</div><div class="delta">55–65° shoulder</div></div>
+   <div class="card metric"><div class="label">EtherCAT errors</div><div class="value good">0</div><div class="delta">During feedback events</div></div>
+  </div>
+  <div class="section"><div><h2>Encoder / Feedback Cable Monitoring</h2><p>Separate feedback-path intermittency from mechanical load and network problems.</p></div></div>
+  <div class="grid g2">
+   <div class="card"><h3>Captured feedback event</h3><div class="sub">Position residual impulse with normal current response</div><div class="chart"><canvas id="encoderEventChart"></canvas></div></div>
+   <div class="card"><h3>Diagnostic evidence</h3><div class="kv"><div>Feedback discontinuity</div><div class="bad">Present</div><div>Motor current change</div><div class="good">Normal</div><div>Torque residual</div><div class="good">Normal</div><div>EtherCAT WKC / CRC</div><div class="good">Clean</div><div>Repeated pose region</div><div class="warn">55–65°</div></div><div class="callout" style="margin-top:12px"><strong>Action:</strong> inspect encoder conductor pair, connector pins, strain relief and mapped flex segment before servo retuning or drive replacement.</div></div>
+  </div>
+ </section>
+
+ <section id="home" class="view">
+  <div class="grid g4">
+   <div class="card metric"><div class="label">Home repeatability σ</div><div class="value warn">0.11°</div><div class="delta">Baseline 0.04°</div></div>
+   <div class="card metric"><div class="label">Search time</div><div class="value">1.82 s</div><div class="delta warn">+16%</div></div>
+   <div class="card metric"><div class="label">Retries</div><div class="value">2</div><div class="delta">Last 500 homes</div></div>
+   <div class="card metric"><div class="label">Search effort</div><div class="value">+8%</div><div class="delta">Matched starts</div></div>
+  </div>
+  <div class="section"><div><h2>Homing Health</h2><p>Homing is a repeatable diagnostic routine: reference capture, edge quality, time, effort and retries.</p></div></div>
+  <div class="grid g2">
+   <div class="card"><h3>Home capture position · last 40 cycles</h3><div class="chart"><canvas id="homeChart"></canvas></div></div>
+   <div class="card"><h3>Interpretation</h3><div class="callout"><strong>Reference drift + clean edges:</strong> inspect target, bracket, encoder reference or mechanical stop.</div><div class="callout" style="margin-top:8px"><strong>Edge chatter + pose dependence:</strong> inspect sensor wiring and connector path.</div><div class="callout" style="margin-top:8px"><strong>Increasing search effort:</strong> investigate drag, interference or brake release.</div></div>
+  </div>
+ </section>
+
+ <section id="vib" class="view">
+  <div class="section"><div><h2>Vibration / Mechanical Health</h2><p>Spectral changes become powerful when they agree with effort, following error and settling evidence.</p></div></div>
+  <div class="grid g2">
+   <div class="card"><h3>Healthy vs degrading joint spectrum</h3><div class="chart"><canvas id="vibSpectrum"></canvas></div><div class="legend"><span><i style="background:#00a6b2"></i>Healthy</span><span><i style="background:#d99a2b"></i>Degrading</span></div></div>
+   <div class="card"><h3>Live accelerometer waveform</h3><div class="sub">Illustrative vibration burst synchronized to current move</div><div class="chart"><canvas id="vibWave"></canvas></div></div>
+   <div class="card"><h3>Right Shoulder condition</h3><div class="progress"><div class="head"><span>Motion Effort</span><span>+18%</span></div><div class="bar warn"><i style="width:78%"></i></div></div><div class="progress"><div class="head"><span>Following Error</span><span>+9%</span></div><div class="bar warn"><i style="width:64%"></i></div></div><div class="progress"><div class="head"><span>Settling Time</span><span>+22%</span></div><div class="bar warn"><i style="width:82%"></i></div></div><div class="progress"><div class="head"><span>Vibration</span><span>+31%</span></div><div class="bar bad"><i style="width:88%"></i></div></div></div>
+   <div class="card"><h3>Maintenance action</h3><div class="callout"><strong>Inspect:</strong> fasteners, joint mounting, coupling/reducer interfaces, bearing condition and structural interference. Preserve pre-repair spectrum and compare after corrective work.</div></div>
+  </div>
+ </section>
+
+ <section id="trouble" class="view">
+  <div class="section"><div><h2>Guided Troubleshooting Workspace</h2><p>What happened first, what shares the circuit, and which approved test best separates the remaining causes?</p></div></div>
+  <div class="grid g2">
+   <div class="card"><h3>Synchronized event replay</h3><div class="chart lg"><canvas id="replayChart"></canvas></div><div class="legend"><span><i style="background:#00a6b2"></i>Position residual</span><span><i style="background:#d9534f"></i>Feedback event</span><span><i style="background:#0b2e4a"></i>Current residual</span></div></div>
+   <div class="card"><h3>Event chronology</h3><div class="timeline"><div class="event"><b>02:14:36.481 · feedback discontinuity</b><span>One-cycle encoder validity event at shoulder 61.8°.</span></div><div class="event"><b>+2 ms · position residual impulse</b><span>Following error rises sharply.</span></div><div class="event"><b>+4 ms · drive warning</b><span>Tracking warning follows the feedback disturbance.</span></div><div class="event"><b>Mechanical effort remains normal</b><span>No coincident current / torque increase.</span></div></div></div>
+   <div class="card"><h3>Competing hypotheses</h3><div class="hypo"><div><h4>Harness / connector intermittency</h4><p>Pose association + feedback event + normal effort.</p></div><div class="score">86%</div></div><div class="hypo"><div><h4>Encoder / local supply electronics</h4><p>Still plausible until isolated electrical checks.</p></div><div class="score">42%</div></div><div class="hypo"><div><h4>Mechanical drag</h4><p>Contradicted by normal current and torque during event.</p></div><div class="score">12%</div></div></div>
+   <div class="card"><h3>Next useful maintenance action</h3><div class="callout"><strong>Inspect H-14 flex zone and connector J4 feedback pins.</strong> Use the approved isolated harness test procedure. Record exact physical finding and repair location, then run matched validation exposure.</div></div>
+  </div>
+ </section>
+
+ <section id="models" class="view">
+  <div class="section"><div><h2>Machine Learning Evidence</h2><p>Start interpretable, use known-good baselines, then add supervised diagnosis as verified maintenance labels accumulate.</p></div></div>
+  <div class="grid g3">
+   <div class="card"><h3>Expected behavior</h3><div class="sub">Regression</div><p style="font-size:10px">I_expected = f(position, velocity, acceleration, direction, temperature, move, configuration)</p><div class="callout">Trend measured-minus-expected effort to expose increasing friction or load.</div></div>
+   <div class="card"><h3>Unusual behavior</h3><div class="sub">PCA / Isolation Forest</div><p style="font-size:10px">Known-good move-level feature vectors establish the normal operating envelope.</p><div class="callout">Output is an anomaly score plus contributing features, not a failure verdict.</div></div>
+   <div class="card"><h3>Likely failure domain</h3><div class="sub">XGBoost / Random Forest</div><p style="font-size:10px">Train only after confirmed repair outcomes create trustworthy labels.</p><div class="callout">Rank cable/feedback, mechanical, network, supply, brake and unknown.</div></div>
+   <div class="card span2"><h3>Current feature contribution · Right Shoulder</h3><div class="chart"><canvas id="featureChart"></canvas></div></div>
+   <div class="card"><h3>Model guardrails</h3><div class="callout">Missing telemetry = UNKNOWN, never healthy.</div><div class="callout" style="margin-top:8px">A model can recommend work; it cannot command motion, clear faults or bypass protections.</div><div class="callout" style="margin-top:8px">Post-repair validation produces the strongest maintenance label.</div></div>
+  </div>
+ </section>
+
+ <section id="architecture" class="view">
+  <div class="section"><div><h2>Platform Architecture</h2><p>From synchronized figure telemetry to a verified maintenance outcome.</p></div></div>
+  <div class="pipeline">
+   <div class="pipe"><b>01 · Acquire</b><span>TwinCAT + Elmo position, velocity, current, torque, feedback, states, EtherCAT, I/O and optional sensors.</span></div>
+   <div class="pipe"><b>02 · Context</b><span>Figure, axis, animation, move, pose, direction, harness, connector, maintenance revision.</span></div>
+   <div class="pipe"><b>03 · Features</b><span>Residuals, settling, event rates, pose density, flex exposure, spectra, cross-channel coincidence.</span></div>
+   <div class="pipe"><b>04 · Infer</b><span>Expected behavior, anomaly detection, cause ranking and degradation trends.</span></div>
+   <div class="pipe"><b>05 · Act</b><span>Generate a targeted inspection or verification task with evidence and physical location.</span></div>
+   <div class="pipe"><b>06 · Verify</b><span>Record the actual finding, repair, measurements and post-repair signature recovery.</span></div>
+  </div>
+  <div class="grid g2" style="margin-top:13px">
+   <div class="card"><h3>Runtime deployment</h3><p class="sub">TwinCAT handles bounded acquisition and optional validated inference. A local service handles historian, Python training, heavier analytics and the browser dashboard.</p></div>
+   <div class="card"><h3>Safety boundary</h3><p class="sub">TwinSAFE, drive protection, hard limits, interlocks and deterministic control remain authoritative. The ML platform observes, explains, trends and recommends.</p></div>
+  </div>
+ </section>
+ <div class="footer">Simulated showcase data · proposed maintenance intelligence platform · no control or safety authority</div>
+</main></div>
+
+<script>
+(function(){
+var meta={
+ live:["Live Figure Intelligence","Simulated real-time TwinCAT / Elmo telemetry and maintenance health."],
+ health:["Overall Figure Health","Condition scores, degradation trends and explainable subsystem evidence."],
+ tasks:["Maintenance Tasks","Smart work generation from persistent, localized evidence."],
+ cable:["Harness / Cable Health","Flex exposure, pose-conditioned anomalies and early-warning diagnostic loops."],
+ encoder:["Encoder / Feedback Health","Feedback cable intermittency separated from network and mechanical signatures."],
+ home:["Homing Health","Repeatability, search time, edge quality, effort and retry trends."],
+ vib:["Vibration / Mechanical Health","Spectral and time-domain evidence correlated with motion effort."],
+ trouble:["Guided Troubleshooting","Timeline reconstruction, competing hypotheses and the next discriminating test."],
+ models:["Model Evidence","Expected behavior, anomaly detection and supervised failure-domain ranking."],
+ architecture:["Platform Architecture","Acquire, contextualize, infer, act and verify without touching the safety chain."]
+};
+function showView(id){
+ document.querySelectorAll(".view").forEach(function(x){x.classList.remove("active")});
+ var v=document.getElementById(id);if(v)v.classList.add("active");
+ document.querySelectorAll("[data-view]").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-view")===id)});
+ document.getElementById("pageTitle").textContent=meta[id][0];
+ document.getElementById("pageDesc").textContent=meta[id][1];
+ window.scrollTo(0,0);setTimeout(drawVisible,20);
+}
+document.querySelectorAll("[data-view]").forEach(function(b){b.addEventListener("click",function(){showView(this.getAttribute("data-view"))})});
+
+var colors={teal:"#00a6b2",navy:"#0b2e4a",amber:"#d99a2b",red:"#d9534f",green:"#24a866",blue:"#4d79b8",violet:"#7467b8",grid:"#e4ebef",muted:"#7890a0"};
+function prep(id){
+ var c=document.getElementById(id);if(!c||c.offsetParent===null)return null;
+ var r=c.getBoundingClientRect(),d=Math.max(1,window.devicePixelRatio||1);
+ if(c.width!==Math.round(r.width*d)||c.height!==Math.round(r.height*d)){c.width=Math.round(r.width*d);c.height=Math.round(r.height*d)}
+ var x=c.getContext("2d");x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,r.width,r.height);return {c:c,x:x,w:r.width,h:r.height};
+}
+function grid(p,min,max){
+ var x=p.x,w=p.w,h=p.h;x.strokeStyle=colors.grid;x.lineWidth=1;x.font="9px system-ui";x.fillStyle=colors.muted;
+ for(var i=0;i<5;i++){var y=10+(h-28)*i/4;x.beginPath();x.moveTo(34,y);x.lineTo(w-6,y);x.stroke();var v=max-(max-min)*i/4;x.fillText(v.toFixed(Math.abs(max-min)<5?1:0),2,y+3)}
+}
+function lineChart(id,series,opt){
+ var p=prep(id);if(!p)return;opt=opt||{};var all=[];series.forEach(function(s){all=all.concat(s.data)});
+ var min=opt.min!=null?opt.min:Math.min.apply(null,all),max=opt.max!=null?opt.max:Math.max.apply(null,all);if(max===min){max=min+1}var pad=(max-min)*.12;min-=pad;max+=pad;grid(p,min,max);
+ var x=p.x,w=p.w,h=p.h,n=Math.max(2,series[0].data.length);
+ series.forEach(function(s){x.strokeStyle=s.color;x.lineWidth=s.width||2;x.beginPath();s.data.forEach(function(v,i){var px=34+(w-42)*i/(n-1);var py=10+(h-28)*(max-v)/(max-min);if(i===0)x.moveTo(px,py);else x.lineTo(px,py)});x.stroke()});
+}
+function barChart(id,labels,sets,opt){
+ var p=prep(id);if(!p)return;opt=opt||{};var x=p.x,w=p.w,h=p.h;var vals=[];sets.forEach(function(s){vals=vals.concat(s.data)});var max=opt.max||Math.max.apply(null,vals)*1.18;x.font="9px system-ui";x.fillStyle=colors.muted;
+ var gw=(w-40)/labels.length,bw=gw/(sets.length+1);
+ for(var g=0;g<5;g++){var yy=10+(h-38)*g/4;x.strokeStyle=colors.grid;x.beginPath();x.moveTo(30,yy);x.lineTo(w-6,yy);x.stroke()}
+ labels.forEach(function(l,i){x.fillStyle=colors.muted;x.fillText(l,30+i*gw+3,h-8);sets.forEach(function(s,j){var v=s.data[i],bh=(h-48)*v/max;x.fillStyle=s.color;x.fillRect(30+i*gw+5+j*bw,h-24-bh,bw-3,bh)})});
+}
+function scatterChart(id,data,opt){
+ var p=prep(id);if(!p)return;opt=opt||{};var x=p.x,w=p.w,h=p.h,min=opt.min||Math.min.apply(null,data),max=opt.max||Math.max.apply(null,data);var range=max-min||1;grid(p,min,max);x.fillStyle=opt.color||colors.teal;
+ data.forEach(function(v,i){var px=34+(w-42)*i/(data.length-1);var py=10+(h-28)*(max-v)/range;x.beginPath();x.arc(px,py,3,0,Math.PI*2);x.fill()});
+}
+var posCmd=[],posAct=[],cur=[],torque=[],err=[],vib=[],time=0,running=true,frame=0,cycle=18442;
+for(var i=0;i<120;i++){posCmd.push(45);posAct.push(45);cur.push(4);torque.push(2.5);err.push(0);vib.push(0)}
+var axisNames=["Head Yaw","R Shoulder Pitch","R Elbow","Torso Yaw","R Wrist","Motion Base"];
+function push(a,v){a.push(v);if(a.length>120)a.shift()}
+function liveTick(){
+ if(!running)return;time+=.1;frame=(frame+3)%1800;if(frame<3&&time>1)cycle++;
+ var q=45+24*Math.sin(time*.82)+4*Math.sin(time*.21);
+ var v=19.7*Math.cos(time*.82)+.84*Math.cos(time*.21);
+ var fe=.28*Math.sin(time*2.4)+.08*Math.sin(time*7.2);
+ if(q>56&&q<65&&Math.sin(time*.31)>.985)fe+=1.1;
+ var qa=q-fe;
+ var amp=3.6+1.6*Math.abs(Math.cos(time*.82))+.18*Math.sin(time*4.1);
+ var tq=amp*.61+.09*Math.sin(time*2.1);
+ var vv=.12*Math.sin(time*12)+.06*Math.sin(time*24)+.04*Math.sin(time*36);
+ push(posCmd,q);push(posAct,qa);push(cur,amp);push(torque,tq);push(err,fe);push(vib,vv);
+ document.getElementById("nShoulder").textContent=qa.toFixed(1)+"°";document.getElementById("nHead").textContent=(8*Math.sin(time*.34)).toFixed(1)+"°";document.getElementById("nElbow").textContent=(35+18*Math.sin(time*.59+1)).toFixed(1)+"°";document.getElementById("nTorso").textContent=(7*Math.sin(time*.22)).toFixed(1)+"°";document.getElementById("nHand").textContent=(18+10*Math.sin(time*1.1)).toFixed(1)+"°";document.getElementById("nBase").textContent=(.18+.06*Math.sin(time*.18)).toFixed(2)+" m";
+ document.getElementById("velLive").textContent=v.toFixed(1)+"°/s";document.getElementById("curLive").textContent=amp.toFixed(2)+" A";document.getElementById("errLive").textContent=fe.toFixed(2)+"°";document.getElementById("frameRead").textContent="Frame "+String(frame).padStart(4,"0");document.getElementById("cycleRead").textContent=cycle.toLocaleString();
+ updateAxisTable(q,v,amp);drawVisible();
+}
+function updateAxisTable(q,v,a){
+ var vals=[
+  [8*Math.sin(time*.34),2.7*Math.cos(time*.34),1.2],
+  [q,v,a],[35+18*Math.sin(time*.59+1),10.6*Math.cos(time*.59+1),3.1],
+  [7*Math.sin(time*.22),1.54*Math.cos(time*.22),2.0],
+  [18+10*Math.sin(time*1.1),11*Math.cos(time*1.1),1.4],
+  [.18+.06*Math.sin(time*.18),.0108*Math.cos(time*.18),5.3]
+ ];
+ document.getElementById("axisRows").innerHTML=axisNames.map(function(n,i){return "<tr><td><span class='status'></span>"+n+"</td><td>"+vals[i][0].toFixed(i===5?3:1)+(i===5?" m":"°")+"</td><td>"+vals[i][1].toFixed(1)+(i===5?" m/s":"°/s")+"</td><td>"+vals[i][2].toFixed(1)+" A</td><td>"+(i===1?"<span class='warn'>72 · degrading</span>":"<span class='good'>stable</span>")+"</td></tr>"}).join("");
+}
+var healthDays=[],figHealth=[],cableHealth=[],shoulderHealth=[];
+for(var d=1;d<=30;d++){healthDays.push(d);figHealth.push(88-d*.12+.35*Math.sin(d*.55));cableHealth.push(77-d*.34+.5*Math.sin(d*.43));shoulderHealth.push(82-d*.32+.7*Math.sin(d*.37))}
+var poseLabels=["25–35","35–45","45–55","55–65","65–75","75–85"],poseVals=[.1,.2,1.4,19.5,2.1,.3];
+var harnessDays=[],harnessRate=[],witness=[];
+for(var h=1;h<=30;h++){harnessDays.push(h);harnessRate.push(.25+.004*h*h+.08*Math.sin(h*.8));witness.push(.84+.0008*h+.00007*h*h)}
+var home=[];for(var z=0;z<40;z++)home.push(.02*Math.sin(z*.9)+.0015*z+(z>30?.025*Math.sin(z*1.7):0));
+var encEvent=[];for(var e=0;e<80;e++){var y=.05*Math.sin(e*.4);if(e===42)y=1.3;if(e===43)y=-.6;encEvent.push(y)}
+var replayPos=[],replayFb=[],replayCurrent=[];for(var r=0;r<100;r++){replayPos.push(.08*Math.sin(r*.23)+(r===48?1.2:r===49?-.5:0));replayFb.push(r===48?1:0);replayCurrent.push(.05*Math.sin(r*.18))}
+var featureLabels=["Vibration band","Settling time","Effort residual","Pose repeatability","Following error","Flex exposure"];var featureVals=[.31,.22,.18,.14,.09,.08];
+function drawVisible(){
+ lineChart("positionChart",[{data:posCmd,color:colors.teal},{data:posAct,color:colors.navy}]);
+ lineChart("effortChart",[{data:cur,color:colors.amber},{data:torque,color:colors.navy}]);
+ lineChart("errorChart",[{data:err,color:colors.red}],{min:-1.5,max:1.5});
+ lineChart("healthTrend",[{data:figHealth,color:colors.green},{data:cableHealth,color:colors.teal},{data:shoulderHealth,color:colors.amber}],{min:60,max:95});
+ barChart("poseChart",poseLabels,[{data:poseVals,color:colors.teal}],{max:22});
+ lineChart("harnessTrend",[{data:harnessRate,color:colors.red}],{min:0,max:4.8});
+ lineChart("witnessChart",[{data:witness,color:colors.amber}],{min:.82,max:.94});
+ lineChart("encoderEventChart",[{data:encEvent,color:colors.red}],{min:-1,max:1.6});
+ scatterChart("homeChart",home,{min:-.08,max:.15,color:colors.teal});
+ barChart("vibSpectrum",["30","60","90","120"],[{data:[1,.24,.12,.05],color:colors.teal},{data:[1,.65,.48,.34],color:colors.amber}],{max:1.2});
+ lineChart("vibWave",[{data:vib,color:colors.violet}],{min:-.3,max:.3});
+ lineChart("replayChart",[{data:replayPos,color:colors.teal},{data:replayFb,color:colors.red},{data:replayCurrent,color:colors.navy}],{min:-1,max:1.5});
+ barChart("featureChart",featureLabels,[{data:featureVals,color:colors.teal}],{max:.4});
+}
+document.getElementById("pauseBtn").addEventListener("click",function(){running=!running;this.textContent=running?"Pause demo":"Resume demo";document.getElementById("runState").textContent=running?"SHOW RUNNING":"DEMO PAUSED"});
+window.addEventListener("resize",function(){clearTimeout(window.__rz);window.__rz=setTimeout(drawVisible,100)});
+updateAxisTable(45,0,4);drawVisible();setInterval(liveTick,100);
+})();
+</script>
+</body></html>
