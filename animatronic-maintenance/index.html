@@ -34,11 +34,11 @@ button{font:inherit}.app{display:grid;grid-template-columns:245px minmax(0,1fr);
 .kv{display:grid;grid-template-columns:1fr auto;gap:7px;font-size:10px;margin-top:10px}.kv div:nth-child(odd){color:var(--muted)}.kv div:nth-child(even){text-align:right;font-weight:700}
 .hypo{border:1px solid var(--line);border-radius:9px;padding:10px;margin-top:8px;display:grid;grid-template-columns:1fr 72px;gap:8px}.hypo h4{font-size:10px;margin:0;color:var(--navy)}.hypo p{font-size:9px;color:var(--muted);margin:4px 0 0}.hypo .score{text-align:right;font-size:18px;font-weight:800;color:var(--navy)}
 .timeline{border-left:2px solid #d7e3e8;margin:13px 0 0 7px;padding-left:15px}.event{position:relative;margin-bottom:12px}.event:before{content:"";position:absolute;left:-20px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--teal);border:2px solid #fff}.event b{font-size:10px}.event span{display:block;font-size:9px;color:var(--muted)}
-.pipeline{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.pipe{background:#fff;border:1px solid var(--line);border-top:4px solid var(--teal);border-radius:9px;padding:11px}.pipe b{font-size:10px;color:var(--navy)}.pipe span{display:block;font-size:9px;color:var(--muted);margin-top:5px}
+.method-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.method-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--shadow)}.method-card h3{margin:4px 0 8px;color:var(--navy);font-size:13px}.method-card p{font-size:10px;color:var(--muted);margin:7px 0;line-height:1.55}.method-card p b{color:var(--text)}.method-tag{font-size:8px;font-weight:800;color:var(--teal);letter-spacing:.11em}.formula{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f4f8fa;border:1px solid #e0e8ed;border-radius:7px;padding:9px;color:var(--navy);font-size:11px;overflow-x:auto}.pipeline{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.pipe{background:#fff;border:1px solid var(--line);border-top:4px solid var(--teal);border-radius:9px;padding:11px}.pipe b{font-size:10px;color:var(--navy)}.pipe span{display:block;font-size:9px;color:var(--muted);margin-top:5px}
 .spectrum-row{display:grid;grid-template-columns:48px 1fr 38px;gap:7px;align-items:center;font-size:9px;margin:8px 0}.spec{height:9px;background:#e8eef1;border-radius:3px;overflow:hidden}.spec i{display:block;height:100%;background:var(--teal)}
 .footer{margin-top:24px;text-align:center;color:#7c8f9e;font-size:9px}
 @media(max-width:1100px){.live-layout{grid-template-columns:300px 1fr}.g4{grid-template-columns:repeat(2,1fr)}.pipeline{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:820px){
+@media(max-width:820px){.method-grid{grid-template-columns:1fr}
  .app{display:block}.side{display:none}.mobile-nav{display:flex;position:sticky;top:0;z-index:20;background:var(--navy);overflow-x:auto;gap:4px;padding:8px max(9px,env(safe-area-inset-left));-webkit-overflow-scrolling:touch}.mobile-nav button{flex:0 0 auto;border:0;background:transparent;color:#bcd0db;border-radius:7px;padding:9px 10px;font-size:10px}.mobile-nav button.active{background:#0d5364;color:#fff}
  .main{padding:14px 12px 28px}.top{display:block}.top-right{justify-content:flex-start;margin-top:10px}.live-layout{grid-template-columns:1fr}.figure-card{min-height:0}.figure-stage{height:410px}.figure-stage img{height:375px;max-width:76%}
  .g2,.g3{grid-template-columns:1fr}.g4{grid-template-columns:repeat(2,1fr)}.span2{grid-column:auto}.task{grid-template-columns:1fr}.pipeline{grid-template-columns:repeat(2,1fr)}.chart{height:205px}.chart.lg{height:230px}
@@ -50,13 +50,13 @@ button{font:inherit}.app{display:grid;grid-template-columns:245px minmax(0,1fr);
 </head>
 <body>
 <div class="mobile-nav" id="mnav">
- <button class="active" data-view="live">Live Figure</button><button data-view="health">Health</button><button data-view="tasks">Tasks</button><button data-view="cable">Cable</button><button data-view="encoder">Encoder</button><button data-view="home">Homing</button><button data-view="vib">Vibration</button><button data-view="trouble">Troubleshoot</button><button data-view="models">Models</button><button data-view="architecture">Architecture</button>
+ <button class="active" data-view="live">Live Figure</button><button data-view="health">Health</button><button data-view="tasks">Tasks</button><button data-view="cable">Cable</button><button data-view="encoder">Encoder</button><button data-view="home">Homing</button><button data-view="vib">Vibration</button><button data-view="trouble">Troubleshoot</button><button data-view="models">Models</button><button data-view="methodology">Methodology</button><button data-view="architecture">Architecture</button>
 </div>
 <div class="app">
 <aside class="side">
  <div class="brand"><strong>Maintenance Intelligence</strong><span>Animatronic ML maintenance platform</span></div>
  <div class="nav" id="nav">
-  <button class="active" data-view="live">Live Figure</button><button data-view="health">Figure Health</button><button data-view="tasks">Maintenance Tasks</button><button data-view="cable">Harness / Cable</button><button data-view="encoder">Encoder Health</button><button data-view="home">Homing Health</button><button data-view="vib">Vibration</button><button data-view="trouble">Troubleshoot</button><button data-view="models">Model Evidence</button><button data-view="architecture">Architecture</button>
+  <button class="active" data-view="live">Live Figure</button><button data-view="health">Figure Health</button><button data-view="tasks">Maintenance Tasks</button><button data-view="cable">Harness / Cable</button><button data-view="encoder">Encoder Health</button><button data-view="home">Homing Health</button><button data-view="vib">Vibration</button><button data-view="trouble">Troubleshoot</button><button data-view="models">Model Evidence</button><button data-view="methodology">Methodology / Signal Math</button><button data-view="architecture">Architecture</button>
  </div>
  <div class="sidefoot"><div><span class="live-dot"></span>Simulated figure online</div><div>Figure 07 · baseline v3.4</div><div>Advisory maintenance layer</div></div>
 </aside>
@@ -75,16 +75,14 @@ button{font:inherit}.app{display:grid;grid-template-columns:245px minmax(0,1fr);
   </div>
   <div class="section"><div><h2>Live Figure HMI</h2><p>The figure is simulated as active and moving so the dashboard can demonstrate real-time condition intelligence.</p></div></div>
   <div class="card actuator-toolbar">
-     <label for="actuatorSelect">Selected actuator · choose below or tap a figure callout</label>
-     <select id="actuatorSelect">
-       <option value="head">Head / Neck</option>
-       <option value="shoulder" selected>Right Shoulder</option>
-       <option value="elbow">Right Elbow</option>
-       <option value="torso">Torso</option>
-       <option value="hand">Right Hand / Wrist</option>
-       <option value="base">Motion Base</option>
-     </select>
-     <div class="actuator-readout"><span>Health <b id="selHealth">72 / 100</b></span><span>Trend <b id="selTrend" class="warn">DEGRADING</b></span><span>Harness <b id="selHarness">H-14</b></span><span>Drive <b id="selDrive">ELMO-04</b></span></div>
+     <label>Global actuator context</label>
+     <div class="actuator-readout">
+       <span>Selected <b id="selName">Right Shoulder Pitch</b></span>
+       <span>Health <b id="selHealth">72 / 100</b></span>
+       <span>Trend <b id="selTrend" class="warn">DEGRADING</b></span>
+       <span>Harness <b id="selHarness">H-14</b></span>
+       <span>Drive <b id="selDrive">ELMO-04</b></span>
+     </div>
    </div>
    <div class="live-layout">
    <div class="card figure-card">
@@ -114,114 +112,135 @@ button{font:inherit}.app{display:grid;grid-template-columns:245px minmax(0,1fr);
 
  <section id="health" class="view">
   <div class="grid g4">
-   <div class="card metric"><div class="label">Overall</div><div class="value">84</div><div class="delta warn">-3 / 30 days</div></div>
-   <div class="card metric"><div class="label">Cable health</div><div class="value warn">67</div><div class="delta">H-14 drives risk</div></div>
-   <div class="card metric"><div class="label">Motion health</div><div class="value">88</div><div class="delta good">Mostly stable</div></div>
-   <div class="card metric"><div class="label">Homing health</div><div class="value warn">79</div><div class="delta">Repeatability drifting</div></div>
+   <div class="card metric"><div class="label">Selected actuator health</div><div class="value" id="healthOverall">72</div><div class="delta" id="healthTrendText">degrading</div></div>
+   <div class="card metric"><div class="label">Cable health</div><div class="value" id="healthCable">67</div><div class="delta" id="healthCableText">H-14 drives risk</div></div>
+   <div class="card metric"><div class="label">Motion health</div><div class="value" id="healthMotion">79</div><div class="delta" id="healthMotionText">Effort trend elevated</div></div>
+   <div class="card metric"><div class="label">Homing health</div><div class="value" id="healthHome">79</div><div class="delta" id="healthHomeText">Repeatability drifting</div></div>
   </div>
-  <div class="section"><div><h2>Overall Figure Health HMI</h2><p>Scores summarize explainable evidence while preserving the underlying measurements.</p></div></div>
+  <div class="section"><div><h2 id="healthSectionTitle">Right Shoulder Health HMI</h2><p>All condition evidence follows the globally selected actuator.</p></div></div>
   <div class="grid g2">
-   <div class="card"><div class="health-flex"><div class="health-ring" style="--p:72;--c:var(--amber)"><b>72</b></div><div><h3>Right Shoulder</h3><b class="warn">DEGRADING</b><div class="sub">Matched-motion effort, settling and vibration are rising together.</div></div></div>
-    <div class="progress"><div class="head"><span>Motion Effort</span><span>+18%</span></div><div class="bar warn"><i style="width:78%"></i></div></div>
-    <div class="progress"><div class="head"><span>Following Error</span><span>+9%</span></div><div class="bar warn"><i style="width:64%"></i></div></div>
-    <div class="progress"><div class="head"><span>Settling Time</span><span>+22%</span></div><div class="bar warn"><i style="width:82%"></i></div></div>
-    <div class="progress"><div class="head"><span>Vibration</span><span>+31%</span></div><div class="bar bad"><i style="width:88%"></i></div></div>
+   <div class="card"><div class="health-flex"><div class="health-ring" id="selectedHealthRing" style="--p:72;--c:var(--amber)"><b id="healthRingValue">72</b></div><div><h3 id="healthActuatorName">Right Shoulder Pitch</h3><b id="healthState" class="warn">DEGRADING</b><div class="sub" id="healthSummary">Matched-motion effort, settling and vibration are rising together.</div></div></div>
+    <div class="progress"><div class="head"><span>Motion Effort</span><span id="metricEffort">+18%</span></div><div class="bar" id="barEffort"><i></i></div></div>
+    <div class="progress"><div class="head"><span>Following Error</span><span id="metricFollow">+9%</span></div><div class="bar" id="barFollow"><i></i></div></div>
+    <div class="progress"><div class="head"><span>Settling Time</span><span id="metricSettling">+22%</span></div><div class="bar" id="barSettling"><i></i></div></div>
+    <div class="progress"><div class="head"><span>Vibration</span><span id="metricVibration">+31%</span></div><div class="bar" id="barVibration"><i></i></div></div>
    </div>
-   <div class="card"><h3>30-day health trend</h3><div class="sub">Figure, cable and right-shoulder condition index</div><div class="chart"><canvas id="healthTrend"></canvas></div></div>
-   <div class="card"><h3>Likely contributors · Right Shoulder</h3><div class="kv"><div>Mechanical looseness</div><div>72%</div><div>Increasing drivetrain compliance</div><div>61%</div><div>Bearing / gearbox wear</div><div>49%</div><div>Feedback-path electrical</div><div>18%</div></div><div class="callout" style="margin-top:12px"><strong>Maintenance action:</strong> inspect fasteners, joint mounting, coupler/reducer interfaces and bearing condition before changing tuning.</div></div>
-   <div class="card"><h3>Subsystem health</h3><table class="axis-table"><tbody><tr><td>Head / neck</td><td><span class="badge healthy">92 stable</span></td></tr><tr><td>Torso</td><td><span class="badge healthy">91 stable</span></td></tr><tr><td>Right shoulder</td><td><span class="badge watch">72 degrading</span></td></tr><tr><td>Right elbow</td><td><span class="badge healthy">88 stable</span></td></tr><tr><td>Right hand</td><td><span class="badge healthy">86 stable</span></td></tr><tr><td>Motion base</td><td><span class="badge healthy">89 stable</span></td></tr></tbody></table></div>
+   <div class="card"><h3 id="healthChartTitle">30-day condition trend · Right Shoulder</h3><div class="sub">Selected actuator, cable and figure-level health indices.</div><div class="chart"><canvas id="healthTrend"></canvas></div></div>
+   <div class="card"><h3 id="contributorsTitle">Likely contributors · Right Shoulder</h3><div class="kv" id="contributorsKV"></div><div class="callout" style="margin-top:12px" id="healthAction"></div></div>
+   <div class="card"><h3>Subsystem health</h3><table class="axis-table"><tbody id="subsystemHealthRows"></tbody></table></div>
   </div>
  </section>
 
  <section id="tasks" class="view">
-  <div class="section"><div><h2>Prioritized Maintenance Work</h2><p>Every task includes evidence, physical target, next action and repair verification.</p></div></div>
-  <div class="card">
-   <div class="task"><div><span class="badge inspect">INSPECT</span></div><div><h4>Right shoulder feedback path · H-14</h4><p>Feedback disturbances are 4× matched baseline and cluster at 55–65° shoulder pitch. Current and torque remain normal.</p><div class="meta"><span>Confidence 86%</span><span>Flex exposure 88th percentile</span><span>Connector J4 mapped</span></div></div><button class="btn primary" data-view="trouble">Troubleshoot</button></div>
-   <div class="task"><div><span class="badge watch">WATCH</span></div><div><h4>Right shoulder mechanical condition</h4><p>Effort +18%, settling +22% and vibration +31% across matched animation executions.</p><div class="meta"><span>Health 72/100</span><span>Trend 21 days</span></div></div><button class="btn" data-view="vib">Evidence</button></div>
-   <div class="task"><div><span class="badge verify">VERIFY</span></div><div><h4>Neck harness repair</h4><p>Post-repair dropout signature returned to baseline. Validation exposure is 2,400 / 3,000 required cycles.</p></div><button class="btn" data-view="encoder">Review</button></div>
-  </div>
+  <div class="section"><div><h2 id="tasksTitle">Prioritized Maintenance Work · Right Shoulder</h2><p>Tasks and evidence update with the globally selected actuator.</p></div></div>
+  <div class="card" id="selectedTaskCard"></div>
   <div class="grid g2" style="margin-top:13px">
-   <div class="card"><h3>Generated task · H-14 feedback path</h3><div class="timeline"><div class="event"><b>Review event captures</b><span>Confirm move 42 / pose 55–65° and data validity.</span></div><div class="event"><b>Inspect physical flex zone</b><span>Routing, over-bend, clamp stress, abrasion, strain relief.</span></div><div class="event"><b>Inspect connector J4</b><span>Feedback pins, retention and termination.</span></div><div class="event"><b>Approved isolated electrical test</b><span>Continuity / resistance / flex test where procedure permits.</span></div><div class="event"><b>Repair + validate</b><span>Capture actual defect and run matched post-repair exposure.</span></div></div></div>
-   <div class="card"><h3>Why this is smarter than an alarm</h3><div class="callout"><strong>The task is generated from correlated evidence:</strong> feedback discontinuity + pose clustering + normal mechanical effort + clean EtherCAT diagnostics. That points maintenance toward the feedback conductor path without pretending the model knows the exact broken wire.</div></div>
+   <div class="card"><h3 id="generatedTaskTitle">Generated task</h3><div class="timeline" id="generatedTaskSteps"></div></div>
+   <div class="card"><h3>Reasoning path</h3><div class="callout" id="taskReasoning"></div></div>
   </div>
  </section>
 
  <section id="cable" class="view">
   <div class="grid g4">
-   <div class="card metric"><div class="label">Flex cycles</div><div class="value">1.48M</div><div class="delta">H-14 instance</div></div>
-   <div class="card metric"><div class="label">Direction changes</div><div class="value">2.75M</div><div class="delta">Qualified reversals</div></div>
-   <div class="card metric"><div class="label">Harness age</div><div class="value">14 mo</div><div class="delta">Routing rev C</div></div>
-   <div class="card metric"><div class="label">Exposure percentile</div><div class="value warn">88%</div><div class="delta">Fleet-matched peers</div></div>
+   <div class="card metric"><div class="label">Flex cycles</div><div class="value" id="flexCycles">1.48M</div><div class="delta" id="flexHarness">H-14 instance</div></div>
+   <div class="card metric"><div class="label">Direction changes</div><div class="value" id="directionChanges">2.75M</div><div class="delta">Qualified reversals</div></div>
+   <div class="card metric"><div class="label">Harness age</div><div class="value" id="harnessAge">14 mo</div><div class="delta" id="routingRev">Routing rev C</div></div>
+   <div class="card metric"><div class="label">Exposure percentile</div><div class="value" id="exposurePercentile">88%</div><div class="delta">Fleet-matched peers</div></div>
   </div>
-  <div class="section"><div><h2>Harness / Cable Health</h2><p>Motion exposure becomes useful when combined with observable electrical precursors and repair history.</p></div></div>
+  <div class="section"><div><h2 id="cableTitle">Harness / Cable Health · Right Shoulder</h2><p>Exposure is interpreted with electrical precursors, pose, routing and repair history.</p></div></div>
   <div class="grid g2">
-   <div class="card"><h3>Pose-conditioned feedback anomaly density</h3><div class="sub">Events per 1,000 valid traversals; hotspot identifies where the harness is stressed.</div><div class="chart"><canvas id="poseChart"></canvas></div></div>
+   <div class="card"><h3 id="poseChartTitle">Pose-conditioned anomaly density</h3><div class="sub" id="poseChartSub">Events per 1,000 valid traversals.</div><div class="chart"><canvas id="poseChart"></canvas></div></div>
    <div class="card"><h3>Feedback anomaly rate · 30 days</h3><div class="sub">Normalized by opportunities, not clock time.</div><div class="chart"><canvas id="harnessTrend"></canvas></div></div>
-   <div class="card"><h3>Early-warning sacrificial conductor</h3><div class="sub">Diagnostic loop routed through the same moving bundle.</div><div class="chart"><canvas id="witnessChart"></canvas></div><div class="kv"><div>Baseline resistance</div><div>0.84 Ω</div><div>Current compensated resistance</div><div class="warn">0.92 Ω</div><div>Transient continuity events</div><div class="warn">3 / 10k cycles</div></div></div>
-   <div class="card"><h3>Harness action logic</h3><div class="callout"><strong>WATCH:</strong> high exposure alone raises inspection priority but does not predict a break.</div><div class="callout" style="margin-top:8px"><strong>INSPECT:</strong> exposure + rising event rate + pose localization produces a targeted harness task.</div><div class="callout" style="margin-top:8px"><strong>PLAN REPLACEMENT:</strong> only after field failures establish a validated exposure / degradation relationship.</div></div>
+   <div class="card"><h3>Early-warning sacrificial conductor</h3><div class="sub">Diagnostic loop routed through the same moving bundle.</div><div class="chart"><canvas id="witnessChart"></canvas></div><div class="kv"><div>Baseline resistance</div><div id="witnessBase">0.84 Ω</div><div>Current compensated resistance</div><div id="witnessCurrent">0.92 Ω</div><div>Transient continuity events</div><div id="witnessEvents">3 / 10k cycles</div></div></div>
+   <div class="card"><h3>Harness action logic</h3><div class="callout" id="cableAction"></div></div>
   </div>
  </section>
 
  <section id="encoder" class="view">
   <div class="grid g4">
-   <div class="card metric"><div class="label">Dropouts / 10k moves</div><div class="value bad">4.0</div><div class="delta">Baseline 1.0</div></div>
-   <div class="card metric"><div class="label">Position steps</div><div class="value">11</div><div class="delta">30-day window</div></div>
-   <div class="card metric"><div class="label">Pose correlation</div><div class="value warn">81%</div><div class="delta">55–65° shoulder</div></div>
-   <div class="card metric"><div class="label">EtherCAT errors</div><div class="value good">0</div><div class="delta">During feedback events</div></div>
+   <div class="card metric"><div class="label">Dropouts / 10k moves</div><div class="value" id="encoderDropouts">4.0</div><div class="delta" id="encoderBaseline">Baseline 1.0</div></div>
+   <div class="card metric"><div class="label">Position steps</div><div class="value" id="encoderSteps">11</div><div class="delta">30-day window</div></div>
+   <div class="card metric"><div class="label">Pose correlation</div><div class="value" id="encoderPoseCorr">81%</div><div class="delta" id="encoderPoseText">55–65° shoulder</div></div>
+   <div class="card metric"><div class="label">EtherCAT errors</div><div class="value good" id="encoderEcat">0</div><div class="delta">During feedback events</div></div>
   </div>
-  <div class="section"><div><h2>Encoder / Feedback Cable Monitoring</h2><p>Separate feedback-path intermittency from mechanical load and network problems.</p></div></div>
+  <div class="section"><div><h2 id="encoderTitle">Encoder / Feedback Health · Right Shoulder</h2><p>Separate feedback-path intermittency from network and mechanical signatures.</p></div></div>
   <div class="grid g2">
-   <div class="card"><h3>Captured feedback event</h3><div class="sub">Position residual impulse with normal current response</div><div class="chart"><canvas id="encoderEventChart"></canvas></div></div>
-   <div class="card"><h3>Diagnostic evidence</h3><div class="kv"><div>Feedback discontinuity</div><div class="bad">Present</div><div>Motor current change</div><div class="good">Normal</div><div>Torque residual</div><div class="good">Normal</div><div>EtherCAT WKC / CRC</div><div class="good">Clean</div><div>Repeated pose region</div><div class="warn">55–65°</div></div><div class="callout" style="margin-top:12px"><strong>Action:</strong> inspect encoder conductor pair, connector pins, strain relief and mapped flex segment before servo retuning or drive replacement.</div></div>
+   <div class="card"><h3>Captured feedback event</h3><div class="sub" id="encoderEventSub">Position residual impulse with normal current response.</div><div class="chart"><canvas id="encoderEventChart"></canvas></div></div>
+   <div class="card"><h3>Diagnostic evidence</h3><div class="kv" id="encoderEvidence"></div><div class="callout" style="margin-top:12px" id="encoderAction"></div></div>
   </div>
  </section>
 
  <section id="home" class="view">
   <div class="grid g4">
-   <div class="card metric"><div class="label">Home repeatability σ</div><div class="value warn">0.11°</div><div class="delta">Baseline 0.04°</div></div>
-   <div class="card metric"><div class="label">Search time</div><div class="value">1.82 s</div><div class="delta warn">+16%</div></div>
-   <div class="card metric"><div class="label">Retries</div><div class="value">2</div><div class="delta">Last 500 homes</div></div>
-   <div class="card metric"><div class="label">Search effort</div><div class="value">+8%</div><div class="delta">Matched starts</div></div>
+   <div class="card metric"><div class="label">Home repeatability σ</div><div class="value" id="homeSigma">0.11°</div><div class="delta" id="homeBaseline">Baseline 0.04°</div></div>
+   <div class="card metric"><div class="label">Search time</div><div class="value" id="homeSearch">1.82 s</div><div class="delta" id="homeSearchDelta">+16%</div></div>
+   <div class="card metric"><div class="label">Retries</div><div class="value" id="homeRetries">2</div><div class="delta">Last 500 homes</div></div>
+   <div class="card metric"><div class="label">Search effort</div><div class="value" id="homeEffort">+8%</div><div class="delta">Matched starts</div></div>
   </div>
-  <div class="section"><div><h2>Homing Health</h2><p>Homing is a repeatable diagnostic routine: reference capture, edge quality, time, effort and retries.</p></div></div>
+  <div class="section"><div><h2 id="homeTitle">Homing Health · Right Shoulder</h2><p>Repeatability, edge quality, search time, effort and retry count.</p></div></div>
   <div class="grid g2">
    <div class="card"><h3>Home capture position · last 40 cycles</h3><div class="chart"><canvas id="homeChart"></canvas></div></div>
-   <div class="card"><h3>Interpretation</h3><div class="callout"><strong>Reference drift + clean edges:</strong> inspect target, bracket, encoder reference or mechanical stop.</div><div class="callout" style="margin-top:8px"><strong>Edge chatter + pose dependence:</strong> inspect sensor wiring and connector path.</div><div class="callout" style="margin-top:8px"><strong>Increasing search effort:</strong> investigate drag, interference or brake release.</div></div>
+   <div class="card"><h3>Interpretation</h3><div id="homeInterpretation"></div></div>
   </div>
  </section>
 
  <section id="vib" class="view">
-  <div class="section"><div><h2>Vibration / Mechanical Health</h2><p>Spectral changes become powerful when they agree with effort, following error and settling evidence.</p></div></div>
+  <div class="section"><div><h2 id="vibTitle">Vibration / Mechanical Health · Right Shoulder</h2><p>Spectral changes are correlated with effort, following error, settling and pose.</p></div></div>
   <div class="grid g2">
-   <div class="card"><h3>Healthy vs degrading joint spectrum</h3><div class="chart"><canvas id="vibSpectrum"></canvas></div><div class="legend"><span><i style="background:#00a6b2"></i>Healthy</span><span><i style="background:#d99a2b"></i>Degrading</span></div></div>
-   <div class="card"><h3>Live accelerometer waveform</h3><div class="sub">Illustrative vibration burst synchronized to current move</div><div class="chart"><canvas id="vibWave"></canvas></div></div>
-   <div class="card"><h3>Right Shoulder condition</h3><div class="progress"><div class="head"><span>Motion Effort</span><span>+18%</span></div><div class="bar warn"><i style="width:78%"></i></div></div><div class="progress"><div class="head"><span>Following Error</span><span>+9%</span></div><div class="bar warn"><i style="width:64%"></i></div></div><div class="progress"><div class="head"><span>Settling Time</span><span>+22%</span></div><div class="bar warn"><i style="width:82%"></i></div></div><div class="progress"><div class="head"><span>Vibration</span><span>+31%</span></div><div class="bar bad"><i style="width:88%"></i></div></div></div>
-   <div class="card"><h3>Maintenance action</h3><div class="callout"><strong>Inspect:</strong> fasteners, joint mounting, coupling/reducer interfaces, bearing condition and structural interference. Preserve pre-repair spectrum and compare after corrective work.</div></div>
+   <div class="card"><h3>Healthy vs current joint spectrum</h3><div class="chart"><canvas id="vibSpectrum"></canvas></div><div class="legend"><span><i style="background:#00a6b2"></i>Healthy</span><span><i style="background:#d99a2b"></i>Current</span></div></div>
+   <div class="card"><h3>Live accelerometer waveform</h3><div class="sub">Illustrative vibration burst synchronized to selected actuator motion.</div><div class="chart"><canvas id="vibWave"></canvas></div></div>
+   <div class="card"><h3 id="vibConditionTitle">Selected actuator condition</h3><div id="vibConditionMetrics"></div></div>
+   <div class="card"><h3>Maintenance action</h3><div class="callout" id="vibAction"></div></div>
   </div>
  </section>
 
  <section id="trouble" class="view">
-  <div class="section"><div><h2>Guided Troubleshooting Workspace</h2><p>What happened first, what shares the circuit, and which approved test best separates the remaining causes?</p></div></div>
+  <div class="section"><div><h2 id="troubleTitle">Guided Troubleshooting · Right Shoulder</h2><p>Chronology, hypotheses and the next discriminating maintenance test follow the selected actuator.</p></div></div>
   <div class="grid g2">
    <div class="card"><h3>Synchronized event replay</h3><div class="chart lg"><canvas id="replayChart"></canvas></div><div class="legend"><span><i style="background:#00a6b2"></i>Position residual</span><span><i style="background:#d9534f"></i>Feedback event</span><span><i style="background:#0b2e4a"></i>Current residual</span></div></div>
-   <div class="card"><h3>Event chronology</h3><div class="timeline"><div class="event"><b>02:14:36.481 · feedback discontinuity</b><span>One-cycle encoder validity event at shoulder 61.8°.</span></div><div class="event"><b>+2 ms · position residual impulse</b><span>Following error rises sharply.</span></div><div class="event"><b>+4 ms · drive warning</b><span>Tracking warning follows the feedback disturbance.</span></div><div class="event"><b>Mechanical effort remains normal</b><span>No coincident current / torque increase.</span></div></div></div>
-   <div class="card"><h3>Competing hypotheses</h3><div class="hypo"><div><h4>Harness / connector intermittency</h4><p>Pose association + feedback event + normal effort.</p></div><div class="score">86%</div></div><div class="hypo"><div><h4>Encoder / local supply electronics</h4><p>Still plausible until isolated electrical checks.</p></div><div class="score">42%</div></div><div class="hypo"><div><h4>Mechanical drag</h4><p>Contradicted by normal current and torque during event.</p></div><div class="score">12%</div></div></div>
-   <div class="card"><h3>Next useful maintenance action</h3><div class="callout"><strong>Inspect H-14 flex zone and connector J4 feedback pins.</strong> Use the approved isolated harness test procedure. Record exact physical finding and repair location, then run matched validation exposure.</div></div>
+   <div class="card"><h3>Event chronology</h3><div class="timeline" id="eventChronology"></div></div>
+   <div class="card"><h3>Competing hypotheses</h3><div id="hypotheses"></div></div>
+   <div class="card"><h3>Next useful maintenance action</h3><div class="callout" id="troubleAction"></div></div>
   </div>
  </section>
 
  <section id="models" class="view">
-  <div class="section"><div><h2>Machine Learning Evidence</h2><p>Start interpretable, use known-good baselines, then add supervised diagnosis as verified maintenance labels accumulate.</p></div></div>
+  <div class="section"><div><h2 id="modelsTitle">Machine Learning Evidence · Right Shoulder</h2><p>Expected behavior, anomaly detection and cause ranking use the same global actuator context.</p></div></div>
   <div class="grid g3">
-   <div class="card"><h3>Expected behavior</h3><div class="sub">Regression</div><p style="font-size:10px">I_expected = f(position, velocity, acceleration, direction, temperature, move, configuration)</p><div class="callout">Trend measured-minus-expected effort to expose increasing friction or load.</div></div>
-   <div class="card"><h3>Unusual behavior</h3><div class="sub">PCA / Isolation Forest</div><p style="font-size:10px">Known-good move-level feature vectors establish the normal operating envelope.</p><div class="callout">Output is an anomaly score plus contributing features, not a failure verdict.</div></div>
-   <div class="card"><h3>Likely failure domain</h3><div class="sub">XGBoost / Random Forest</div><p style="font-size:10px">Train only after confirmed repair outcomes create trustworthy labels.</p><div class="callout">Rank cable/feedback, mechanical, network, supply, brake and unknown.</div></div>
-   <div class="card span2"><h3>Current feature contribution · Right Shoulder</h3><div class="chart"><canvas id="featureChart"></canvas></div></div>
-   <div class="card"><h3>Model guardrails</h3><div class="callout">Missing telemetry = UNKNOWN, never healthy.</div><div class="callout" style="margin-top:8px">A model can recommend work; it cannot command motion, clear faults or bypass protections.</div><div class="callout" style="margin-top:8px">Post-repair validation produces the strongest maintenance label.</div></div>
+   <div class="card"><h3>Expected behavior</h3><div class="sub">Regression</div><p style="font-size:10px">I_expected = f(q, v, a, direction, temperature, move, configuration)</p><div class="callout">Measured-minus-expected effort exposes increasing load independent of commanded motion.</div></div>
+   <div class="card"><h3>Unusual behavior</h3><div class="sub">PCA / Isolation Forest</div><p style="font-size:10px">Known-good move-level features establish the normal operating envelope for this actuator.</p><div class="callout">The anomaly score is evidence, not a probability of failure.</div></div>
+   <div class="card"><h3>Likely failure domain</h3><div class="sub">XGBoost / Random Forest</div><p style="font-size:10px">Confirmed repair labels train cable, feedback, mechanical, network, brake and unknown classes.</p><div class="callout">Unknown remains a valid outcome when evidence does not discriminate.</div></div>
+   <div class="card span2"><h3 id="featureTitle">Current feature contribution · Right Shoulder</h3><div class="chart"><canvas id="featureChart"></canvas></div></div>
+   <div class="card"><h3>Model guardrails</h3><div class="callout">Missing telemetry = UNKNOWN, never healthy.</div><div class="callout" style="margin-top:8px">Models do not command motion, clear faults or change safety limits.</div><div class="callout" style="margin-top:8px">Post-repair signature recovery creates the highest-value label.</div></div>
   </div>
  </section>
 
- <section id="architecture" class="view">
+ <section id="methodology" class="view">
+  <div class="section"><div><h2>Methodology / Signal Math</h2><p>What we read, how we transform it, why it matters, and what maintenance decision it supports.</p></div></div>
+  <div class="card" style="margin-bottom:13px"><div class="callout"><strong>Core rule:</strong> raw values are rarely actionable alone. We compare each actuator against the expected behavior for the same move, pose, direction, speed, acceleration, temperature and configuration. All equations below are engineering feature definitions for the proposed platform and require validation on the actual hardware.</div></div>
+  <div class="method-grid" id="methodGrid">
+   <div class="method-card"><div class="method-tag">RAW MOTION</div><h3>Commanded position · q<sub>cmd</sub>(t)</h3><div class="formula">q<sub>cmd</sub>(t)</div><p><b>Source:</b> TwinCAT motion setpoint / drive target position.</p><p><b>Reasoning:</b> Defines intended pose and trajectory phase. It is the reference for motion residuals and pose-conditioned cable analysis.</p><p><b>Action:</b> If an apparent anomaly follows a changed command, review animation/configuration before replacing hardware.</p></div>
+   <div class="method-card"><div class="method-tag">RAW MOTION</div><h3>Actual position · q<sub>act</sub>(t)</h3><div class="formula">e<sub>p</sub>(t) = q<sub>act</sub>(t) − q<sub>cmd</sub>(t)</div><p><b>Source:</b> motor/load encoder feedback.</p><p><b>Reasoning:</b> Measures physical response. Sudden discontinuities can indicate feedback-path faults; gradual direction-dependent changes can indicate compliance/backlash.</p><p><b>Action:</b> Electrical path inspection for discontinuities with normal effort; mechanical inspection for load-dependent residual growth.</p></div>
+   <div class="method-card"><div class="method-tag">DERIVED</div><h3>Velocity / acceleration / jerk</h3><div class="formula">v = dq/dt &nbsp; a = dv/dt &nbsp; j = da/dt</div><p>Prefer drive/TwinCAT values when available. Numerical derivatives must be filtered because differentiation amplifies noise.</p><p><b>Reasoning:</b> Normalizes effort by dynamic demand and identifies high-reversal/high-jerk cable stress.</p><p><b>Action:</b> High-jerk-only anomalies point toward restraint, whip, routing or dynamic mechanical loading.</p></div>
+   <div class="method-card"><div class="method-tag">SERVO</div><h3>Following error</h3><div class="formula">e(t)=q<sub>cmd</sub>(t)−q<sub>act</sub>(t)<br>RMS = √[(1/N) Σ e²]</div><p>Also calculate peak, p95/p99, phase-specific energy and waveform similarity.</p><p><b>Reasoning:</b> Detects subtle tracking changes below the hard fault threshold.</p><p><b>Action:</b> Error + current rise → load/drag; impulse + feedback invalidity → encoder/cable; oscillatory settle → tuning/compliance/resonance.</p></div>
+   <div class="method-card"><div class="method-tag">EFFORT MODEL</div><h3>Current residual</h3><div class="formula">Î = f(q,v,a,dir,T,move,config)<br>ΔI = I<sub>meas</sub> − Î</div><p><b>Source:</b> Elmo measured current or equivalent drive estimate.</p><p><b>Reasoning:</b> Raw current changes with commanded motion. The residual asks whether the motor is working harder than expected for the same motion.</p><p><b>Action:</b> Persistent positive ΔI supports friction, binding, brake drag, alignment or cable/hose interference inspection.</p></div>
+   <div class="method-card"><div class="method-tag">EFFORT MODEL</div><h3>Torque residual</h3><div class="formula">T̂ = f(q,v,a,dir,T<sub>motor</sub>,move)<br>ΔT = T<sub>meas</sub> − T̂</div><p>Use correctly scaled drive torque. Do not count current-derived torque as independent evidence from current.</p><p><b>Action:</b> Growing ΔT across matched cycles strengthens a mechanical-load hypothesis.</p></div>
+   <div class="method-card"><div class="method-tag">MOVE FEATURE</div><h3>Motion effort / energy</h3><div class="formula">I²t = ∫ I(t)² dt<br>E<sub>effort</sub> = ∫ |I(t)| dt</div><p><b>Reasoning:</b> Condenses the electrical work required to execute a defined move and can be trended move-to-move.</p><p><b>Action:</b> Rising effort with the same trajectory generates a WATCH/INSPECT condition depending on persistence and corroborating signals.</p></div>
+   <div class="method-card"><div class="method-tag">DYNAMIC RESPONSE</div><h3>Settling time</h3><div class="formula">t<sub>s</sub> = first t after move end where |e(t)| &lt; ε for Δt<sub>hold</sub></div><p>ε and hold duration are validated per actuator/move rather than universal constants.</p><p><b>Reasoning:</b> Increased settling can reveal compliance, looseness, friction or tuning changes.</p><p><b>Action:</b> Combine with vibration and effort before choosing mechanical vs controls inspection.</p></div>
+   <div class="method-card"><div class="method-tag">CABLE</div><h3>Feedback event rate</h3><div class="formula">λ = N<sub>events</sub> / N<sub>opportunities</sub> × 1000</div><p>Opportunities are valid move executions or traversals—not hours.</p><p><b>Reasoning:</b> Normalization prevents a high-use actuator from looking worse simply because it moves more often.</p><p><b>Action:</b> Trend λ and its slope; rising normalized rate creates early cable/feedback evidence.</p></div>
+   <div class="method-card"><div class="method-tag">CABLE LOCALIZATION</div><h3>Pose-conditioned anomaly density</h3><div class="formula">λ(θ<sub>bin</sub>) = N<sub>events,bin</sub> / N<sub>traversals,bin</sub> × 1000</div><p><b>Reasoning:</b> A fractured conductor may open only when a joint bends the harness through a specific geometry.</p><p><b>Action:</b> A repeatable hotspot maps the task to the harness flex segment stressed at that pose.</p></div>
+   <div class="method-card"><div class="method-tag">CABLE EXPOSURE</div><h3>Flex exposure index</h3><div class="formula">F = Σ(w₁|Δθ| + w₂R + w₃|v| + w₄|j| + w₅Z<sub>pose</sub> + w₆T)</div><p>R = direction reversal event. Z<sub>pose</sub> weights validated high-strain zones. Weights begin as relative engineering factors and are calibrated against field/bench data.</p><p><b>Action:</b> Prioritize high-exposure harnesses; do not call this remaining life until validated against failures.</p></div>
+   <div class="method-card"><div class="method-tag">CABLE FATIGUE</div><h3>Direction changes / rainflow cycles</h3><div class="formula">R = count(sign(v<sub>k</sub>) ≠ sign(v<sub>k−1</sub>))</div><p>For calibrated bend-angle surrogates, rainflow counting can estimate cyclic damage more meaningfully than raw show counts.</p><p><b>Action:</b> Supports PM interval research and harness-family comparisons.</p></div>
+   <div class="method-card"><div class="method-tag">DIAGNOSTIC LOOP</div><h3>Sacrificial conductor resistance</h3><div class="formula">R<sub>comp</sub> = R<sub>meas</sub> / [1 + α(T−T₀)]<br>ΔR = R<sub>comp</sub> − R<sub>baseline</sub></div><p>Temperature compensation is required because copper resistance changes with temperature.</p><p><b>Reasoning:</b> A witness conductor may expose flex damage without injecting diagnostics into operational encoder/safety conductors.</p><p><b>Action:</b> Rising ΔR or intermittent continuity generates inspection only after correlation with the actual harness is experimentally validated.</p></div>
+   <div class="method-card"><div class="method-tag">HOMING</div><h3>Home repeatability</h3><div class="formula">σ<sub>home</sub> = √[Σ(q<sub>home,i</sub>−q̄<sub>home</sub>)²/(N−1)]</div><p>Also track search duration, retries, edge quality and current/torque during search.</p><p><b>Action:</b> Rising σ with clean electrical edges → mechanical/reference inspection; noisy edges → sensor/wiring inspection.</p></div>
+   <div class="method-card"><div class="method-tag">VIBRATION</div><h3>RMS / crest factor / kurtosis</h3><div class="formula">a<sub>RMS</sub>=√[(1/N)Σa²]<br>CF = |a|<sub>peak</sub>/a<sub>RMS</sub></div><p>Kurtosis adds sensitivity to impulsive behavior. These are calculated on comparable move windows.</p><p><b>Action:</b> Rising vibration + effort residual strengthens a mechanical looseness/bearing/reducer hypothesis.</p></div>
+   <div class="method-card"><div class="method-tag">VIBRATION FFT</div><h3>Spectral band energy</h3><div class="formula">X[k]=DFT{x[n]}<br>E<sub>band</sub>=Σ<sub>k∈band</sub>|X[k]|²</div><p>Sampling and anti-alias filtering must support the frequency range of interest.</p><p><b>Reasoning:</b> New harmonics or band-energy growth can reveal resonance, looseness or rotating/transmission defects.</p><p><b>Action:</b> Use as corroboration; a spectral peak alone is not a unique diagnosis.</p></div>
+   <div class="method-card"><div class="method-tag">NETWORK</div><h3>EtherCAT error rate</h3><div class="formula">r<sub>ECAT</sub> = Δ(counter) / Δt</div><p>Track CRC/RX/lost-link/WKC deltas with counter-reset awareness and network topology.</p><p><b>Action:</b> Motion-correlated link errors point to the moving network segment; downstream coincidence points to a common upstream link.</p></div>
+   <div class="method-card"><div class="method-tag">FUSION</div><h3>Cross-channel coincidence</h3><div class="formula">C = count(events from channels sharing asset path within ±Δt)</div><p><b>Reasoning:</b> Several channels failing together are stronger evidence of a common harness, connector, supply or network segment than independent device failures.</p><p><b>Action:</b> Use the physical topology graph to localize the common segment.</p></div>
+   <div class="method-card"><div class="method-tag">HEALTH</div><h3>Health index</h3><div class="formula">H = 100 − g(z₁,z₂,…, persistence, confidence)</div><p>z-values are normalized deviations from qualified healthy baselines. The production form is versioned and validated; it is not an arbitrary average of raw sensors.</p><p><b>Action:</b> Health is a navigation/priority summary. Every score must expose the evidence that moved it.</p></div>
+   <div class="method-card"><div class="method-tag">ML</div><h3>Anomaly / cause models</h3><div class="formula">x = [ΔI, ΔT, e<sub>RMS</sub>, t<sub>s</sub>, λ, F, E<sub>FFT</sub>, …]</div><p>PCA / Isolation Forest learn unusual behavior from known-good feature vectors. XGBoost/Random Forest later rank failure domains from confirmed repair labels.</p><p><b>Action:</b> Models contribute evidence and ranking; an engineering-controlled action engine selects the maintenance task and preserves UNKNOWN.</p></div>
+  </div>
+ </section><section id="architecture" class="view">
   <div class="section"><div><h2>Platform Architecture</h2><p>From synchronized figure telemetry to a verified maintenance outcome.</p></div></div>
   <div class="pipeline">
    <div class="pipe"><b>01 · Acquire</b><span>TwinCAT + Elmo position, velocity, current, torque, feedback, states, EtherCAT, I/O and optional sensors.</span></div>
@@ -251,6 +270,7 @@ var meta={
  vib:["Vibration / Mechanical Health","Spectral and time-domain evidence correlated with motion effort."],
  trouble:["Guided Troubleshooting","Timeline reconstruction, competing hypotheses and the next discriminating test."],
  models:["Model Evidence","Expected behavior, anomaly detection and supervised failure-domain ranking."],
+ methodology:["Methodology / Signal Math","Raw measurements, derived features, equations, engineering reasoning and maintenance mapping."],
  architecture:["Platform Architecture","Acquire, contextualize, infer, act and verify without touching the safety chain."]
 };
 function showView(id){
@@ -292,12 +312,12 @@ function scatterChart(id,data,opt){
 }
 
 var actuatorDefs=[
- {name:"Head / Neck Yaw",short:"Head / Neck",unit:"°",base:0,amp:12,freq:.34,phase:.2,current:1.25,load:0.55,error:.07,health:92,status:"stable"},
- {name:"Right Shoulder Pitch",short:"Right Shoulder",unit:"°",base:45,amp:24,freq:.82,phase:0,current:4.0,load:1.45,error:.28,health:72,status:"degrading"},
- {name:"Right Elbow",short:"Right Elbow",unit:"°",base:35,amp:18,freq:.59,phase:1,current:2.7,load:.9,error:.12,health:88,status:"stable"},
- {name:"Torso Yaw",short:"Torso",unit:"°",base:0,amp:7,freq:.22,phase:.4,current:1.8,load:.55,error:.09,health:91,status:"stable"},
- {name:"Right Wrist",short:"Right Hand",unit:"°",base:18,amp:10,freq:1.1,phase:.8,current:1.1,load:.45,error:.08,health:86,status:"stable"},
- {name:"Motion Base",short:"Motion Base",unit:"mm",base:180,amp:60,freq:.18,phase:.1,current:4.8,load:1.2,error:.65,health:89,status:"stable"}
+ {name:"Head / Neck Yaw",short:"Head / Neck",unit:"°",base:0,amp:12,freq:.34,phase:.2,current:1.25,load:.55,error:.07,health:92,status:"stable",harness:"H-02",drive:"ELMO-01",cable:91,motion:93,homing:92,effort:3,follow:2,settling:4,vibration:5,flex:.92,reversals:1.44,age:9,exposure:52,dropouts:.5,dropBase:.4,steps:2,poseCorr:24,ecat:0,homeSigma:.03,homeBase:.03,homeTime:1.28,homeDelta:2,retries:0,homeEffort:2,witnessBase:.84,witnessNow:.845,witnessEvents:0,route:"B"},
+ {name:"Right Shoulder Pitch",short:"Right Shoulder",unit:"°",base:45,amp:24,freq:.82,phase:0,current:4.0,load:1.45,error:.28,health:72,status:"degrading",harness:"H-14",drive:"ELMO-04",cable:67,motion:76,homing:79,effort:18,follow:9,settling:22,vibration:31,flex:1.48,reversals:2.75,age:14,exposure:88,dropouts:4,dropBase:1,steps:11,poseCorr:81,ecat:0,homeSigma:.11,homeBase:.04,homeTime:1.82,homeDelta:16,retries:2,homeEffort:8,witnessBase:.84,witnessNow:.92,witnessEvents:3,route:"C"},
+ {name:"Right Elbow",short:"Right Elbow",unit:"°",base:35,amp:18,freq:.59,phase:1,current:2.7,load:.9,error:.12,health:88,status:"stable",harness:"H-14",drive:"ELMO-05",cable:82,motion:89,homing:87,effort:7,follow:4,settling:8,vibration:10,flex:1.25,reversals:2.11,age:14,exposure:73,dropouts:1.4,dropBase:.8,steps:4,poseCorr:39,ecat:0,homeSigma:.05,homeBase:.04,homeTime:1.43,homeDelta:5,retries:0,homeEffort:4,witnessBase:.84,witnessNow:.862,witnessEvents:1,route:"C"},
+ {name:"Torso Yaw",short:"Torso",unit:"°",base:0,amp:7,freq:.22,phase:.4,current:1.8,load:.55,error:.09,health:91,status:"stable",harness:"H-08",drive:"ELMO-03",cable:92,motion:91,homing:90,effort:4,follow:2,settling:5,vibration:6,flex:.68,reversals:.92,age:11,exposure:44,dropouts:.4,dropBase:.4,steps:1,poseCorr:18,ecat:0,homeSigma:.04,homeBase:.04,homeTime:1.55,homeDelta:1,retries:0,homeEffort:2,witnessBase:.84,witnessNow:.842,witnessEvents:0,route:"B"},
+ {name:"Right Wrist",short:"Right Hand",unit:"°",base:18,amp:10,freq:1.1,phase:.8,current:1.1,load:.45,error:.08,health:86,status:"stable",harness:"H-16",drive:"ELMO-06",cable:78,motion:87,homing:92,effort:6,follow:3,settling:6,vibration:8,flex:1.73,reversals:3.10,age:12,exposure:81,dropouts:2.1,dropBase:.7,steps:5,poseCorr:48,ecat:0,homeSigma:.03,homeBase:.03,homeTime:1.12,homeDelta:3,retries:0,homeEffort:3,witnessBase:.84,witnessNow:.874,witnessEvents:1,route:"D"},
+ {name:"Motion Base",short:"Motion Base",unit:"mm",base:180,amp:60,freq:.18,phase:.1,current:4.8,load:1.2,error:.65,health:89,status:"stable",harness:"H-20",drive:"ELMO-09",cable:94,motion:88,homing:85,effort:8,follow:5,settling:9,vibration:12,flex:.44,reversals:.65,age:18,exposure:42,dropouts:.2,dropBase:.2,steps:1,poseCorr:12,ecat:0,homeSigma:.8,homeBase:.6,homeTime:3.42,homeDelta:7,retries:1,homeEffort:5,witnessBase:.84,witnessNow:.846,witnessEvents:0,route:"A"}
 ];
 var selectedAxis=1;
 var posCmd=[],posAct=[],cur=[],torque=[],err=[],vib=[],time=0,running=true,frame=0,cycle=18442;
@@ -317,13 +337,18 @@ function resetSelectedBuffers(){
 }
 function setActuator(index){
  selectedAxis=Number(index);var d=actuatorDefs[selectedAxis];
- document.getElementById("actuatorSelect").value=String(selectedAxis);
+ var selEl=document.getElementById("actuatorSelect");if(selEl)selEl.value=String(selectedAxis);
  document.getElementById("positionTitle").textContent=d.name+" · commanded vs actual position";
  document.getElementById("effortTitle").textContent=d.name+" · current and torque";
  document.getElementById("errorTitle").textContent=d.name+" · following error";
- document.getElementById("selectedHealth").textContent="Selected health: "+d.health+" · "+d.status;
+ document.getElementById("selectedHealth").textContent="Selected: "+d.short+" · "+d.health+" · "+d.status;
+ var sn=document.getElementById("selName");if(sn)sn.textContent=d.name;
+ var sh=document.getElementById("selHealth");if(sh)sh.textContent=d.health+" / 100";
+ var st=document.getElementById("selTrend");if(st){st.textContent=d.status.toUpperCase();st.className=d.status==="degrading"?"warn":"good"}
+ var hh=document.getElementById("selHarness");if(hh)hh.textContent=d.harness;
+ var dd=document.getElementById("selDrive");if(dd)dd.textContent=d.drive;
  document.querySelectorAll(".figure-node").forEach(function(n){n.classList.toggle("selected",Number(n.getAttribute("data-axis"))===selectedAxis)});
- resetSelectedBuffers();updateAxisTable();drawVisible();
+ resetSelectedBuffers();updateAxisTable();buildDiagnosticData();updateGlobalViews();drawVisible();
 }
 var sel=document.getElementById("actuatorSelect");
 actuatorDefs.forEach(function(d,i){var o=document.createElement("option");o.value=i;o.textContent=d.name;sel.appendChild(o)});
@@ -357,33 +382,85 @@ function updateAxisTable(){
  document.querySelectorAll("#axisRows .axis-row").forEach(function(r){r.addEventListener("click",function(){setActuator(this.getAttribute("data-axis"))})});
 }
 resetSelectedBuffers();
-var healthDays=[],figHealth=[],cableHealth=[],shoulderHealth=[];
-for(var d=1;d<=30;d++){healthDays.push(d);figHealth.push(88-d*.12+.35*Math.sin(d*.55));cableHealth.push(77-d*.34+.5*Math.sin(d*.43));shoulderHealth.push(82-d*.32+.7*Math.sin(d*.37))}
-var poseLabels=["25–35","35–45","45–55","55–65","65–75","75–85"],poseVals=[.1,.2,1.4,19.5,2.1,.3];
-var harnessDays=[],harnessRate=[],witness=[];
-for(var h=1;h<=30;h++){harnessDays.push(h);harnessRate.push(.25+.004*h*h+.08*Math.sin(h*.8));witness.push(.84+.0008*h+.00007*h*h)}
-var home=[];for(var z=0;z<40;z++)home.push(.02*Math.sin(z*.9)+.0015*z+(z>30?.025*Math.sin(z*1.7):0));
-var encEvent=[];for(var e=0;e<80;e++){var y=.05*Math.sin(e*.4);if(e===42)y=1.3;if(e===43)y=-.6;encEvent.push(y)}
-var replayPos=[],replayFb=[],replayCurrent=[];for(var r=0;r<100;r++){replayPos.push(.08*Math.sin(r*.23)+(r===48?1.2:r===49?-.5:0));replayFb.push(r===48?1:0);replayCurrent.push(.05*Math.sin(r*.18))}
-var featureLabels=["Vibration band","Settling time","Effort residual","Pose repeatability","Following error","Flex exposure"];var featureVals=[.31,.22,.18,.14,.09,.08];
+var healthDays=[],figHealth=[],cableHealth=[],selectedHealthTrend=[],poseLabels=[],poseVals=[],harnessRate=[],witness=[],home=[],encEvent=[],replayPos=[],replayFb=[],replayCurrent=[],featureLabels=[],featureVals=[],vibHealthy=[],vibCurrent=[];
+function buildDiagnosticData(){
+ var d=actuatorDefs[selectedAxis],severity=Math.max(0,(100-d.health)/28),i;
+ healthDays=[];figHealth=[];cableHealth=[];selectedHealthTrend=[];
+ for(i=1;i<=30;i++){healthDays.push(i);figHealth.push(88-i*.12+.35*Math.sin(i*.55));cableHealth.push(Math.min(98,d.cable+4-(i/30)*(4+severity*5)+.5*Math.sin(i*.43+selectedAxis)));selectedHealthTrend.push(Math.min(98,d.health+4-(i/30)*4+.55*Math.sin(i*.37+selectedAxis)))}
+ var low=d.base-d.amp,step=(2*d.amp)/6;poseLabels=[];poseVals=[];
+ for(i=0;i<6;i++){var mid=low+step*(i+.5);poseLabels.push(d.unit==="mm"?Math.round(mid)+"":Math.round(mid)+"°");var hotspot=(selectedAxis===1&&i===4)?18*severity:(selectedAxis===4&&i===3)?5*severity:0;poseVals.push(.15+d.dropouts*.08+hotspot+Math.max(0,Math.sin(i+selectedAxis))*.25)}
+ harnessRate=[];witness=[];for(i=1;i<=30;i++){var growth=(d.dropouts-d.dropBase)*Math.pow(i/30,1.8);harnessRate.push(Math.max(.05,d.dropBase+growth+.06*Math.sin(i*.8)));witness.push(d.witnessBase+(d.witnessNow-d.witnessBase)*(i/30)+.001*Math.sin(i*.6))}
+ home=[];for(i=0;i<40;i++){var sigma=d.homeSigma;home.push((i/39)*Math.max(0,d.homeSigma-d.homeBase)+sigma*.35*Math.sin(i*.91+selectedAxis))}
+ encEvent=[];for(i=0;i<80;i++){var y=d.error*.35*Math.sin(i*.4);if(i===42&&d.dropouts>d.dropBase*1.4)y=d.error*4.5;if(i===43&&d.dropouts>d.dropBase*1.4)y=-d.error*2;encEvent.push(y)}
+ replayPos=[];replayFb=[];replayCurrent=[];for(i=0;i<100;i++){var event=(i===48&&d.dropouts>d.dropBase*1.4);replayPos.push(d.error*.3*Math.sin(i*.23)+(event?d.error*4:0)+(i===49&&event?-d.error*1.8:0));replayFb.push(event?1:0);replayCurrent.push(.04*Math.sin(i*.18)+d.effort/100*.05)}
+ featureLabels=["Vibration band","Settling time","Effort residual","Pose correlation","Following error","Flex exposure"];featureVals=[d.vibration/100,d.settling/100,d.effort/100,d.poseCorr/100*.22,d.follow/100,d.exposure/100*.12];
+ vibHealthy=[1,.24,.12,.05];var vm=1+d.vibration/40;vibCurrent=[1,Math.min(1,.24*vm),Math.min(1,.12*vm*1.5),Math.min(1,.05*vm*2.2)];
+}
+function updateGlobalViews(){
+ var d=actuatorDefs[selectedAxis],degrading=d.status==="degrading";
+ function txt(id,v){var e=document.getElementById(id);if(e)e.textContent=v}
+ function html(id,v){var e=document.getElementById(id);if(e)e.innerHTML=v}
+ function cls(id,c){var e=document.getElementById(id);if(e)e.className=c}
+ txt("healthOverall",d.health);txt("healthTrendText",d.status);cls("healthTrendText","delta "+(degrading?"warn":"good"));
+ txt("healthCable",d.cable);txt("healthCableText",d.harness+" · exposure "+d.exposure+"%");
+ txt("healthMotion",d.motion);txt("healthMotionText","Effort "+(d.effort>=0?"+":"")+d.effort+"%");
+ txt("healthHome",d.homing);txt("healthHomeText","σ "+d.homeSigma+d.unit);
+ txt("healthSectionTitle",d.short+" Health HMI");txt("healthActuatorName",d.name);txt("healthRingValue",d.health);txt("healthState",d.status.toUpperCase());cls("healthState",degrading?"warn":"good");
+ var ring=document.getElementById("selectedHealthRing");if(ring){ring.style.setProperty("--p",d.health);ring.style.setProperty("--c",degrading?"var(--amber)":"var(--green)")}
+ txt("healthSummary",degrading?"Multiple matched-motion features are drifting together.":"Current features remain close to the qualified matched-motion baseline.");
+ [["metricEffort",d.effort],["metricFollow",d.follow],["metricSettling",d.settling],["metricVibration",d.vibration]].forEach(function(x){txt(x[0],(x[1]>=0?"+":"")+x[1]+"%")});
+ [["barEffort",d.effort],["barFollow",d.follow],["barSettling",d.settling],["barVibration",d.vibration]].forEach(function(x){var e=document.querySelector("#"+x[0]+" i");if(e)e.style.width=Math.min(95,25+x[1]*2.1)+"%"});
+ txt("healthChartTitle","30-day condition trend · "+d.short);txt("contributorsTitle","Likely contributors · "+d.short);
+ var mech=Math.round(Math.min(92,25+d.effort*2.4+d.vibration*.8)),cable=Math.round(Math.min(92,15+d.dropouts*12+d.poseCorr*.35)),control=Math.round(Math.max(8,35+d.settling*.6-d.effort*.5));
+ html("contributorsKV","<div>Mechanical load / looseness</div><div>"+mech+"%</div><div>Harness / feedback path</div><div>"+cable+"%</div><div>Controls / tuning</div><div>"+control+"%</div><div>Unknown / other</div><div>"+Math.max(8,100-Math.max(mech,cable))+"%</div>");
+ html("healthAction","<strong>Maintenance action:</strong> "+(degrading?"Review the dominant evidence and perform the targeted inspection before changing the healthy baseline.":"Continue monitoring; no maintenance task generated from current condition alone."));
+ html("subsystemHealthRows",actuatorDefs.map(function(a,i){return "<tr data-axis='"+i+"'><td>"+a.short+"</td><td><span class='badge "+(a.status==="degrading"?"watch":"healthy")+"'>"+a.health+" "+a.status+"</span></td></tr>"}).join(""));
+ document.querySelectorAll("#subsystemHealthRows tr").forEach(function(r){r.onclick=function(){setActuator(this.getAttribute("data-axis"))}});
+ txt("tasksTitle","Prioritized Maintenance Work · "+d.short);txt("generatedTaskTitle","Generated task · "+d.harness+" / "+d.short);
+ var taskState=degrading?"INSPECT":(d.exposure>75||d.dropouts>d.dropBase*1.7?"WATCH":"MONITOR");
+ html("selectedTaskCard","<div class='task'><div><span class='badge "+(taskState==="INSPECT"?"inspect":taskState==="WATCH"?"watch":"healthy")+"'>"+taskState+"</span></div><div><h4>"+d.short+" · "+d.harness+"</h4><p>"+(degrading?"Matched-motion evidence is persistent enough to justify targeted inspection.":"No high-confidence defect signature. Continue condition monitoring and preserve event captures.")+"</p><div class='meta'><span>Health "+d.health+"/100</span><span>Exposure "+d.exposure+"th percentile</span><span>Dropout rate "+d.dropouts+"/10k</span></div></div><button class='btn primary' data-view='trouble'>Troubleshoot</button></div>");
+ document.querySelectorAll("#selectedTaskCard [data-view]").forEach(function(b){b.onclick=function(){showView(this.getAttribute("data-view"))}});
+ html("generatedTaskSteps","<div class='event'><b>Validate matched evidence</b><span>Confirm move, pose, data quality and configuration.</span></div><div class='event'><b>Inspect "+d.harness+"</b><span>Routing, strain relief, connector retention and shared conductors.</span></div><div class='event'><b>Check competing domain</b><span>Compare current/torque, feedback validity, network and homing evidence.</span></div><div class='event'><b>Record finding</b><span>Defect location, measurements, repair and replaced part.</span></div><div class='event'><b>Verify recovery</b><span>Repeat matched exposure and confirm abnormal signature collapses.</span></div>");
+ html("taskReasoning","<strong>Why:</strong> "+(degrading?"The selected actuator has multiple persistent deviations and the task engine can localize the likely maintenance domain.":"The selected actuator is largely healthy; the platform avoids creating unnecessary work from isolated or weak deviations."));
+ txt("flexCycles",d.flex.toFixed(2)+"M");txt("flexHarness",d.harness+" instance");txt("directionChanges",d.reversals.toFixed(2)+"M");txt("harnessAge",d.age+" mo");txt("routingRev","Routing rev "+d.route);txt("exposurePercentile",d.exposure+"%");
+ txt("cableTitle","Harness / Cable Health · "+d.short);txt("poseChartTitle","Pose-conditioned anomaly density · "+d.short);txt("poseChartSub","Events per 1,000 valid traversals through "+d.unit+" bins.");
+ txt("witnessBase",d.witnessBase.toFixed(3)+" Ω");txt("witnessCurrent",d.witnessNow.toFixed(3)+" Ω");txt("witnessEvents",d.witnessEvents+" / 10k cycles");
+ html("cableAction","<strong>"+(d.exposure>80||d.dropouts>d.dropBase*2?"INSPECT/WATCH:":"MONITOR:")+"</strong> "+(d.exposure>80||d.dropouts>d.dropBase*2?"Exposure and electrical evidence justify targeted review of "+d.harness+".":"Exposure alone does not justify replacement; continue trending normalized event rate and diagnostic-loop behavior."));
+ txt("encoderDropouts",d.dropouts.toFixed(1));txt("encoderBaseline","Baseline "+d.dropBase.toFixed(1));txt("encoderSteps",d.steps);txt("encoderPoseCorr",d.poseCorr+"%");txt("encoderPoseText",d.poseCorr>50?"Strong motion/pose association":"Weak-to-moderate pose association");txt("encoderEcat",d.ecat);
+ txt("encoderTitle","Encoder / Feedback Health · "+d.short);txt("encoderEventSub",d.dropouts>d.dropBase*1.5?"Illustrative intermittent feedback event with comparison to effort/network evidence.":"No strong intermittent feedback signature in current baseline.");
+ html("encoderEvidence","<div>Feedback event rate</div><div class='"+(d.dropouts>d.dropBase*2?"bad":"good")+"'>"+d.dropouts+"/10k</div><div>Motor effort change</div><div>"+(d.effort>10?"Elevated":"Normal")+"</div><div>EtherCAT WKC / CRC</div><div class='good'>"+d.ecat+"</div><div>Pose correlation</div><div class='"+(d.poseCorr>60?"warn":"good")+"'>"+d.poseCorr+"%</div>");
+ html("encoderAction","<strong>Action:</strong> "+(d.dropouts>d.dropBase*2?"Prioritize "+d.harness+" feedback conductors, connector pins and flex segment; keep encoder electronics/local supply as competing causes.":"Continue monitoring. Do not generate an encoder-cable task from the present evidence alone."));
+ txt("homeSigma",d.homeSigma+(d.unit==="mm"?" mm":"°"));txt("homeBaseline","Baseline "+d.homeBase+(d.unit==="mm"?" mm":"°"));txt("homeSearch",d.homeTime.toFixed(2)+" s");txt("homeSearchDelta",(d.homeDelta>=0?"+":"")+d.homeDelta+"%");txt("homeRetries",d.retries);txt("homeEffort","+"+d.homeEffort+"%");txt("homeTitle","Homing Health · "+d.short);
+ html("homeInterpretation","<div class='callout'><strong>Repeatability:</strong> "+(d.homeSigma>d.homeBase*1.8?"Drift exceeds the illustrative baseline; inspect reference mechanics and edge quality.":"Repeatability remains near the qualified baseline.")+"</div><div class='callout' style='margin-top:8px'><strong>Search effort:</strong> +"+d.homeEffort+"%. "+(d.homeEffort>7?"Review drag/interference or brake release.":"No strong search-load signature.")+"</div><div class='callout' style='margin-top:8px'><strong>Retries:</strong> "+d.retries+" in the illustrative window.</div>");
+ txt("vibTitle","Vibration / Mechanical Health · "+d.short);txt("vibConditionTitle",d.short+" condition");
+ html("vibConditionMetrics","<div class='progress'><div class='head'><span>Motion Effort</span><span>+"+d.effort+"%</span></div><div class='bar'><i style='width:"+Math.min(95,25+d.effort*2)+"%'></i></div></div><div class='progress'><div class='head'><span>Following Error</span><span>+"+d.follow+"%</span></div><div class='bar'><i style='width:"+Math.min(95,25+d.follow*2)+"%'></i></div></div><div class='progress'><div class='head'><span>Settling Time</span><span>+"+d.settling+"%</span></div><div class='bar'><i style='width:"+Math.min(95,25+d.settling*2)+"%'></i></div></div><div class='progress'><div class='head'><span>Vibration</span><span>+"+d.vibration+"%</span></div><div class='bar'><i style='width:"+Math.min(95,25+d.vibration*2)+"%'></i></div></div>");
+ html("vibAction","<strong>Action:</strong> "+(d.vibration>15&&d.effort>10?"Inspect fasteners, mounting, coupling/reducer, bearing condition and structural interference; compare spectrum after repair.":"No strong vibration-supported mechanical task. Continue matched-motion trending."));
+ txt("troubleTitle","Guided Troubleshooting · "+d.short);
+ var hasElec=d.dropouts>d.dropBase*1.5,hasMech=d.effort>10||d.vibration>15;
+ html("eventChronology","<div class='event'><b>Matched move evaluation</b><span>"+d.short+" · "+d.drive+" · "+d.harness+"</span></div><div class='event'><b>Feedback / motion residual</b><span>"+(hasElec?"Intermittent deviation detected.":"No strong feedback discontinuity.")+"</span></div><div class='event'><b>Effort comparison</b><span>"+(hasMech?"Expected-effort residual elevated.":"Current / torque remain close to baseline.")+"</span></div><div class='event'><b>Network scope</b><span>EtherCAT error evidence: "+d.ecat+".</span></div>");
+ var hp=Math.round(Math.min(90,20+d.dropouts*12+d.poseCorr*.35)),mp=Math.round(Math.min(90,20+d.effort*2+d.vibration)),cp=Math.round(Math.min(70,18+d.settling));
+ html("hypotheses","<div class='hypo'><div><h4>Harness / feedback path</h4><p>Dropout rate, pose correlation and network evidence.</p></div><div class='score'>"+hp+"%</div></div><div class='hypo'><div><h4>Mechanical load / compliance</h4><p>Effort, vibration, settling and following error.</p></div><div class='score'>"+mp+"%</div></div><div class='hypo'><div><h4>Controls / tuning</h4><p>Residual shape and settling without matching physical evidence.</p></div><div class='score'>"+cp+"%</div></div>");
+ html("troubleAction","<strong>Next action:</strong> "+(hasElec&&hp>=mp?"Inspect "+d.harness+" and feedback path using the approved procedure.":hasMech?"Inspect the mechanical load path and compare post-maintenance residuals.":"Collect more matched cycles; evidence is not strong enough for a targeted intrusive inspection."));
+ txt("modelsTitle","Machine Learning Evidence · "+d.short);txt("featureTitle","Current feature contribution · "+d.short);
+}
 function drawVisible(){
  lineChart("positionChart",[{data:posCmd,color:colors.teal},{data:posAct,color:colors.navy}]);
  lineChart("effortChart",[{data:cur,color:colors.amber},{data:torque,color:colors.navy}]);
  var ed=actuatorDefs[selectedAxis];var erange=ed.unit==="mm"?2.5:1.5;lineChart("errorChart",[{data:err,color:colors.red}],{min:-erange,max:erange});
- lineChart("healthTrend",[{data:figHealth,color:colors.green},{data:cableHealth,color:colors.teal},{data:shoulderHealth,color:colors.amber}],{min:60,max:95});
+ lineChart("healthTrend",[{data:figHealth,color:colors.green},{data:cableHealth,color:colors.teal},{data:selectedHealthTrend,color:colors.amber}],{min:55,max:100});
  barChart("poseChart",poseLabels,[{data:poseVals,color:colors.teal}],{max:22});
  lineChart("harnessTrend",[{data:harnessRate,color:colors.red}],{min:0,max:4.8});
  lineChart("witnessChart",[{data:witness,color:colors.amber}],{min:.82,max:.94});
  lineChart("encoderEventChart",[{data:encEvent,color:colors.red}],{min:-1,max:1.6});
  scatterChart("homeChart",home,{min:-.08,max:.15,color:colors.teal});
- barChart("vibSpectrum",["30","60","90","120"],[{data:[1,.24,.12,.05],color:colors.teal},{data:[1,.65,.48,.34],color:colors.amber}],{max:1.2});
+ barChart("vibSpectrum",["30","60","90","120"],[{data:vibHealthy,color:colors.teal},{data:vibCurrent,color:colors.amber}],{max:1.2});
  lineChart("vibWave",[{data:vib,color:colors.violet}],{min:-.3,max:.3});
  lineChart("replayChart",[{data:replayPos,color:colors.teal},{data:replayFb,color:colors.red},{data:replayCurrent,color:colors.navy}],{min:-1,max:1.5});
  barChart("featureChart",featureLabels,[{data:featureVals,color:colors.teal}],{max:.4});
 }
 document.getElementById("pauseBtn").addEventListener("click",function(){running=!running;this.textContent=running?"Pause demo":"Resume demo";document.getElementById("runState").textContent=running?"SHOW RUNNING":"DEMO PAUSED"});
 window.addEventListener("resize",function(){clearTimeout(window.__rz);window.__rz=setTimeout(drawVisible,100)});
-setActuator(1);updateAxisTable();drawVisible();setInterval(liveTick,100);
+buildDiagnosticData();setActuator(1);updateAxisTable();drawVisible();setInterval(liveTick,100);
 })();
 </script>
 </body></htmlvar actuatorMeta={
