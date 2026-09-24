@@ -1,0 +1,62 @@
+{
+  "menu": {
+    "title": "Moon over the Bayou",
+    "url": "assets/audio/moon-over-the-bayou.mp3",
+    "duration": 191.56,
+    "bpm": 102.05,
+    "requestedBpm": 82,
+    "beatCount": 299,
+    "source": "MOON OVER THE BAYOU.mp3",
+    "sha256": "3b40aed8776972a481825e9ef6f732579adaf049c27fe07546c63773c82c9cfb",
+    "method": "librosa 0.11 onset-strength / dynamic-programming beat tracking; pulse selected by recording autocorrelation, not prompt BPM",
+    "timingNote": "Automatically analyzed beat map. Not manually beat-charted; edit timestamps or use the sync offset for fine tuning.",
+    "minBeatInterval": 0.48762,
+    "maxBeatInterval": 0.76626,
+    "containerDuration": 191.592
+  },
+  "bayou": {
+    "title": "Beignet Bounce",
+    "url": "assets/audio/beignet-bounce.mp3",
+    "duration": 99.6,
+    "bpm": 108.2,
+    "requestedBpm": 146,
+    "beatCount": 176,
+    "source": "BEIGNET BOUNCE.mp3",
+    "sha256": "7256eac258d224f26a2d345d49003593003efbd74e82fdad21597046371c9c8d",
+    "method": "librosa 0.11 onset-strength / dynamic-programming beat tracking; pulse selected by recording autocorrelation, not prompt BPM",
+    "timingNote": "Automatically analyzed beat map. Not manually beat-charted; edit timestamps or use the sync offset for fine tuning.",
+    "minBeatInterval": 0.45279,
+    "maxBeatInterval": 0.63855,
+    "containerDuration": 99.624
+  },
+  "riverboat": {
+    "title": "Fireflies & Crocodile Eyes",
+    "url": "assets/audio/fireflies-and-crocodile-eyes.mp3",
+    "duration": 203.2,
+    "bpm": 102.1,
+    "requestedBpm": 104,
+    "beatCount": 338,
+    "source": "FIREFLIES & CROCODILE EYES.mp3",
+    "sha256": "dee57cbcc786d645d017c296669919e1840fc19e6cf5bf552cee1de627ab7d4f",
+    "method": "librosa 0.11 onset-strength / dynamic-programming beat tracking; pulse selected by recording autocorrelation, not prompt BPM",
+    "timingNote": "Automatically analyzed beat map. Not manually beat-charted; edit timestamps or use the sync offset for fine tuning.",
+    "minBeatInterval": 0.53406,
+    "maxBeatInterval": 0.67338,
+    "containerDuration": 203.232
+  },
+  "city": {
+    "title": "French Quarter Fever",
+    "url": "assets/audio/french-quarter-fever.mp3",
+    "duration": 191.6,
+    "bpm": 161.87,
+    "requestedBpm": 162,
+    "beatCount": 510,
+    "source": "FRENCH QUARTER FEVER.mp3",
+    "sha256": "f7a04ae2032f752555851afcd3f204041d599da72af73eb7cb8cf1b76cde519e",
+    "method": "librosa 0.11 onset-strength / dynamic-programming beat tracking; pulse selected by recording autocorrelation, not prompt BPM",
+    "timingNote": "Automatically analyzed beat map. Not manually beat-charted; edit timestamps or use the sync offset for fine tuning.",
+    "minBeatInterval": 0.32508,
+    "maxBeatInterval": 0.4644,
+    "containerDuration": 191.64
+  }
+}

@@ -716,6 +716,48 @@
     gap: 4rem;
     align-items: start;
   }
+  /* ── Focus lens selector ── */
+  .focus-lens { margin: 0 0 1.75rem; }
+  .focus-lens-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.7rem;
+  }
+  .focus-lens-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .focus-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.42rem 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    white-space: nowrap;
+  }
+  .focus-pill:hover { color: var(--white); border-color: rgba(200,150,46,0.45); }
+  .focus-pill.active {
+    color: var(--ink, #0d1f3c);
+    background: var(--gold);
+    border-color: var(--gold);
+    font-weight: 500;
+  }
+  .focus-lens-note {
+    font-size: 0.75rem;
+    color: var(--gold-dim);
+    line-height: 1.6;
+    margin-top: 0.7rem;
+    max-width: 34rem;
+  }
+  @media (max-width: 640px) {
+    .focus-pill { font-size: 0.66rem; padding: 0.38rem 0.7rem; }
+  }
+
   .recruiter-nav { display: flex; flex-direction: column; gap: 2px; }
   .recruiter-nav-btn {
     display: flex;
@@ -1853,11 +1895,11 @@
 
 <!-- ── HERO ── -->
 <div class="hero">
-  <div class="hero-eyebrow">Engineering Portfolio</div>
+  <div class="hero-eyebrow" id="heroEyebrow">Engineering Portfolio</div>
   <h1>Rey Soto</h1>
-  <div class="hero-title">Ride & Attraction Systems Engineer</div>
-  <p class="hero-desc">
-    10+ years building, commissioning, and restoring complex mechanical and electronic systems — from aerospace and power generation to theme park animatronics. Currently at Walt Disney World, Magic Kingdom West.
+  <div class="hero-title" id="heroTitle">Controls · Systems · Data · AI</div>
+  <p class="hero-desc" id="heroDesc">
+    10+ years engineering complex physical and digital systems — industrial controls &amp; automation, enterprise data &amp; machine learning, and themed-entertainment show systems. Currently at Walt Disney World, Magic Kingdom West.
   </p>
   <div class="hero-stats">
     <div class="stat">
@@ -1889,15 +1931,27 @@
   <div class="recruiter-brief-inner">
     <div class="recruiter-brief-left">
       <div class="section-label" style="margin-bottom:1rem;">For the Recruiter</div>
-      <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);margin-bottom:1.25rem;line-height:1.25;">The 30-Second Version</h2>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);margin-bottom:1rem;line-height:1.25;">The 30-Second Version</h2>
+
+      <!-- ── FOCUS LENS SELECTOR ── -->
+      <div class="focus-lens" id="focusLens">
+        <div class="focus-lens-label">View through a lens</div>
+        <div class="focus-lens-pills">
+          <button class="focus-pill active" data-focus="default"      onclick="setFocus('default')">Overview</button>
+          <button class="focus-pill"        data-focus="controls"     onclick="setFocus('controls')">Controls &amp; Systems</button>
+          <button class="focus-pill"        data-focus="data-ai"      onclick="setFocus('data-ai')">Data &amp; AI</button>
+          <button class="focus-pill"        data-focus="show-systems" onclick="setFocus('show-systems')">Show &amp; Entertainment</button>
+        </div>
+        <div class="focus-lens-note" id="focusLensNote">Same engineer, same evidence — reordered and re-emphasized for the discipline you're hiring for.</div>
+      </div>
       <p style="font-size:0.93rem;color:var(--muted);line-height:1.85;margin-bottom:1rem;">
-        Rey Soto is a Ride &amp; Attraction Systems Engineer with 10+ years spanning the U.S. Air Force, Boeing aerospace, Universal Orlando, GE power generation, and Walt Disney World. He currently works in Magic Kingdom West as a Ride Systems Technician, applying deep animatronic diagnostics and controls expertise in a live-show environment.
+        Rey Soto is a multidisciplinary engineer with 10+ years spanning the U.S. Air Force, Boeing aerospace, Universal Orlando, GE power generation, and Walt Disney World — working across industrial controls, automation, enterprise data and machine learning, embedded systems, and themed-entertainment technology. He currently works in Magic Kingdom West as a Ride Systems Technician, applying deep animatronic diagnostics and controls expertise in a live-show environment.
       </p>
       <p style="font-size:0.93rem;color:var(--muted);line-height:1.85;margin-bottom:1rem;">
         Before Disney, he served as a corporate controls engineer across a 10-plant steel manufacturing network — building the company's first real-time SCADA platform and a machine learning predictive maintenance system from the ground up. Before that: hydraulic ride systems and show timing at Universal, and VelociCoaster commissioning alongside Design Engineering.
       </p>
-      <p style="font-size:0.93rem;color:var(--muted);line-height:1.85;">
-        He's looking to grow into a role where that blend of field-proven systems knowledge, industrial controls depth, and hands-on commissioning experience has the most impact — whether in controls and show systems engineering, hardware and firmware design, or technical program work.
+      <p style="font-size:0.93rem;color:var(--muted);line-height:1.85;" id="recruiterClose">
+        He's looking to grow into a role where that blend of field-proven systems knowledge, industrial controls depth, enterprise data &amp; machine-learning work, and hands-on commissioning experience has the most impact — across controls &amp; systems engineering, data &amp; AI, and show-systems technology.
       </p>
     </div>
     <div class="recruiter-brief-right">
@@ -1971,7 +2025,7 @@
   <div class="projects-grid">
 
     <!-- PROJECT 01 — Walt Disney World -->
-    <div class="project-card featured fade-up">
+    <div class="project-card featured fade-up" data-proj="disney" data-employer="Walt Disney World">
       <div class="project-number">Project 01 · Walt Disney World</div>
       <div class="project-layout">
         <div>
@@ -2013,7 +2067,7 @@
     </div>
 
     <!-- PROJECT 02 — Insteel Industries -->
-    <div class="project-card featured fade-up">
+    <div class="project-card featured fade-up" data-proj="insteel" data-employer="Insteel Industries">
       <div class="project-number">Project 02 · Insteel Industries</div>
       <div class="project-layout">
         <div>
@@ -2173,7 +2227,7 @@
     </div>
 
     <!-- PROJECT 04 — Universal -->
-    <div class="project-card featured fade-up">
+    <div class="project-card featured fade-up" data-proj="universal" data-employer="Universal Orlando Resort">
       <div class="project-number">Project 03 · Universal Orlando Resort</div>
       <div class="project-layout">
         <div>
@@ -2327,9 +2381,84 @@
   <div class="section-label">Personal Work</div>
   <h2 class="section-title">The Home Lab</h2>
   <p style="color: var(--muted); max-width: 600px; margin-bottom: 3rem; font-size: 0.95rem; line-height: 1.8;">
-    Engineering doesn't stop at the job site. These personal projects represent curiosity in action — building animatronics, machining metal, designing PCBs, and rapid prototyping for the pure challenge of it.
+    Engineering doesn't stop at the job site. These personal projects represent curiosity in action — building animatronics, machining metal, designing PCBs, writing software and games, and rapid prototyping for the pure challenge of it.
   </p>
   <div class="personal-grid">
+
+    <!-- BAYOU BITES — Browser rhythm game, playable in-page -->
+    <div class="personal-card fade-up" style="grid-column: 1 / -1; border-left: 3px solid var(--gold);">
+      <div class="personal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:0.5rem;">Browser Game — Playable Here</div>
+      <div class="personal-name" style="font-size:1.45rem;">Bayou Bites</div>
+      <div style="font-size:0.88rem;color:var(--gold-light);font-style:italic;margin-bottom:1.25rem;">Original browser rhythm game · 4 original songs · 3 stages · touch, mouse &amp; keyboard</div>
+      <p class="personal-desc" style="margin-bottom:1.25rem;">
+        A self-contained, touch-first rhythm game built from scratch for the browser — no frameworks, no game engine. A hand-written HTML5 canvas render loop, a Web Audio timing system, sprite-atlas animation, and an adaptive beatmap engine that scales the pace to your accuracy. Four original songs carry a three-stage journey from the bayou to the riverboat to the city.
+      </p>
+      <div class="project-tags" style="margin-bottom:0.5rem;">
+        <span class="tag">HTML5 Canvas</span>
+        <span class="tag">Web Audio API</span>
+        <span class="tag">Custom Game Loop</span>
+        <span class="tag">Adaptive Beatmaps</span>
+        <span class="tag">Sprite Animation</span>
+        <span class="tag">Responsive · Touch-First</span>
+        <span class="tag">Zero Dependencies</span>
+      </div>
+
+      <!-- ── PLAY LAUNCH ── -->
+      <div style="margin-top:1.5rem;">
+        <button onclick="openGame()" style="
+          display:inline-flex;align-items:center;gap:0.7rem;
+          padding:0.8rem 1.7rem;
+          background:var(--gold);
+          border:1px solid var(--gold);
+          border-radius:6px;
+          color:var(--ink,#0d1f3c);
+          font-family:'DM Mono',monospace;
+          font-size:0.82rem;font-weight:600;
+          letter-spacing:0.1em;text-transform:uppercase;
+          cursor:pointer;
+          transition:filter 0.2s, transform 0.15s;
+        " onmouseover="this.style.filter='brightness(1.12)';this.style.transform='translateY(-1px)'"
+           onmouseout="this.style.filter='none';this.style.transform='none'">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Play in Browser
+        </button>
+        <div style="font-size:0.75rem;color:var(--gold-dim);margin-top:0.75rem;line-height:1.6;">
+          Opens in a window right here — best with sound on. Tap the pastries on the beat; leave the thorns alone.
+        </div>
+      </div>
+
+      <div class="card-detail-trigger" onclick="toggleInit('bayou-detail')" id="trigger-bayou-detail">
+        <span>How It Was Built</span>
+        <span class="sub-init-chevron" id="chevron-bayou-detail">▼</span>
+      </div>
+      <div class="card-detail-body" id="body-bayou-detail">
+        <div style="padding-top:1.5rem;">
+          <img src="assets/bayou-bites/preview.png" alt="Bayou Bites gameplay preview" loading="lazy"
+               style="width:100%;border-radius:8px;border:1px solid var(--border);margin-bottom:1.5rem;cursor:pointer;" onclick="openGame()">
+          <div class="case-block">
+            <div class="case-item">
+              <div class="case-label">Engine &amp; Rendering</div>
+              <div class="case-text">A from-scratch HTML5 canvas engine — its own game loop, fixed-timestep update, sprite-atlas animation, and layered parallax backgrounds. No Phaser, no Unity, no framework: just a hand-written render, input, and state pipeline in vanilla JavaScript.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Audio &amp; Timing</div>
+              <div class="case-text">The hard part of any rhythm game is timing. Beatmaps are aligned to four original tracks through the Web Audio API, with a judgment window that grades each tap and a calibration path for audio latency — the same signal-timing sensibility I bring to show control, applied to music instead of motion.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Adaptive Difficulty</div>
+              <div class="case-text">An adaptive pace system reads your accuracy in real time and scales the challenge across five levels, so the game stays in the sweet spot for a first-timer and a veteran alike — one journey, three stages, tuned live to the player.</div>
+            </div>
+            <div class="case-item">
+              <div class="case-label">Built to Embed</div>
+              <div class="case-text">Fully self-contained and responsive, designed to drop into any page as a sandboxed window that reports score and progress events back to its host — which is exactly how it runs inside this portfolio.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- HOME AUTOMATION — S7-1200 HVAC & Lift Station -->
     <div class="personal-card fade-up" style="grid-column: 1 / -1;">
@@ -3008,7 +3137,7 @@
     <div class="section-label">Capabilities</div>
     <h2 class="section-title" style="margin-bottom: 0;">Technical Skills</h2>
     <div class="skills-grid">
-      <div>
+      <div data-grp="attraction">
         <div class="skill-group-title">Ride & Attraction</div>
         <ul class="skill-list">
           <li>Animatronic diagnostics & repair</li>
@@ -3018,7 +3147,7 @@
           <li>System integration</li>
         </ul>
       </div>
-      <div>
+      <div data-grp="controls">
         <div class="skill-group-title">Controls & Automation</div>
         <ul class="skill-list">
           <li>Rockwell (Studio 5000)</li>
@@ -3028,7 +3157,7 @@
           <li>HMI / SCADA systems</li>
         </ul>
       </div>
-      <div>
+      <div data-grp="ai">
         <div class="skill-group-title">AI & Engineering</div>
         <ul class="skill-list">
           <li>ML predictive maintenance</li>
@@ -3038,7 +3167,7 @@
           <li>LLM-augmented troubleshooting</li>
         </ul>
       </div>
-      <div>
+      <div data-grp="fabrication">
         <div class="skill-group-title">Fabrication & Design</div>
         <ul class="skill-list">
           <li>CNC machining (aluminum)</li>
@@ -3066,7 +3195,7 @@
 </section>
 
 <footer>
-  <strong>Rey Soto</strong> · Ride & Attraction Systems Engineer · Deltona, FL · (407) 491-5445
+  <strong>Rey Soto</strong> · Controls · Systems · Data · AI Engineer · Deltona, FL · (407) 491-5445
 </footer>
 
 <script>
@@ -3152,7 +3281,13 @@
 
   function renderSkills() {
     const container = document.getElementById('skillsBars');
-    const filtered = activeCategory === 'all' ? allSkills : allSkills.filter(s => s.cat === activeCategory);
+    let filtered = activeCategory === 'all' ? allSkills.slice() : allSkills.filter(s => s.cat === activeCategory);
+    // When showing all, order by the active focus lens so the most
+    // relevant discipline surfaces first (stable sort keeps sub-order).
+    if (activeCategory === 'all' && window.__focusCatOrder) {
+      const ord = window.__focusCatOrder;
+      filtered.sort((a, b) => ord.indexOf(a.cat) - ord.indexOf(b.cat));
+    }
     container.innerHTML = '';
     filtered.forEach((skill, i) => {
       const card = document.createElement('div');
@@ -3180,6 +3315,122 @@
   }, { threshold: 0.1 });
 
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // ══════════════════════════════════════════════════════════════
+  //  FOCUS LENS ENGINE
+  //  One engineer, one set of evidence — viewed through different
+  //  professional lenses. The default is intentionally multidisciplinary;
+  //  ?focus=controls|data-ai|show-systems reorders + re-emphasizes.
+  //  Nothing is a "career change" — the stack expands, it never replaces.
+  // ══════════════════════════════════════════════════════════════
+  const FOCUS = {
+    'default': {
+      pill: 'default',
+      eyebrow: 'Engineering Portfolio',
+      title:   'Controls · Systems · Data · AI',
+      desc:    '10+ years engineering complex physical and digital systems — industrial controls &amp; automation, enterprise data &amp; machine learning, and themed-entertainment show systems. Currently at Walt Disney World, Magic Kingdom West.',
+      close:   'He’s looking to grow into a role where that blend of field-proven systems knowledge, industrial controls depth, enterprise data &amp; machine-learning work, and hands-on commissioning experience has the most impact — across controls &amp; systems engineering, data &amp; AI, and show-systems technology.',
+      note:    'Same engineer, same evidence — reordered and re-emphasized for the discipline you’re hiring for.',
+      projOrder: ['disney', 'insteel', 'universal'],
+      catOrder:  ['attraction', 'controls', 'ai', 'fabrication'],
+    },
+    'controls': {
+      pill: 'controls',
+      eyebrow: 'Engineering Portfolio · Controls & Systems Lens',
+      title:   'Controls &amp; Systems Engineering',
+      desc:    'Industrial controls, automation, and motion-systems engineer — PLC architecture, SCADA, drives, industrial networks, commissioning, and reliability across steel manufacturing, power generation, and themed-entertainment ride &amp; show systems. Data and machine learning layered on top of that foundation.',
+      close:   'For a controls or systems role the through-line is clear: PLC and SCADA architecture across a 10-plant network, motion and drives work, ride and show-control systems at Disney and Universal, and hands-on field commissioning — with data and machine learning built on that foundation, not in place of it.',
+      note:    'Controls & Systems lens: controls, PLC, motion, SCADA, and commissioning surfaced first.',
+      projOrder: ['insteel', 'disney', 'universal'],
+      catOrder:  ['controls', 'attraction', 'ai', 'fabrication'],
+    },
+    'data-ai': {
+      pill: 'data-ai',
+      eyebrow: 'Engineering Portfolio · Data & AI Lens',
+      title:   'Data &amp; AI Engineering',
+      desc:    'Data &amp; AI engineer grounded in real operational systems — enterprise data architecture, telemetry, condition monitoring, machine-learning predictive maintenance, and AI-augmented engineering, built on a deep industrial controls and systems foundation.',
+      close:   'For a data or AI role the differentiator is where the data comes from: he architected the enterprise SCADA and production-data platform, then built the condition-monitoring and machine-learning predictive-maintenance pipeline on top of it — someone who understands the system from the sensor on the machine all the way to the model driving the business decision.',
+      note:    'Data & AI lens: enterprise data, ML, telemetry, and software / embedded architecture surfaced first.',
+      projOrder: ['insteel', 'disney', 'universal'],
+      catOrder:  ['ai', 'controls', 'fabrication', 'attraction'],
+    },
+    'show-systems': {
+      pill: 'show-systems',
+      eyebrow: 'Engineering Portfolio · Show & Entertainment Lens',
+      title:   'Show &amp; Entertainment Systems',
+      desc:    'Themed-entertainment systems engineer — animatronics, show control, ride systems, motion, and special-effects technology, backed by industrial controls depth and embedded / distributed-systems design. Walt Disney World and Universal Orlando.',
+      close:   'For a show-systems role the fit is direct: live animatronic and ride-control work at Walt Disney World, hydraulics, show timing, and VelociCoaster commissioning at Universal, and custom embedded / distributed hardware for animatronic figures — industrial controls depth applied to themed entertainment.',
+      note:    'Show & Entertainment lens: animatronics, show control, ride systems, and effects surfaced first.',
+      projOrder: ['disney', 'universal', 'insteel'],
+      catOrder:  ['attraction', 'controls', 'fabrication', 'ai'],
+    },
+  };
+
+  const FOCUS_ALIASES = {
+    'default': 'default', 'overview': 'default', 'all': 'default',
+    'controls': 'controls', 'systems': 'controls', 'controls-systems': 'controls', 'automation': 'controls',
+    'data-ai': 'data-ai', 'data': 'data-ai', 'ai': 'data-ai', 'dataai': 'data-ai', 'data_ai': 'data-ai',
+    'show-systems': 'show-systems', 'show': 'show-systems', 'show-control': 'show-systems',
+    'entertainment': 'show-systems', 'themed': 'show-systems', 'wdi': 'show-systems',
+  };
+  function normalizeFocus(v) {
+    if (!v) return 'default';
+    return FOCUS_ALIASES[String(v).toLowerCase().trim()] || 'default';
+  }
+
+  function applyFocus(mode) {
+    const cfg = FOCUS[mode] || FOCUS['default'];
+
+    // 1) Hero + recruiter copy
+    const setHTML = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+    setHTML('heroEyebrow', cfg.eyebrow);
+    setHTML('heroTitle',   cfg.title);
+    setHTML('heroDesc',    cfg.desc);
+    setHTML('recruiterClose', cfg.close);
+    setHTML('focusLensNote',  cfg.note);
+
+    // 2) Reorder + renumber project case studies
+    document.querySelectorAll('.project-card[data-proj]').forEach(card => {
+      const rank = cfg.projOrder.indexOf(card.dataset.proj);
+      const r = rank === -1 ? 99 : rank;
+      card.style.order = r;
+      const num = card.querySelector('.project-number');
+      if (num && r < 90) num.textContent = 'Project 0' + (r + 1) + ' · ' + card.dataset.employer;
+    });
+
+    // 3) Skills — interactive cards (via focus sort) + static groups
+    window.__focusCatOrder = cfg.catOrder;
+    if (typeof renderSkills === 'function') renderSkills();
+    document.querySelectorAll('.skills-grid [data-grp]').forEach(g => {
+      const rank = cfg.catOrder.indexOf(g.dataset.grp);
+      g.style.order = rank === -1 ? 99 : rank;
+    });
+
+    // 4) Active pill + body flag (subtle accent hook, not a reskin)
+    document.querySelectorAll('.focus-pill').forEach(p =>
+      p.classList.toggle('active', p.dataset.focus === cfg.pill));
+    document.body.dataset.focus = cfg.pill;
+  }
+
+  // Public: switch lens AND update the URL so the view is shareable.
+  function setFocus(mode) {
+    const m = normalizeFocus(mode);
+    applyFocus(m);
+    try {
+      const url = new URL(window.location.href);
+      if (m === 'default') url.searchParams.delete('focus');
+      else url.searchParams.set('focus', m);
+      history.replaceState(null, '', url);
+    } catch (e) {}
+  }
+  window.setFocus = setFocus;
+
+  // Init from ?focus= on load (default stays neutral/multidisciplinary)
+  (function initFocus() {
+    let param = null;
+    try { param = new URL(window.location.href).searchParams.get('focus'); } catch (e) {}
+    applyFocus(normalizeFocus(param));
+  })();
 </script>
 
 <!-- ── HMI SIMULATOR MODAL ── -->
@@ -3216,6 +3467,51 @@
     ></iframe>
   </div>
 </div>
+
+<!-- ── BAYOU BITES GAME MODAL ── -->
+<div id="gameModal" style="
+  display:none;position:fixed;inset:0;z-index:8889;
+  background:rgba(4,10,14,0.90);
+  backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;
+" onclick="if(event.target===this)closeGame()">
+  <div style="position:relative;">
+    <button onclick="closeGame()" style="
+      position:absolute;top:-2.6rem;right:0;z-index:10;
+      background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);
+      border-radius:4px;color:rgba(255,255,255,0.7);
+      font-size:0.8rem;padding:0.4rem 0.8rem;
+      cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:0.1em;
+      transition:background 0.15s, color 0.15s;
+    " onmouseover="this.style.background='rgba(255,255,255,0.14)';this.style.color='#fff'"
+       onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='rgba(255,255,255,0.7)'">✕ CLOSE</button>
+    <iframe
+      id="gameFrame"
+      src=""
+      style="width:480px;height:680px;aspect-ratio:12/17;max-width:94vw;max-height:86vh;border:none;border-radius:14px;box-shadow:0 30px 70px rgba(0,0,0,0.7);display:block;background:#071923;"
+      allow="autoplay"
+      title="Bayou Bites rhythm game"
+    ></iframe>
+  </div>
+</div>
+<script>
+  // Lazy-load the game on open (keeps audio/assets off the initial page load)
+  // and fully tear down the iframe on close so its music stops.
+  function openGame(){
+    var m = document.getElementById('gameModal');
+    document.getElementById('gameFrame').src = 'assets/bayou-bites/index.html?embed=1';
+    m.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeGame(){
+    document.getElementById('gameModal').style.display = 'none';
+    document.getElementById('gameFrame').src = 'about:blank';
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.getElementById('gameModal').style.display === 'flex') closeGame();
+  });
+</script>
 
 <!-- ── EASTER EGG: Three-circle silhouette ── -->
 <img id="easterEgg" src="assets/sprites/mouse.png" alt="..." title="...">

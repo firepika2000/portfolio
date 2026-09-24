@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#071923"><meta name="description" content="Feel the beat. Feed the gator. A touch-first, three-stage rhythm game."><title>Bayou Bites · Adaptive Rhythm Edition</title><link rel="stylesheet" href="styles.css"></head><body>
+<main class="mount"><div class="edition"><span>THE MIDNIGHT ARCADE</span><span>RHYTHM EDITION · 05</span></div>
+<section class="cabinet" id="game" aria-label="Bayou Bites rhythm game" data-mode="loading">
+<canvas id="canvas" width="480" height="680" tabindex="0" aria-label="Rhythm playfield. Tap left, center or right as a pastry crosses the glowing line. Never tap thorn fruit."></canvas>
+<div class="edge" aria-hidden="true"></div>
+<div id="menu" class="menu" hidden>
+ <p class="menu-overline">A SMALL BITE OF A BRIGHTER NIGHT</p><img class="big-logo" data-asset="logo" alt="Bayou Bites">
+ <button id="theme" class="theme glass" aria-label="Play Moon over the Bayou"><span class="music-icon">♪</span><span class="theme-copy"><small id="theme-status">TAP TO HEAR LOUIS PLAY</small><b>Moon over the Bayou</b><em>4 ORIGINAL SONGS <span class="dots">● · · ·</span></em></span><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button>
+ <button id="performer" class="performer" aria-label="Let Louis play his trumpet"><span id="performer-hint">LET LOUIS PLAY ♫</span></button>
+ <button class="start gold" id="start" disabled><span class="ear-mark" aria-hidden="true"></span><b>START</b><span>▸</span></button>
+ <p class="menu-hint">TAP ON THE BEAT. TAKE A BITE.</p>
+ <div class="menu-tools"><button class="square glass sound-button" aria-label="Mute sound">♪</button><button class="square glass settings-button" aria-label="Open audio and timing settings">⚙</button><span class="menu-tagline">FEEL THE BEAT<br><strong>FEED THE GATOR</strong></span><button id="help" class="glass help-button">HOW TO<br><b>PLAY ↗</b></button></div>
+ <p class="menu-best">PERSONAL BEST <strong id="best">0</strong> · 3 STAGES / 1 JOURNEY</p>
+</div>
+<div id="play-ui" hidden>
+ <header class="game-hud"><img data-asset="logo" class="small-logo" alt="Bayou Bites"><div class="score"><small>SCORE</small><b id="score">000000</b><div class="combo-box"><span id="combo">0</span><small id="combo-caption">COMBO</small></div></div><div class="health"><small>HEARTS</small><div id="hearts" aria-label="3 hearts remaining"><span>♥</span><span>♥</span><span>♥</span></div><p>MISSES <b id="misses">0 / 3</b></p><div id="heat" class="heat" aria-label="Pace 1 of 5"><i></i><i></i><i></i><i></i><i></i></div><small class="pace-label" id="pace-label">PACE 1 / 5</small></div><button id="pause" class="pause glass" aria-label="Pause game">Ⅱ</button></header>
+ <div class="song-ribbon glass"><span class="song-icon">♪</span><div><small id="stage-label">01 · BAYOU</small><b id="song-title">Beignet Bounce</b></div><span class="tempo"><b id="bpm">108</b> BPM <i id="beat-dot"></i></span></div>
+ <div id="pace-notice" class="pace-notice" aria-hidden="true"></div>
+ <div class="judgment" id="judgment" aria-hidden="true"><b id="judge-word"></b><small id="judge-detail"></small></div>
+ <div class="micro-stats"><span>ACCURACY <b id="accuracy">—</b></span><span id="guide-text">PASTRY: TAP · THORNS: REST</span><span id="mult">×1</span></div>
+ <nav class="pads" aria-label="Timed munch controls"><button class="pad left" data-lane="0" aria-label="Munch left lane, A or left arrow"><span class="ear-mark"></span><small>LEFT · A</small></button><button class="pad center" data-lane="1" aria-label="Munch center lane, S or down arrow"><span class="ear-mark"></span><small>CENTER · S</small></button><button class="pad right" data-lane="2" aria-label="Munch right lane, D or right arrow"><span class="ear-mark"></span><small>RIGHT · D</small></button></nav>
+ <div class="song-progress"><div class="progress-track"><i id="progress"></i></div><div><span id="elapsed">0:00</span><span id="journey">01 BAYOU · 02 RIVERBOAT · 03 CITY</span><span id="duration">1:40</span></div></div>
+</div>
+<div class="modal-backdrop" id="modal" hidden><section class="panel glass" id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title" tabindex="-1"><button id="panel-close" aria-label="Close dialog" class="panel-close">×</button><p id="panel-kicker" class="kicker"></p><h1 id="panel-title"></h1><div id="panel-body"></div><div id="panel-actions"></div></section></div>
+<div id="count-in" class="count-in" hidden><small id="count-area">THE BAYOU</small><b id="count-number">4</b><span id="count-song">Beignet Bounce</span><em>TAP THE PASTRY ON THE LINE</em></div>
+<div id="loading" class="loading glass"><b>WAKING THE BAYOU…</b><small>Setting the stage for Louis.</small></div>
+</section><p class="outside"><span>TOUCH · MOUSE · A S D</span><span>Feel the beat. Feed the gator.</span></p><p id="announcer" role="status" aria-live="polite" class="sr-only"></p></main>
+<script src="sprite-data.js"></script><script src="track-data.js"></script><script src="menu-envelope.js"></script><script src="music.js"></script><script src="rhythm.js"></script><script src="engine.js"></script><script src="game.js"></script></body></html>
