@@ -758,6 +758,134 @@
     .focus-pill { font-size: 0.66rem; padding: 0.38rem 0.7rem; }
   }
 
+  /* ── Nav lens switcher (visible from the first screen, incl. mobile) ── */
+  .nav-right { display: flex; align-items: center; gap: 2rem; }
+  .nav-lens {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--gold-light);
+    cursor: pointer;
+  }
+  .nav-lens-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+  .nav-lens select {
+    appearance: none;
+    -webkit-appearance: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    color: inherit;
+    background: rgba(200,150,46,0.08);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.36rem 1.8rem 0.36rem 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .nav-lens::after {
+    content: '▾';
+    position: absolute;
+    right: 0.7rem;
+    font-size: 0.7rem;
+    pointer-events: none;
+    color: inherit;
+  }
+  .nav-lens select:hover,
+  .nav-lens select:focus-visible { border-color: rgba(200,150,46,0.6); outline: none; }
+  .nav-lens select option { background: #0D1F3C; color: #F5F0E8; }
+  /* A non-default lens reads as "on" at a glance */
+  body[data-focus]:not([data-focus="default"]) .nav-lens { color: var(--navy); }
+  body[data-focus]:not([data-focus="default"]) .nav-lens select { background: var(--gold); border-color: var(--gold); }
+  /* Mid widths: make room for the switcher before the links collide */
+  @media (max-width: 1080px) {
+    nav { padding-left: 2rem; padding-right: 2rem; }
+    .nav-right, .nav-links { gap: 1.25rem; }
+    .nav-lens-label { display: none; }
+  }
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+  }
+  @media (max-width: 480px) {
+    .nav-lens select { font-size: 0.68rem; padding: 0.32rem 1.6rem 0.32rem 0.7rem; }
+  }
+
+  /* ── In-card emphasis: lens-relevant tags light up, the rest recede ── */
+  .tag { transition: opacity 0.3s, background 0.3s, border-color 0.3s, color 0.3s; }
+  body[data-focus]:not([data-focus="default"]) .tag:not(.tag-hit) { opacity: 0.45; }
+  .tag.tag-hit {
+    background: rgba(200,150,46,0.26);
+    border-color: var(--gold);
+    color: var(--white);
+  }
+
+  /* ── Per-lens "why this matters" callout ── */
+  .lens-why {
+    display: none;
+    margin: 0 0 1.25rem;
+    padding: 0.75rem 1rem;
+    border-left: 2px solid var(--gold);
+    background: rgba(200,150,46,0.06);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.86rem;
+    line-height: 1.65;
+    color: var(--cream);
+  }
+  .lens-why.show { display: block; animation: lensIn 0.35s ease; }
+  .lens-why-label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 0.25rem;
+  }
+  @keyframes lensIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ── Lens-change toast (confirms what moved) ── */
+  .lens-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 1.5rem;
+    z-index: 200;
+    transform: translate(-50%, 0.75rem);
+    opacity: 0;
+    pointer-events: none;
+    width: max-content;
+    max-width: calc(100vw - 2rem);
+    padding: 0.6rem 1.2rem;
+    background: rgba(13,31,60,0.96);
+    border: 1px solid var(--gold-dim);
+    border-radius: 10px;
+    backdrop-filter: blur(8px);
+    text-align: center;
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .lens-toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .lens-toast b {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--gold-light);
+  }
+  .lens-toast span {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
   .recruiter-nav { display: flex; flex-direction: column; gap: 2px; }
   .recruiter-nav-btn {
     display: flex;
@@ -1883,15 +2011,27 @@
 
 <nav>
   <a href="#" class="nav-logo">Rey Soto</a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#timeline">Journey</a></li>
-    <li><a href="#personal">Lab</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#timeline">Journey</a></li>
+      <li><a href="#personal">Lab</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <label class="nav-lens" title="View this portfolio through a discipline lens">
+      <span class="nav-lens-label">Lens</span>
+      <select id="navLens" aria-label="Portfolio focus lens" onchange="setFocus(this.value)">
+        <option value="default">Overview</option>
+        <option value="controls">Controls &amp; Systems</option>
+        <option value="data-ai">Data &amp; AI</option>
+        <option value="show-systems">Show &amp; Entertainment</option>
+      </select>
+    </label>
+  </div>
 </nav>
+<div class="lens-toast" id="lensToast" role="status" aria-live="polite"></div>
 
 <!-- ── HERO ── -->
 <div class="hero">
@@ -2386,7 +2526,7 @@
   <div class="personal-grid">
 
     <!-- BAYOU BITES — Browser rhythm game, playable in-page -->
-    <div class="personal-card fade-up" style="grid-column: 1 / -1; border-left: 3px solid var(--gold);">
+    <div class="personal-card fade-up" data-lab="bayou" style="grid-column: 1 / -1; border-left: 3px solid var(--gold);">
       <div class="personal-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
       </div>
@@ -2461,7 +2601,7 @@
     </div>
 
     <!-- HOME AUTOMATION — S7-1200 HVAC & Lift Station -->
-    <div class="personal-card fade-up" style="grid-column: 1 / -1;">
+    <div class="personal-card fade-up" data-lab="hvac" style="grid-column: 1 / -1;">
       <div class="personal-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4M2 10h20"/><circle cx="7" cy="13.5" r="1"/><circle cx="12" cy="13.5" r="1"/><circle cx="17" cy="13.5" r="1"/></svg>
       </div>
@@ -2512,7 +2652,7 @@
     </div>
 
     <!-- JOLLY ROGER — full width featured -->
-    <div class="personal-card fade-up" style="grid-column: 1 / -1; border-left: 3px solid var(--gold);">
+    <div class="personal-card fade-up" data-lab="jolly" style="grid-column: 1 / -1; border-left: 3px solid var(--gold);">
       <div class="personal-icon">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="4"/><path d="M8 13s-2 1-2 4h12c0-3-2-4-2-4M9 21l3-4 3 4M9 5l-2-2M15 5l2-2"/></svg>
       </div>
@@ -2627,7 +2767,7 @@
     </div>
 
     <!-- WALL-E — full width featured, in progress -->
-    <div class="personal-card fade-up" style="grid-column: 1 / -1; border-left: 3px solid var(--gold-dim);">
+    <div class="personal-card fade-up" data-lab="walle" style="grid-column: 1 / -1; border-left: 3px solid var(--gold-dim);">
       <div class="personal-icon" style="border-color: var(--gold-dim);">
         <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M7 8V6a5 5 0 0 1 10 0v2"/><circle cx="9" cy="14" r="1.5"/><circle cx="15" cy="14" r="1.5"/><path d="M9 18h6"/></svg>
       </div>
@@ -2743,7 +2883,7 @@
     </div>
 
     <!-- PIXIE — full width featured -->
-    <div class="personal-card fade-up" style="grid-column: 1 / -1; border-left: 3px solid var(--gold-dim);">
+    <div class="personal-card fade-up" data-lab="pixie" style="grid-column: 1 / -1; border-left: 3px solid var(--gold-dim);">
       <div class="personal-icon" style="border-color: var(--gold-dim);">
         <svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M12 2v4M12 18v4"/><circle cx="12" cy="12" r="3"/><path d="M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
       </div>
@@ -2807,6 +2947,7 @@
               With custom nodes installed, each arm assembly connects via two Lemo connectors: motor power harness and PIXIE node cable. A second set of pre-built arms held as hot-swap spares enables scheduled swaps in minutes — removed arm goes to shop for full rebuild and inspection. Reactive in-cavity repair replaced by proactive scheduled rotation.
             </div>
           </div>
+          </div><!-- /case-block -->
 
           <!-- ── PIXIE ATTACHMENT ──────────────────────────────────────── -->
           <div style="margin-top:1.5rem;margin-bottom:0.5rem;">
@@ -3378,6 +3519,100 @@
     return FOCUS_ALIASES[String(v).toLowerCase().trim()] || 'default';
   }
 
+  // ── Per-lens emphasis inside the cards ─────────────────────────
+  // label   : display name (nav, callout label, toast)
+  // labOrder: Home Lab full-width card order (half-width fabrication
+  //           cards stay pinned at the end so the 2-col pairing holds)
+  // tagRe   : which tags light up; everything else recedes
+  const LENS = {
+    'default': {
+      label: 'Overview',
+      labOrder: ['bayou', 'hvac', 'jolly', 'walle', 'pixie'],
+      tagRe: null,
+    },
+    'controls': {
+      label: 'Controls & Systems',
+      labOrder: ['hvac', 'pixie', 'walle', 'jolly', 'bayou'],
+      tagRe: /\bplc\b|siemens|\bs7\b|tia portal|scada|\bhmi\b|vfd|servo|motion control|multi-axis|hydraulic|commissioning|ride controls|electrical|et200|\bpwm\b|ot networking|lift station|hvac|rs-422|biss-c|lighting controls|root cause|vibration/i,
+    },
+    'data-ai': {
+      label: 'Data & AI',
+      labOrder: ['pixie', 'bayou', 'hvac', 'walle', 'jolly'],
+      tagRe: /machine learning|maximo|cmms|vibration|scada|real-time data|dashboard|reporting|protocol|\becc\b|psync|embedded|rp2350|qt5|html5 canvas|web audio|game loop|adaptive|zero dependencies|biss-c/i,
+    },
+    'show-systems': {
+      label: 'Show & Entertainment',
+      labOrder: ['jolly', 'pixie', 'walle', 'bayou', 'hvac'],
+      tagRe: /animatron|\bshow\b|scene|lighting controls|hydraulic|ride controls|commissioning|themed|wall installation|linkage|character|servo|multi-axis|motion control|full-scale|psync|wire reduction|root cause|electrical diagnostics|cnc milled|3d printed|sprite/i,
+    },
+  };
+
+  // One-line "why this matters" per card per lens. Drawn only from what
+  // each card already states — no lens gets a callout it can't back up.
+  const WHY = {
+    disney: {
+      'controls':     'Live multi-axis motion, drive faults, DMX lighting networks, show-control interfaces, and ride electrical systems diagnosed and restored in a live guest-facing environment — field controls work where every minute of downtime is visible.',
+      'data-ai':      'The ground truth maintenance data depends on: daily root-cause work on real animatronic and lighting failure modes, including a systemic fixture failure traced to a power-supply specification mismatch that had resisted prior diagnosis.',
+      'show-systems': 'Primary technical resource for complex hydraulic, pneumatic, and servo-driven animatronic figures at Magic Kingdom West — plus show lighting and show-control interfaces — while training the team that keeps them running.',
+    },
+    insteel: {
+      'controls':     'Owned the controls and automation domain across 10 plants: a phased Siemens S7 fleet migration, company-wide SCADA, and a network of 20–30 controls technicians. The predictive platform was built on top of this controls modernization.',
+      'data-ai':      'The full chain from machine signal to business decision: live SCADA production data from 10 plants, fused with vibration and oil analysis into an ML failure-prediction model that automatically generates IBM Maximo work orders.',
+      'show-systems': 'The disciplines a show-control platform needs at scale — deterministic PLC logic, fleet-wide standardization, real-time monitoring, and maintenance scheduled before a failure instead of discovered after one.',
+    },
+    universal: {
+      'controls':     'Hydraulic motion-base control, servo-valve systems, and ride-control validation — electrical testing and calibration against OEM and engineering specifications on the VelociCoaster Commissioning & Test team.',
+      'data-ai':      'A complex real-time operational environment: motion, projection, audio, and prop cues synchronized to hard timing windows — exactly where the operational data behind monitoring systems originates.',
+      'show-systems': 'Multi-cue show sequences on Transformers, hydraulic simulator motion bases, and VelociCoaster commissioning alongside Design Engineering — props, lighting, audio, and motion tuned as one integrated show.',
+    },
+    pixie: {
+      'controls':     'Deterministic encoder capture and quadrature regeneration on RP2350 PIO with zero interrupt jitter. The drives see an unmodified signal, so it drops into existing servo systems with no reconfiguration.',
+      'data-ai':      'A distributed telemetry system: three nodes stream framed position data over a custom protocol with Hamming ECC and CRC-16, and a Qt5 HMI surfaces live link health, velocity, and diagnostics.',
+      'show-systems': 'Designed for animatronic maintainability: a 17-motor figure drops from 68 encoder wires to 36, and each arm becomes a quick-disconnect module that swaps in minutes instead of hours.',
+    },
+    hvac: {
+      'controls':     'Real industrial hardware at home: an S7-1200 running VFD-driven blower and compressor control, ET200 distributed I/O, and ladder-logic lift-station control with fault alarming.',
+    },
+    walle: {
+      'controls':     'A full figure-control architecture in design: multi-axis servo control for head, eyes, arms, and tracks on custom control electronics and PCBs.',
+      'show-systems': 'Character animation where performance is the product — the character’s expressiveness lives in millimeters of eye movement and fractions of a second of timing.',
+    },
+    jolly: {
+      'show-systems': 'A finished themed installation, not just a mechanism: concept, servo-and-linkage jaw animation, in-house CNC and 3D-printed fabrication, and show programming.',
+    },
+    bayou: {
+      'data-ai':      'Software engineering from first principles: a hand-written render and timing engine plus an adaptive system that reads player accuracy in real time and adjusts the pace — no frameworks.',
+      'show-systems': 'Themed entertainment in software: an original three-stage journey, four original songs, and beat-synced cue timing — the show-control sensibility applied to music instead of motion.',
+    },
+  };
+
+  // Find-or-create the callout slot right under a card's description.
+  function lensWhySlot(card) {
+    let slot = card.querySelector('.lens-why');
+    if (slot) return slot;
+    const desc = card.querySelector('.project-desc, .personal-desc');
+    if (!desc) return null;
+    slot = document.createElement('div');
+    slot.className = 'lens-why';
+    desc.insertAdjacentElement('afterend', slot);
+    return slot;
+  }
+
+  let currentFocus = null;
+  let toastTimer = null;
+  function showLensToast(mode) {
+    const t = document.getElementById('lensToast');
+    if (!t) return;
+    const head = mode === 'default' ? 'Overview' : LENS[mode].label + ' lens';
+    const sub  = mode === 'default' ? 'Full multidisciplinary view' : 'Projects, lab work & skills reordered';
+    t.innerHTML = '<b></b><span></span>';
+    t.firstChild.textContent = head;
+    t.lastChild.textContent  = sub;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
   function applyFocus(mode) {
     const cfg = FOCUS[mode] || FOCUS['default'];
 
@@ -3406,16 +3641,48 @@
       g.style.order = rank === -1 ? 99 : rank;
     });
 
-    // 4) Active pill + body flag (subtle accent hook, not a reskin)
+    const lens = LENS[cfg.pill] || LENS['default'];
+
+    // 4) Home Lab — reorder full-width cards; half-width stay pinned last
+    document.querySelectorAll('.personal-grid > .personal-card').forEach((card, i) => {
+      const rank = card.dataset.lab ? lens.labOrder.indexOf(card.dataset.lab) : -1;
+      card.style.order = rank === -1 ? 50 + i : rank;
+    });
+
+    // 5) Tag emphasis — lens-relevant tags light up, the rest recede
+    document.querySelectorAll('.tag').forEach(tag => {
+      tag.classList.toggle('tag-hit', !!(lens.tagRe && lens.tagRe.test(tag.textContent)));
+    });
+
+    // 6) "Why this matters" callouts on case studies + Home Lab cards
+    document.querySelectorAll('.project-card[data-proj], .personal-card[data-lab]').forEach(card => {
+      const id = card.dataset.proj || card.dataset.lab;
+      const text = WHY[id] && WHY[id][cfg.pill];
+      const slot = text ? lensWhySlot(card) : card.querySelector('.lens-why');
+      if (!slot) return;
+      if (text) {
+        slot.innerHTML = '<span class="lens-why-label">Why it matters · ' + lens.label + '</span>' + text;
+        slot.classList.add('show');
+      } else {
+        slot.classList.remove('show');
+      }
+    });
+
+    // 7) Sync every lens control + body flag (subtle accent hook, not a reskin)
     document.querySelectorAll('.focus-pill').forEach(p =>
       p.classList.toggle('active', p.dataset.focus === cfg.pill));
+    const navLens = document.getElementById('navLens');
+    if (navLens) navLens.value = cfg.pill;
     document.body.dataset.focus = cfg.pill;
   }
 
   // Public: switch lens AND update the URL so the view is shareable.
   function setFocus(mode) {
     const m = normalizeFocus(mode);
+    const changed = m !== currentFocus;
+    currentFocus = m;
     applyFocus(m);
+    if (changed) showLensToast(m);
     try {
       const url = new URL(window.location.href);
       if (m === 'default') url.searchParams.delete('focus');
@@ -3429,7 +3696,8 @@
   (function initFocus() {
     let param = null;
     try { param = new URL(window.location.href).searchParams.get('focus'); } catch (e) {}
-    applyFocus(normalizeFocus(param));
+    currentFocus = normalizeFocus(param);
+    applyFocus(currentFocus);   // no toast on load — the URL chose the lens
   })();
 </script>
 
