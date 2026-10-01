@@ -28,6 +28,23 @@
           this.intent = 'paused'; this.setStatus('ended'); this.callbacks.ended?.(this.id);
         }
       });
+      // Truth over events. On real devices and networks (mobile Safari,
+      // Android Chrome, slow connections) audible playback can start or
+      // resume without the matching 'playing' event. The status then stuck on
+      // 'buffering'/'loading' while the song played on, and because the engine
+      // only advances while status === 'playing', no notes ever fell. If the
+      // media clock is actually advancing, we are playing. A genuine stall
+      // still holds the notes, because during a real stall the clock stops.
+      this.lastProgressT = -1; this.progressWaiter = null;
+      on('timeupdate', () => {
+        const el = this.element, t = el.currentTime;
+        if (this.intent === 'playing' && !el.paused && this.lastProgressT >= 0 && t > this.lastProgressT
+            && (this.status === 'buffering' || this.status === 'loading')) this.setStatus('playing');
+        this.lastProgressT = t;
+        if (this.progressWaiter && !el.paused && t > this.progressWaiter.from + 0.05) {
+          const done = this.progressWaiter.resolve; this.progressWaiter = null; done();
+        }
+      });
       on('error', () => {
         if (!this.destroyed && this.id && this.intent !== 'paused') {
           this.setStatus('error'); this.callbacks.error?.('The soundtrack could not load. Check the audio files, then retry.');
@@ -42,7 +59,7 @@
     select(id, loop = false) {
       if (!this.tracks[id]) throw new Error(`Unknown soundtrack: ${id}`);
       const el = this.element;
-      el.pause(); this.id = id; this.testTime = 0; el.loop = loop;
+      el.pause(); this.id = id; this.testTime = 0; el.loop = loop; this.lastProgressT = -1;
       if (!this.virtual) {
         const url = this.urls[id] || this.tracks[id].url;
         if (el.getAttribute('src') !== url || el.error) { el.src = url; el.preload = 'auto'; el.load(); }
@@ -57,7 +74,9 @@
         // Called from the user gesture for preparation / menu. The same element
         // is reused after the count-in, and every rejected play() has a retry UI.
         const promise = this.element.play();
-        await Promise.race([promise, new Promise((_, reject) => {
+        if (promise && promise.catch) promise.catch(() => {});   // handled by the race below
+        const progressed = new Promise(resolve => { this.progressWaiter = { from: this.element.currentTime, resolve }; });
+        await Promise.race([promise, progressed, new Promise((_, reject) => {
           timer = setTimeout(() => reject(new Error('Audio loading timed out. Check your connection and retry.')), 20000);
         })]);
         if (token !== this.token || this.destroyed) return false;
@@ -73,7 +92,7 @@
         this.setStatus(blocked ? 'blocked' : 'error');
         this.callbacks.error?.(blocked ? 'Tap the button below to allow this song to play.' : error.message || 'The soundtrack could not load. Please retry.');
         return false;
-      } finally { clearTimeout(timer); }
+      } finally { clearTimeout(timer); this.progressWaiter = null; }
     }
     prepare(id) {
       const token = ++this.token; this.select(id); this.intent = 'preparing'; this.setStatus('loading');
@@ -95,6 +114,7 @@
     }
     seek(seconds) {
       const t = Math.max(0, Math.min(this.duration(), Number(seconds) || 0));
+      this.lastProgressT = -1;
       if (this.virtual) this.testTime = t;
       else { try { this.element.currentTime = t; } catch (_) {} }
     }
