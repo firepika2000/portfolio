@@ -4612,7 +4612,8 @@
   function openGame(){
     var m = document.getElementById('gameModal');
     if (window.fairyPause) window.fairyPause(true);
-    document.getElementById('gameFrame').src = 'assets/bayou-bites/index.html?embed=1';
+    var diag = /[?&]diag=1(&|$)/.test(location.search) ? '&diag=1&debug=1' : '';   // on-device diagnostics
+    document.getElementById('gameFrame').src = 'assets/bayou-bites/index.html?embed=1' + diag;
     m.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   }
