@@ -868,6 +868,23 @@
       linear-gradient(180deg, #060e1f 0%, #0a1a35 60%, #0d2042 100%);
   }
   .lens-portal.open { display: flex; animation: portalIn 0.7s ease both; }
+  .lens-portal.open.instant { animation: none; }   /* from the fireworks: opaque at once */
+  /* The dust clears the portal away: a soft opening grows from the chosen
+     door (center and radius are driven from JS each frame). */
+  .lens-portal.revealing {
+    -webkit-mask-image: radial-gradient(circle at var(--rvx, 50%) var(--rvy, 50%), transparent var(--rvr, -110px), #000 calc(var(--rvr, -110px) + var(--rvf, 110px)));
+            mask-image: radial-gradient(circle at var(--rvx, 50%) var(--rvy, 50%), transparent var(--rvr, -110px), #000 calc(var(--rvr, -110px) + var(--rvf, 110px)));
+  }
+  .dust-veil {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 8960;              /* above the portal, below the fairy */
+    pointer-events: none;
+    display: none;
+  }
+  .dust-veil.active { display: block; }
   .lens-portal.leaving { animation: portalOut 0.7s ease forwards; }
 
   /* Night-sky layers: castle on the horizon, particle canvas over it */
@@ -935,7 +952,7 @@
 
   /* ── The doors: arched portals with a traveling glint + inner light ── */
   .portal-door {
-    --door-rgb: 232,186,92;                         /* Controls · gold */
+    --door-rgb: 236,204,146;                        /* Controls · pale gold */
     position: relative;
     isolation: isolate;
     display: flex;
@@ -948,7 +965,7 @@
     color: var(--cream);
     background:
       radial-gradient(ellipse 80% 50% at 50% 0%, rgba(var(--door-rgb),0.10), transparent 70%),
-      rgba(8,18,38,0.62);
+      rgba(8,18,38,0.44);
     border: 1px solid rgba(var(--door-rgb),0.14);
     border-radius: 50% 50% 14px 14px / 96px 96px 14px 14px;
     cursor: pointer;
@@ -956,9 +973,9 @@
     /* 'backwards' so the entrance never overrides hover/choose transforms */
     animation: doorRise 0.7s ease backwards;
   }
-  .portal-door[data-lens="data-ai"]      { --door-rgb: 126,212,236; }   /* aqua */
-  .portal-door[data-lens="show-systems"] { --door-rgb: 244,160,222; }   /* pixie pink */
-  .portal-door[data-lens="default"]      { --door-rgb: 255,234,186; }   /* white-gold */
+  .portal-door[data-lens="data-ai"]      { --door-rgb: 190,214,242; }   /* moonlight blue */
+  .portal-door[data-lens="show-systems"] { --door-rgb: 238,198,218; }   /* soft rose */
+  .portal-door[data-lens="default"]      { --door-rgb: 255,240,214; }   /* warm white */
 
   /* Light from within — swells as the door "opens" */
   .portal-door::after {
@@ -1070,7 +1087,14 @@
   }
 
   /* The moment of choice: chosen door blazes, the rest step back */
-  .lens-portal.choosing .portal-door:not(.chosen) { opacity: 0.12; transform: scale(0.96); }
+  .lens-portal.choosing .portal-door:not(.chosen) { opacity: 0.35; transform: scale(0.97); }
+  /* The chosen door turns to dust: it fades and softens as its dust flies */
+  .lens-portal .portal-door.dissolving {
+    opacity: 0 !important;
+    transform: scale(1.08) !important;
+    filter: blur(8px);
+    transition: opacity 0.3s ease, transform 0.4s ease, filter 0.4s ease;
+  }
   .lens-portal.choosing .portal-door.chosen {
     transform: scale(1.04);
     border-color: rgba(var(--door-rgb),0.9);
@@ -2309,6 +2333,7 @@
      The entry point into the portfolio: same engineer, same work,
      chosen through the discipline the visitor cares about. "The Full
      Picture" keeps the neutral multidisciplinary view a first-class door. -->
+<canvas class="dust-veil" id="dustVeil" aria-hidden="true"></canvas>
 <div class="lens-portal" id="lensPortal" role="dialog" aria-modal="true" aria-labelledby="portalTitle">
   <img class="portal-castle" src="assets/castle.svg" alt="" aria-hidden="true">
   <canvas class="portal-sky" id="portalSky" aria-hidden="true"></canvas>
@@ -4024,11 +4049,16 @@
     currentFocus = m;
     applyFocus(m);
     if (changed && !(opts && opts.quiet)) showLensToast(m);
+    // ?focus= is reserved for links deliberately sent to a hiring manager —
+    // it's what skips the portal. A visitor's own choice must never write it
+    // into the address bar (a refresh would then skip the portal), so any
+    // in-page lens change clears it instead.
     try {
       const url = new URL(window.location.href);
-      if (m === 'default') url.searchParams.delete('focus');
-      else url.searchParams.set('focus', m);
-      history.replaceState(null, '', url);
+      if (url.searchParams.has('focus')) {
+        url.searchParams.delete('focus');
+        history.replaceState(null, '', url);
+      }
     } catch (e) {}
   }
   window.setFocus = setFocus;
@@ -4041,101 +4071,99 @@
     applyFocus(currentFocus);   // no toast on load — the URL chose the lens
   })();
 
-  // ── PORTAL MAGIC: doors drawn in stardust ───────────────────────
-  // Two canvases: a back "sky" (stars + motes rising from the castle,
-  // drawn at half rate, behind the doors so nothing twinkles over text) and
-  // a front "magic" layer (each door's outline traced in twinkling stardust,
-  // a comet circling every arch, pixie dust, the choice burst and the sweep
-  // over the castle). Same performance recipe as the fireworks: sprites are
-  // pre-rendered once and stamped with drawImage + additive blending, the
-  // particle count is capped, quality scales down on slow devices, and the
-  // loop fully stops whenever the portal is closed.
+  // ── PORTAL MAGIC: fiber-optic lights ────────────────────────────
+  // Modeled on park fiber optics, not glitter: every light is a tiny fixed
+  // pinpoint (a crisp core with a faint halo) that breathes slowly in and out
+  // on its own cycle. Nothing flies around. Door outlines are strings of
+  // these points with a soft band of brightness gliding around the arch, and
+  // a small field of points sits *behind* each door — stars glimpsed through
+  // a doorway. Colors are color temperatures (warm white, pale gold,
+  // moonlight blue, soft rose), never neon.
+  //
+  // Two canvases inside the portal: "sky" (starfield + door fields, behind
+  // the doors so no light ever sits on top of text; drawn at half rate) and
+  // "magic" (door outlines). A third canvas, the "dust veil", sits above the
+  // portal: choosing a door bursts it into pixie dust, and that dust clears
+  // the portal away to reveal the portfolio (the veil outlives the portal so
+  // the last dust can settle over the page). Sprites are pre-rendered once,
+  // counts scale with screen area and device speed, and every loop fully
+  // stops when it has nothing left to draw.
   const PortalMagic = (function () {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const TINT = {
-      'controls':     [232, 186,  92],
-      'data-ai':      [126, 212, 236],
-      'show-systems': [244, 160, 222],
-      'default':      [255, 234, 186],
-      'white':        [255, 255, 255],
-      'gold':         [246, 208, 120],
+      'controls':     [255, 224, 168],   // pale gold
+      'data-ai':      [206, 226, 255],   // moonlight blue
+      'show-systems': [255, 214, 232],   // soft rose
+      'default':      [255, 241, 216],   // warm white
+      'warm':         [255, 241, 216],
+      'gold':         [255, 222, 160],
+      'cool':         [214, 230, 255],
     };
-    const MAX = 700;
-    let sky, sctx, fx, fctx, W = 0, H = 0, raf = 0, last = 0, ema = 16, quality = 1, frameNo = 0, t0 = 0;
-    let density = 1;                               // dust scales with screen area (phones get less)
-    let chosen = null;
-    const parts = [], stars = [], motes = [], arcs = [];
+    let sky, sctx, fx, fctx, W = 0, H = 0, raf = 0, last = 0, ema = 16, quality = 1, frameNo = 0;
+    let density = 1, chosen = null, chosenAt = 0;
+    let veil, vctx, veilRaf = 0, vlast = 0, reveal = null;
+    const stars = [], dust = [];
+    const DUST_MAX = 2400;
     const doorState = new Map();
     const sprites = {};
 
-    // ── Sprites (rendered once) ──
-    function sprite(kind, c) {
-      const key = kind + c.join(',');
+    // A fiber-optic point: crisp white core, faint tinted halo.
+    function pointSprite(c) {
+      const key = c.join(',');
       if (sprites[key]) return sprites[key];
-      const S = kind === 'star' ? 64 : 32, s = document.createElement('canvas');
+      const S = 24, s = document.createElement('canvas');
       s.width = s.height = S;
       const o = s.getContext('2d'), m = S / 2, rgb = c.join(',');
-      const g = o.createRadialGradient(m, m, 0, m, m, kind === 'star' ? m * 0.55 : m);
-      g.addColorStop(0, 'rgba(255,255,255,1)');
-      g.addColorStop(0.25, 'rgba(' + rgb + ',0.9)');
-      g.addColorStop(1, 'rgba(' + rgb + ',0)');
+      const g = o.createRadialGradient(m, m, 0, m, m, m);
+      g.addColorStop(0,    'rgba(255,255,255,1)');
+      g.addColorStop(0.14, 'rgba(255,255,255,0.95)');
+      g.addColorStop(0.24, 'rgba(' + rgb + ',0.55)');
+      g.addColorStop(0.5,  'rgba(' + rgb + ',0.12)');
+      g.addColorStop(1,    'rgba(' + rgb + ',0)');
       o.fillStyle = g; o.fillRect(0, 0, S, S);
-      if (kind === 'star') {                       // four-point twinkle rays
-        o.globalCompositeOperation = 'lighter';
-        for (const horiz of [true, false]) {
-          const lg = horiz ? o.createLinearGradient(0, m, S, m) : o.createLinearGradient(m, 0, m, S);
-          lg.addColorStop(0, 'rgba(' + rgb + ',0)');
-          lg.addColorStop(0.5, 'rgba(255,255,255,0.95)');
-          lg.addColorStop(1, 'rgba(' + rgb + ',0)');
-          o.fillStyle = lg;
-          if (horiz) o.fillRect(0, m - 1, S, 2); else o.fillRect(m - 1, 0, 2, S);
-        }
-      }
       return (sprites[key] = s);
     }
-    function stamp(x, kind, c, px, py, size, alpha) {
-      if (alpha <= 0.01) return;
-      x.globalAlpha = alpha > 1 ? 1 : alpha;
-      x.drawImage(sprite(kind, c), px - size, py - size, size * 2, size * 2);
+    function light(x, c, px, py, r, a) {
+      if (a <= 0.015) return;
+      x.globalAlpha = a > 1 ? 1 : a;
+      x.drawImage(pointSprite(c), px - r, py - r, r * 2, r * 2);
     }
+    // Slow fiber-optic breathing: dim most of the time, gentle peaks.
+    function breathe(ph, period, t) {
+      const s = 0.5 + 0.5 * Math.sin(t * 6.2832 / period + ph);
+      return 0.12 + 0.88 * s * s * s;
+    }
+    function rand(seed) { const x = Math.sin(seed * 127.1) * 43758.5453; return x - Math.floor(x); }
 
     // ── Sizing ──
     function sizeCanvas(c, x) {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);   // crisp pinpoints on retina
       c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
       x.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     function resize() {
       W = window.innerWidth; H = window.innerHeight;
-      density = Math.max(0.45, Math.min(1, (W * H) / (1100 * 750)));
+      density = Math.max(0.5, Math.min(1, (W * H) / (1100 * 750)));
       sizeCanvas(sky, sctx); sizeCanvas(fx, fctx);
       stars.length = 0;
-      const n = Math.min(150, Math.round(W * H / 8000));
-      for (let i = 0; i < n; i++) stars.push({
-        x: Math.random() * W, y: Math.random() * H * 0.72,
-        r: 0.5 + Math.random() * 1.3, ph: Math.random() * 6.28, sp: 0.6 + Math.random() * 1.8,
-        big: Math.random() < 0.08,
-      });
-      motes.length = 0;
-      for (let i = 0; i < 34; i++) motes.push(newMote(true));
-      doorState.forEach(st => { st.archH = null; });   // radii change with breakpoints
-    }
-    function newMote(anywhere) {
-      return {
-        x: Math.random() * W, y: anywhere ? H * (0.35 + Math.random() * 0.65) : H + 10,
-        vy: -(8 + Math.random() * 18), sway: Math.random() * 6.28, r: 1 + Math.random() * 1.8,
-        a: 0.25 + Math.random() * 0.45,
-      };
+      const n = Math.min(320, Math.round(W * H / 3800));
+      for (let i = 0; i < n; i++) {
+        const k = Math.random();
+        stars.push({
+          x: Math.random() * W, y: Math.pow(Math.random(), 1.25) * H * 0.82,
+          r: 3 + Math.random() * 2.6, ph: Math.random() * 6.28, per: 2.5 + Math.random() * 4.5,
+          c: k < 0.7 ? TINT.warm : k < 0.88 ? TINT.cool : TINT.gold,
+          base: 0.35 + Math.random() * 0.65,
+        });
+      }
+      doorState.forEach(st => { st.archH = null; st.field = null; });
     }
 
-    // ── Door outline geometry (follows hover lift / choose scale via rects) ──
+    // ── Door geometry (follows the hover lift and choose scale via rects) ──
     function doors() { return Array.from(document.querySelectorAll('#lensPortal .portal-door')); }
     function state(door, i) {
       let st = doorState.get(door);
-      if (!st) {
-        st = { emit: 0, comet: 0, phase: Math.random(), archH: null, seeds: [], appearAt: 0, idx: i };
-        doorState.set(door, st);
-      }
+      if (!st) { st = { wave: Math.random(), archH: null, field: null, appearAt: 0, idx: i }; doorState.set(door, st); }
       return st;
     }
     function geom(door, st) {
@@ -4150,237 +4178,266 @@
         st.archH = parseFloat(v[1] || v[0]) || 96;
       }
       const ry = Math.min(st.archH, r.height * 0.45), rx = r.width / 2;
-      const arc = Math.PI * (3 * (rx + ry) - Math.sqrt((3 * rx + ry) * (rx + 3 * ry))) / 2;
+      const arcLen = Math.PI * (3 * (rx + ry) - Math.sqrt((3 * rx + ry) * (rx + 3 * ry))) / 2;
       const side = r.height - ry;
-      const segs = [side, arc, side, r.width];
+      const segs = [side, arcLen, side, r.width];
       return { r, wide: false, rx, ry, segs, total: segs[0] + segs[1] + segs[2] + segs[3] };
     }
-    // Point at fraction s around the outline, with an outward normal.
+    // Point at fraction s around the outline (clockwise from bottom-left).
     function pointAt(g, s) {
       let d = (((s % 1) + 1) % 1) * g.total;
       const r = g.r;
       if (g.wide) {
         const rad = g.rad, st = g.segs[0];
-        if (d < st) return { x: r.left + rad + d, y: r.top, nx: 0, ny: -1 };
+        if (d < st) return { x: r.left + rad + d, y: r.top };
         d -= st;
-        if (d < g.segs[1]) { const a = -Math.PI / 2 + d / rad; return { x: r.right - rad + Math.cos(a) * rad, y: r.top + rad + Math.sin(a) * rad, nx: Math.cos(a), ny: Math.sin(a) }; }
+        if (d < g.segs[1]) { const a = -Math.PI / 2 + d / rad; return { x: r.right - rad + Math.cos(a) * rad, y: r.top + rad + Math.sin(a) * rad }; }
         d -= g.segs[1];
-        if (d < st) return { x: r.right - rad - d, y: r.bottom, nx: 0, ny: 1 };
+        if (d < st) return { x: r.right - rad - d, y: r.bottom };
         d -= st;
         const a = Math.PI / 2 + d / rad;
-        return { x: r.left + rad + Math.cos(a) * rad, y: r.top + rad + Math.sin(a) * rad, nx: Math.cos(a), ny: Math.sin(a) };
+        return { x: r.left + rad + Math.cos(a) * rad, y: r.top + rad + Math.sin(a) * rad };
       }
       const side = g.segs[0];
-      if (d < side) return { x: r.left, y: r.bottom - d, nx: -1, ny: 0 };          // up the left side
+      if (d < side) return { x: r.left, y: r.bottom - d };
       d -= side;
-      if (d < g.segs[1]) {                                                         // over the arch
-        const a = Math.PI + (d / g.segs[1]) * Math.PI, nx = Math.cos(a), ny = Math.sin(a);
-        return { x: r.left + g.rx + nx * g.rx, y: r.top + g.ry + ny * g.ry, nx, ny };
+      if (d < g.segs[1]) {
+        const a = Math.PI + (d / g.segs[1]) * Math.PI;
+        return { x: r.left + g.rx + Math.cos(a) * g.rx, y: r.top + g.ry + Math.sin(a) * g.ry };
       }
       d -= g.segs[1];
-      if (d < side) return { x: r.right, y: r.top + g.ry + d, nx: 1, ny: 0 };      // down the right side
+      if (d < side) return { x: r.right, y: r.top + g.ry + d };
       d -= side;
-      return { x: r.right - d, y: r.bottom, nx: 0, ny: 1 };                       // along the threshold
+      return { x: r.right - d, y: r.bottom };
     }
-
-    // ── Particles ──
-    function dust(x, y, vx, vy, c, opts) {
-      if (parts.length >= MAX) return;
-      opts = opts || {};
-      const life = opts.life || (0.9 + Math.random() * 1.3);
-      parts.push({
-        x, y, vx, vy, c, life, max: life,
-        g: opts.g != null ? opts.g : 22,
-        size: opts.size || (1.4 + Math.random() * 2.4),
-        star: opts.star != null ? opts.star : Math.random() < 0.24,
-        ph: Math.random() * 6.28,
-      });
-    }
-    function shed(p, c, spread, n) {
-      for (let k = 0; k < n; k++) {
-        const s = 4 + Math.random() * spread;
-        dust(p.x + (Math.random() - 0.5) * 4, p.y + (Math.random() - 0.5) * 4,
-             p.nx * s + (Math.random() - 0.5) * 14, p.ny * s - 4 + Math.random() * 6,
-             Math.random() < 0.35 ? TINT.white : c, { life: 0.7 + Math.random() * 1.2 });
+    // Points seen *through* the doorway, stored relative to the door so they
+    // ride along with the hover lift.
+    function field(door, st, g) {
+      if (st.field) return st.field;
+      const r = g.r, pts = [];
+      const n = Math.round(Math.min(90, (r.width * r.height) / 2600) * density);
+      let tries = 0;
+      while (pts.length < n && tries++ < n * 8) {
+        const u = 0.06 + Math.random() * 0.88, v = 0.04 + Math.random() * 0.92;
+        const x = u * r.width, y = v * r.height;
+        let inside;
+        if (g.wide) {
+          const rad = g.rad, cx = Math.min(Math.max(x, rad), r.width - rad);
+          inside = Math.hypot(x - cx, y - rad) <= rad * 0.86;
+        } else {
+          inside = y >= g.ry || Math.pow((x - g.rx) / g.rx, 2) + Math.pow((y - g.ry) / g.ry, 2) <= 0.8;
+        }
+        if (inside) pts.push({ u, v, ph: Math.random() * 6.28, per: 2.6 + Math.random() * 4, r: 3.2 + Math.random() * 2.4 });
       }
+      return (st.field = pts);
     }
-    function tintOf(door) { return TINT[door.dataset.lens] || TINT.gold; }
+    function tintOf(door) { return TINT[door.dataset.lens] || TINT.warm; }
 
-    function burst(door) {
-      const r = door.getBoundingClientRect(), c = tintOf(door);
-      const cx = r.left + r.width / 2, cy = r.top + r.height * 0.35;
-      for (let i = 0; i < 170 * quality; i++) {
-        const a = Math.random() * 6.28, s = 60 + Math.random() * 280;
-        dust(cx, cy, Math.cos(a) * s, Math.sin(a) * s - 40, Math.random() < 0.3 ? TINT.white : c,
-             { g: 120, life: 0.8 + Math.random() * 1.1, size: 1.6 + Math.random() * 2.8 });
-      }
-    }
-    // A sparkling arc from the chosen door, up over the castle and down the far side.
-    function sweep(door) {
-      const r = door.getBoundingClientRect(), c = tintOf(door);
-      const x0 = r.left + r.width / 2, y0 = r.top + 20, toRight = x0 < W / 2;
-      arcs.push({
-        p0: [x0, y0],
-        cp: [W * (toRight ? 0.62 : 0.38), -H * 0.18],
-        p1: [toRight ? W * 0.94 : W * 0.06, H * 0.66],
-        t: 0, dur: 1.05, c,
-      });
-    }
-
-    // ── Rendering ──
-    function drawSky(t, dt) {
+    // ── Back layer: starfield + doorway fields ──
+    function drawSky(t, now, still) {
       sctx.clearRect(0, 0, W, H);
       sctx.globalCompositeOperation = 'lighter';
-      for (let i = 0; i < stars.length; i += quality < 0.6 ? 2 : 1) {
-        const s = stars[i], a = 0.35 + 0.65 * Math.abs(Math.sin(t * s.sp + s.ph));
-        stamp(sctx, s.big ? 'star' : 'glow', s.big ? TINT.white : TINT.default, s.x, s.y, s.big ? 9 : s.r * 3, a * (s.big ? 0.95 : 0.7));
+      const step = quality < 0.6 ? 2 : 1;
+      for (let i = 0; i < stars.length; i += step) {
+        const s = stars[i];
+        const a = still ? s.base * 0.55 : s.base * breathe(s.ph, s.per, t);
+        light(sctx, s.c, s.x, s.y, s.r, a * 0.85);
       }
-      for (const m of motes) {
-        m.y += m.vy * dt; m.sway += dt;
-        if (m.y < H * 0.25) Object.assign(m, newMote(false));
-        const fade = Math.min(1, (m.y - H * 0.25) / (H * 0.25));
-        stamp(sctx, 'glow', TINT.gold, m.x + Math.sin(m.sway) * 8, m.y, m.r * 3, m.a * fade);
-      }
-      sctx.globalAlpha = 1;
-      sctx.globalCompositeOperation = 'source-over';
-    }
-
-    function drawDoors(t, dt, now, still) {
       const portal = document.getElementById('lensPortal');
       const choosing = portal.classList.contains('choosing');
       doors().forEach((door, i) => {
         const st = state(door, i), g = geom(door, st), c = tintOf(door);
-        const appear = still ? 1 : Math.max(0, Math.min(1, (now - st.appearAt) / 650));
+        const appear = still ? 1 : Math.max(0, Math.min(1, (now - st.appearAt - 350) / 900));
         if (appear <= 0) return;
         const isChosen = door === chosen;
         const active = isChosen || (!choosing && (door.matches(':hover') || door.matches(':focus-visible')));
-        const dim = choosing && !isChosen ? 0.12 : 1;
-
-        // 1) The outline, traced in twinkling stardust
-        const n = Math.max(12, Math.floor(g.total / 15));
-        const step = quality < 0.6 ? 2 : 1;
-        const drift = still ? 0 : t * 0.006;
-        for (let k = 0; k < n; k += step) {
-          const p = pointAt(g, k / n + drift);
-          const tw = still ? 0.6 : 0.3 + 0.7 * Math.abs(Math.sin(t * 1.7 + k * 1.37 + i));
-          const a = tw * (active ? 0.95 : 0.55) * appear * dim;
-          const big = k % 7 === 0;
-          stamp(fctx, big ? 'star' : 'glow', big ? TINT.white : c, p.x, p.y, big ? (active ? 6.5 : 5) : (active ? 3.4 : 2.6), a);
+        const dim = choosing && !isChosen ? 0.1 : 1;
+        const lift = isChosen ? 1 + Math.min(1, (now - chosenAt) / 220) * 0.9 : active ? 1.45 : 1;
+        const pts = field(door, st, g);
+        for (let k = 0; k < pts.length; k += step) {
+          const p = pts[k];
+          const a = (still ? 0.6 : breathe(p.ph, p.per, t)) * 0.95 * appear * dim * lift;
+          light(sctx, c, g.r.left + p.u * g.r.width, g.r.top + p.v * g.r.height, p.r, a);
         }
-        if (still) return;
+      });
+      sctx.globalAlpha = 1;
+      sctx.globalCompositeOperation = 'source-over';
+    }
 
-        // 2) Comets circling the arch (a second joins when the door is active)
-        if (!choosing || isChosen) {
-          const speed = active ? 0.23 : 0.085;
-          st.phase = (st.phase + speed * dt) % 1;
-          const heads = active ? [st.phase, st.phase + 0.5] : [st.phase];
-          for (const h of heads) {
-            const p = pointAt(g, h);
-            stamp(fctx, 'glow', c, p.x, p.y, active ? 15 : 11, 0.75 * appear * dim);
-            stamp(fctx, 'star', TINT.white, p.x, p.y, active ? 11 : 8, appear * dim);
-            st.comet += (active ? 70 : 24) * quality * density * dt;
-            const m = Math.floor(st.comet); st.comet -= m;
-            shed(p, c, active ? 38 : 22, m);
-          }
-        }
-        // 3) Loose dust lifting off the frame
-        if (!choosing) {
-          st.emit += (active ? 40 : 7) * quality * density * dt;
-          let m = Math.floor(st.emit); st.emit -= m;
-          while (m-- > 0) shed(pointAt(g, Math.random()), c, 26, 1);
+    // ── Front layer: door outlines as strings of fiber-optic points ──
+    function drawOutlines(t, dt, now, still) {
+      const portal = document.getElementById('lensPortal');
+      const choosing = portal.classList.contains('choosing');
+      doors().forEach((door, i) => {
+        const st = state(door, i), g = geom(door, st), c = tintOf(door);
+        const isChosen = door === chosen;
+        const active = isChosen || (!choosing && (door.matches(':hover') || door.matches(':focus-visible')));
+        const dim = choosing && !isChosen ? 0.1 : 1;
+        const blaze = isChosen ? Math.min(1, (now - chosenAt) / 220) : 0;
+        if (!still) st.wave = (st.wave + (active ? 0.3 : 0.1) * dt) % 1;
+        const n = Math.max(14, Math.floor(g.total / 11));
+        const powerUp = still ? 1 : (now - st.appearAt) / 700;   // the string lights up point by point
+        for (let k = 0; k < n; k++) {
+          const s = (k + (rand(k * 13.7 + i * 91) - 0.5) * 0.7) / n;   // hand-placed, not a ruler
+          const on = still ? 1 : Math.max(0, Math.min(1, (powerUp - s) * 4));
+          if (on <= 0) continue;
+          const p = pointAt(g, s);
+          let d = Math.abs(s - st.wave); d = Math.min(d, 1 - d);
+          const wave = still ? 0 : Math.exp(-(d * d) / (2 * 0.045 * 0.045));
+          const tw = still ? 0.55 : breathe(k * 2.399 + i, 2.6 + (k * 37 % 5) * 0.9, t);
+          const a = ((0.1 + 0.8 * tw) * (active ? 1.3 : 1) + wave * (active ? 0.75 : 0.5) + blaze * 0.6) * on * dim;
+          const r = (active ? 4.2 : 3.6) + wave * 1.6 + blaze * 1.2;
+          light(fctx, c, p.x, p.y, r, a);
         }
       });
     }
 
+    // ── The burst: the chosen doorway becomes pixie dust that clears the screen ──
+    function sizeVeil() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      veil.width = Math.round(W * dpr); veil.height = Math.round(H * dpr);
+      vctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function mote(x, y, vx, vy, c, life, r) {
+      if (dust.length < DUST_MAX) dust.push({ x, y, vx, vy, c, life, max: life, r, ph: Math.random() * 6.28 });
+    }
+    function dustColor(c) {                                   // mostly warm white and gold
+      const k = Math.random();
+      return k < 0.55 ? TINT.warm : k < 0.85 ? TINT.gold : c;
+    }
+    function burstIntoDust(door, onDone) {
+      const portal = document.getElementById('lensPortal');
+      const st = state(door, 0), g = geom(door, st), c = tintOf(door);
+      const cx = g.r.left + g.r.width / 2, cy = g.r.top + g.r.height * 0.45;
+      // Freeze the scene where it stands; the outlines leave with the door.
+      cancelAnimationFrame(raf); raf = 0;
+      fctx.clearRect(0, 0, W, H);
+      door.classList.add('dissolving');
+      // The doorway breaks into dust: its outline and its interior.
+      const n = Math.round(900 * quality * (0.6 + 0.4 * density));
+      for (let i = 0; i < n; i++) {
+        let x, y;
+        if (i % 5 < 3) { const p = pointAt(g, Math.random()); x = p.x; y = p.y; }
+        else { x = g.r.left + Math.random() * g.r.width; y = g.r.top + (0.12 + Math.random() * 0.88) * g.r.height; }
+        let dx = x - cx, dy = y - cy;
+        const d = Math.hypot(dx, dy) || 1; dx /= d; dy /= d;
+        const sp = 220 + Math.random() * 700;                                     // outward
+        const sw = (Math.random() < 0.5 ? -1 : 1) * (60 + Math.random() * 220);   // and a swirl
+        mote(x, y, dx * sp - dy * sw, dy * sp + dx * sw - 40, dustColor(c), 1.0 + Math.random() * 1.3, 2 + Math.random() * 3);
+      }
+      // The dust clears the screen: a soft opening grows from the doorway to every corner.
+      const far = Math.max(Math.hypot(cx, cy), Math.hypot(W - cx, cy), Math.hypot(cx, H - cy), Math.hypot(W - cx, H - cy));
+      const feather = Math.max(50, Math.min(110, Math.min(W, H) * 0.12));   // soft edge scales with the screen
+      reveal = { x: cx, y: cy, t0: performance.now(), dur: 1350, maxR: far + feather + 30, feather, c, onDone };
+      portal.style.setProperty('--rvx', cx + 'px');
+      portal.style.setProperty('--rvy', cy + 'px');
+      portal.style.setProperty('--rvf', feather + 'px');
+      portal.style.setProperty('--rvr', -feather + 'px');
+      portal.classList.add('revealing');
+      sizeVeil();
+      veil.classList.add('active');
+      cancelAnimationFrame(veilRaf);
+      vlast = performance.now();
+      veilRaf = requestAnimationFrame(veilFrame);
+    }
+    function veilFrame(ts) {
+      const dt = Math.min((ts - vlast) / 1000, 0.05) || 0.016; vlast = ts;
+      vctx.clearRect(0, 0, W, H);
+      vctx.globalCompositeOperation = 'lighter';
+      if (reveal) {
+        const k = Math.min(1, (ts - reveal.t0) / reveal.dur);
+        const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;   // easeInOutCubic
+        const R = -reveal.feather + e * (reveal.maxR + reveal.feather);
+        document.getElementById('lensPortal').style.setProperty('--rvr', R.toFixed(1) + 'px');
+        // Dust riding the edge of the clearing, so it reads as dust, not a circle.
+        const edge = R + reveal.feather / 2;                      // middle of the soft mask edge
+        if (edge > 0 && k < 1) {
+          const m = Math.round(34 * quality * (0.6 + 0.4 * density));
+          for (let i = 0; i < m; i++) {
+            const a = Math.random() * 6.2832, ca = Math.cos(a), sa = Math.sin(a);
+            const x = reveal.x + ca * edge, y = reveal.y + sa * edge;
+            if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue;
+            const sp = 90 + Math.random() * 260, sw = (Math.random() < 0.5 ? -1 : 1) * (40 + Math.random() * 160);
+            mote(x, y, ca * sp - sa * sw, sa * sp + ca * sw - 20, dustColor(reveal.c), 0.5 + Math.random() * 0.9, 1.6 + Math.random() * 2.6);
+          }
+        }
+        if (k >= 1) { const cb = reveal.onDone; reveal = null; if (cb) cb(); }
+      }
+      const drag = Math.pow(0.08, dt);                            // a quick puff, then drifting
+      for (let i = dust.length - 1; i >= 0; i--) {
+        const p = dust[i];
+        p.life -= dt;
+        if (p.life <= 0) { dust[i] = dust[dust.length - 1]; dust.pop(); continue; }
+        p.vx *= drag; p.vy = p.vy * drag + 16 * dt;              // settles gently, like real dust
+        p.x += p.vx * dt; p.y += p.vy * dt;
+        const k = p.life / p.max;
+        light(vctx, p.c, p.x, p.y, p.r * (0.6 + 0.4 * k), Math.min(1, k * 1.6) * (0.6 + 0.4 * Math.sin(ts / 90 + p.ph)));
+      }
+      vctx.globalAlpha = 1;
+      vctx.globalCompositeOperation = 'source-over';
+      if (reveal || dust.length) veilRaf = requestAnimationFrame(veilFrame);
+      else { veilRaf = 0; vctx.clearRect(0, 0, W, H); veil.classList.remove('active'); }
+    }
+
     function frame(ts) {
       const dt = Math.min((ts - last) / 1000, 0.05) || 0.016; last = ts;
-      ema = ema * 0.92 + dt * 1000 * 0.08;           // adaptive quality for weak GPUs
-      quality = ema > 30 ? 0.45 : ema > 22 ? 0.7 : 1;
+      ema = ema * 0.92 + dt * 1000 * 0.08;                     // adaptive quality for weak GPUs
+      quality = ema > 30 ? 0.5 : 1;
       const t = ts / 1000;
       frameNo++;
-
-      if (frameNo % 2 === 0) drawSky(t, dt * 2);     // the sky only needs ~30 fps
-
+      if (frameNo % 2 === 0) drawSky(t, ts, false);           // the sky only needs ~30 fps
       fctx.clearRect(0, 0, W, H);
       fctx.globalCompositeOperation = 'lighter';
-      drawDoors(t, dt, ts, false);
-
-      for (let i = arcs.length - 1; i >= 0; i--) {    // the sweep over the castle
-        const a = arcs[i];
-        a.t = Math.min(1, a.t + dt / a.dur);
-        const e = 0.5 - 0.5 * Math.cos(Math.PI * a.t), u = 1 - e;
-        const x = u * u * a.p0[0] + 2 * u * e * a.cp[0] + e * e * a.p1[0];
-        const y = u * u * a.p0[1] + 2 * u * e * a.cp[1] + e * e * a.p1[1];
-        for (let k = 0; k < 10 * quality; k++)
-          dust(x + (Math.random() - 0.5) * 8, y + (Math.random() - 0.5) * 8,
-               (Math.random() - 0.5) * 40, Math.random() * 30, Math.random() < 0.4 ? TINT.white : a.c,
-               { g: 70, life: 0.7 + Math.random() * 1.1 });
-        stamp(fctx, 'glow', a.c, x, y, 28, 1);
-        stamp(fctx, 'star', TINT.white, x, y, 24, 1);
-        if (a.t >= 1) arcs.splice(i, 1);
-      }
-
-      for (let i = parts.length - 1; i >= 0; i--) {   // pixie dust
-        const p = parts[i];
-        p.life -= dt;
-        if (p.life <= 0) { parts.splice(i, 1); continue; }
-        p.vx *= 0.985; p.vy = p.vy * 0.985 + p.g * dt;
-        p.x += p.vx * dt; p.y += p.vy * dt;
-        const k = p.life / p.max, tw = 0.55 + 0.45 * Math.sin(t * 14 + p.ph);
-        stamp(fctx, p.star ? 'star' : 'glow', p.c, p.x, p.y,
-              p.size * (p.star ? 4.2 : 2.6) * (0.5 + 0.5 * k), Math.min(1, k * 1.4) * tw);
-      }
+      drawOutlines(t, dt, ts, false);
       fctx.globalAlpha = 1;
       fctx.globalCompositeOperation = 'source-over';
       raf = requestAnimationFrame(frame);
     }
 
-    function drawStill() {                         // reduced motion: a quiet, static starlit scene
-      drawSky(0, 0);
+    function drawStill() {                                     // reduced motion: a quiet, static scene
+      drawSky(0, 0, true);
       fctx.clearRect(0, 0, W, H);
       fctx.globalCompositeOperation = 'lighter';
-      drawDoors(0, 0, 0, true);
+      drawOutlines(0, 0, 0, true);
       fctx.globalAlpha = 1; fctx.globalCompositeOperation = 'source-over';
     }
-
     function onResize() { resize(); if (reduce) drawStill(); }
 
     return {
       start() {
         sky = sky || document.getElementById('portalSky');
         fx = fx || document.getElementById('portalMagic');
-        if (!sky || !fx) return;
+        veil = veil || document.getElementById('dustVeil');
+        if (!sky || !fx || !veil) return;
         sctx = sctx || sky.getContext('2d');
         fctx = fctx || fx.getContext('2d');
-        chosen = null;
+        vctx = vctx || veil.getContext('2d');
+        chosen = null; reveal = null; dust.length = 0;
+        cancelAnimationFrame(veilRaf); veilRaf = 0; veil.classList.remove('active');
         resize();
         window.addEventListener('resize', onResize);
         if (reduce) { requestAnimationFrame(drawStill); return; }
-        parts.length = 0; arcs.length = 0; ema = 16; frameNo = 0;
-        t0 = performance.now();
-        // Doors materialize in sequence with their CSS entrance
-        doors().forEach((d, i) => {
-          const st = state(d, i);
-          st.appearAt = t0 + 150 + i * 150; st.emit = 0; st.comet = 0;
-          setTimeout(() => {
-            const g = geom(d, st), c = tintOf(d);
-            for (let k = 0; k < 50 * quality; k++) shed(pointAt(g, Math.random()), c, 70, 1);
-          }, 150 + i * 150);
-        });
+        const t0 = performance.now();
+        doors().forEach((d, i) => { state(d, i).appearAt = t0 + 150 + i * 150; });
+        ema = 16; frameNo = 0;
         cancelAnimationFrame(raf);
-        last = performance.now();
+        last = t0;
         raf = requestAnimationFrame(frame);
       },
+      // Stops the portal scene only; the dust veil finishes on its own.
       stop() {
         cancelAnimationFrame(raf); raf = 0;
         window.removeEventListener('resize', onResize);
-        parts.length = 0; arcs.length = 0; chosen = null;
+        chosen = null;
         if (sctx) sctx.clearRect(0, 0, W, H);
         if (fctx) fctx.clearRect(0, 0, W, H);
       },
-      choose(door) {
-        chosen = door;
-        if (!reduce) { burst(door); setTimeout(() => sweep(door), 140); }
+      // Gather (the doorway blazes), burst into dust, the dust clears the
+      // screen, then onDone() once the portal is fully swept away.
+      choose(door, onDone) {
+        chosen = door; chosenAt = performance.now();
+        if (reduce) return;
+        setTimeout(() => burstIntoDust(door, onDone), 220);
       },
       reduced: reduce,
     };
@@ -4391,11 +4448,16 @@
   // ?focus= link already chose the lens. Choosing a door applies the lens and
   // dissolves into the page.
   let portalBusy = false;
-  function openLensPortal() {
+  function openLensPortal(opts) {
     const p = document.getElementById('lensPortal');
     if (!p || p.classList.contains('open')) return;
-    p.classList.remove('choosing', 'leaving');
-    p.querySelectorAll('.portal-door').forEach(d => d.classList.remove('chosen'));
+    p.classList.remove('choosing', 'leaving', 'instant', 'revealing');
+    ['--rvx', '--rvy', '--rvr', '--rvf'].forEach(v => p.style.removeProperty(v));
+    // From the fireworks the portal must be fully opaque at once: the show's
+    // own fade-out is the transition. Fading both at the same time let the
+    // portfolio show through for a moment.
+    if (opts && opts.instant) p.classList.add('instant');
+    p.querySelectorAll('.portal-door').forEach(d => d.classList.remove('chosen', 'dissolving'));
     p.scrollTop = 0;
     p.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -4410,16 +4472,26 @@
     door.classList.add('chosen');
     p.classList.add('choosing');
     setFocus(mode, { quiet: true });          // the portal itself is the confirmation
-    PortalMagic.choose(door);                 // pixie-dust burst, then the arc over the castle
-    const linger = PortalMagic.reduced ? 420 : 1050;
-    setTimeout(() => p.classList.add('leaving'), linger);
-    setTimeout(() => {
-      p.classList.remove('open', 'choosing', 'leaving');
+    // The page waits underneath, already in this lens and at the top, so the
+    // dust reveals the portfolio exactly as designed.
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    const finish = () => {
+      // One synchronous batch: hiding the portal and dropping the mask land
+      // in the same frame, so the portal can never flash back.
+      p.classList.remove('open', 'choosing', 'leaving', 'revealing', 'instant');
+      ['--rvx', '--rvy', '--rvr', '--rvf'].forEach(v => p.style.removeProperty(v));
+      p.querySelectorAll('.portal-door').forEach(d => d.classList.remove('chosen', 'dissolving'));
       PortalMagic.stop();
       document.body.style.overflow = '';
-      window.scrollTo({ top: 0, behavior: 'instant' });
       portalBusy = false;
-    }, linger + 700);
+    };
+    if (PortalMagic.reduced) {                // reduced motion: a simple crossfade
+      setTimeout(() => p.classList.add('leaving'), 300);
+      setTimeout(finish, 1000);
+      return;
+    }
+    // Gather, burst into dust, the dust clears the screen, then finish.
+    PortalMagic.choose(door, finish);
   }
   document.querySelectorAll('#lensPortal .portal-door').forEach(d =>
     d.addEventListener('click', () => chooseLens(d.dataset.lens, d)));
@@ -4432,7 +4504,7 @@
   window.maybeOpenLensPortal = function () {
     let param = null;
     try { param = new URL(window.location.href).searchParams.get('focus'); } catch (e) {}
-    if (!param) openLensPortal();
+    if (!param) openLensPortal({ instant: true });
   };
 
   // Nav lens menu: a lens applies directly; the last entry reopens the portal.
