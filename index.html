@@ -852,6 +852,275 @@
     to   { opacity: 1; transform: none; }
   }
 
+  /* ── Lens portal (entry point after the fireworks) ──────────────
+     Arched doors in front of the castle, pixie dust on one shared
+     canvas (#portalMagic). Everything here is paused while closed. */
+  .lens-portal {
+    position: fixed;
+    inset: 0;
+    z-index: 8950;            /* below the fairy (9000) so she can fly over it */
+    display: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background:
+      radial-gradient(ellipse 90% 45% at 50% 100%, rgba(200,150,46,0.16), transparent 70%),
+      radial-gradient(ellipse at 50% -10%, rgba(120,140,220,0.14), transparent 60%),
+      linear-gradient(180deg, #060e1f 0%, #0a1a35 60%, #0d2042 100%);
+  }
+  .lens-portal.open { display: flex; animation: portalIn 0.7s ease both; }
+  .lens-portal.leaving { animation: portalOut 0.7s ease forwards; }
+
+  /* Night-sky layers: castle on the horizon, particle canvas over it */
+  .portal-castle {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    width: 100%;
+    height: 34vh;
+    object-fit: contain;
+    object-position: bottom center;
+    opacity: 0.55;
+    pointer-events: none;
+    filter: drop-shadow(0 -10px 36px rgba(200,150,46,0.22));
+  }
+  .portal-sky,
+  .portal-magic {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .portal-sky   { z-index: 0; }   /* stars + motes: behind the doors, never over text */
+  .portal-magic { z-index: 2; }   /* stardust outlines, comets, dust, the sweep: over the doors */
+
+  .portal-inner {
+    position: relative;
+    z-index: 1;
+    margin: auto;               /* centers, but never clips when taller than the screen */
+    width: 100%;
+    max-width: 1080px;
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+  }
+  .portal-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 1rem;
+  }
+  /* Slow gold shimmer across the title */
+  .portal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.1;
+    margin-bottom: 0.8rem;
+    color: var(--white);
+    background: linear-gradient(100deg, #ffffff 0%, #ffffff 38%, #f6d78f 48%, #fff4d6 52%, #ffffff 62%, #ffffff 100%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleShimmer 5.5s ease-in-out infinite;
+  }
+  .portal-sub {
+    color: var(--muted);
+    font-size: 0.98rem;
+    line-height: 1.7;
+    max-width: 34rem;
+    margin: 0 auto 2.75rem;
+  }
+  .portal-doors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+
+  /* ── The doors: arched portals with a traveling glint + inner light ── */
+  .portal-door {
+    --door-rgb: 232,186,92;                         /* Controls · gold */
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 3.1rem 1.5rem 1.4rem;
+    text-align: center;
+    font: inherit;
+    color: var(--cream);
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(var(--door-rgb),0.10), transparent 70%),
+      rgba(8,18,38,0.62);
+    border: 1px solid rgba(var(--door-rgb),0.14);
+    border-radius: 50% 50% 14px 14px / 96px 96px 14px 14px;
+    cursor: pointer;
+    transition: transform 0.4s ease, box-shadow 0.4s, opacity 0.45s, border-color 0.4s;
+    /* 'backwards' so the entrance never overrides hover/choose transforms */
+    animation: doorRise 0.7s ease backwards;
+  }
+  .portal-door[data-lens="data-ai"]      { --door-rgb: 126,212,236; }   /* aqua */
+  .portal-door[data-lens="show-systems"] { --door-rgb: 244,160,222; }   /* pixie pink */
+  .portal-door[data-lens="default"]      { --door-rgb: 255,234,186; }   /* white-gold */
+
+  /* Light from within — swells as the door "opens" */
+  .portal-door::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(ellipse 75% 60% at 50% 38%, rgba(var(--door-rgb),0.22), transparent 72%);
+    opacity: 0.35;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+  .portal-door span { display: block; }
+  .portal-doors .portal-door:nth-child(1) { animation-delay: 0.15s; }
+  .portal-doors .portal-door:nth-child(2) { animation-delay: 0.3s; }
+  .portal-doors .portal-door:nth-child(3) { animation-delay: 0.45s; }
+  .portal-door-wide { animation-delay: 0.6s; }
+
+  .portal-door:hover,
+  .portal-door:focus-visible {
+    transform: translateY(-6px);
+    border-color: rgba(var(--door-rgb),0.55);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 46px rgba(var(--door-rgb),0.22);
+    outline: none;
+  }
+  .portal-door:hover::after,  .portal-door:focus-visible::after  { opacity: 1; }
+
+  .door-icon {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    margin-bottom: 0.35rem;
+    border: 1px solid rgba(var(--door-rgb),0.45);
+    border-radius: 50%;
+    color: rgb(var(--door-rgb));
+    box-shadow: 0 0 18px rgba(var(--door-rgb),0.25), inset 0 0 12px rgba(var(--door-rgb),0.12);
+  }
+  .door-icon svg {
+    width: 1.15rem; height: 1.15rem;
+    fill: none; stroke: currentColor; stroke-width: 1.5;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .door-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(var(--door-rgb),0.75);
+  }
+  .door-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.38rem;
+    line-height: 1.2;
+    color: var(--white);
+  }
+  .door-theme {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    color: var(--gold-light);
+  }
+  .door-points {
+    width: 100%;
+    margin-top: 0.45rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid rgba(var(--door-rgb),0.18);
+  }
+  .door-points span {
+    margin-bottom: 0.32rem;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+  .door-enter {
+    margin-top: auto;
+    padding-top: 0.85rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(var(--door-rgb));
+  }
+
+  /* The Full Picture: a wide glowing gateway rather than an arch */
+  .portal-door-wide {
+    width: 100%;
+    margin-top: 1.4rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.1rem 2rem;
+    text-align: left;
+    border-radius: 999px;
+  }
+  .portal-door-wide .door-icon { margin: 0; flex-shrink: 0; }
+  .portal-door-wide .door-text { display: flex; flex-direction: column; gap: 0.2rem; flex: 1; }
+  .portal-door-wide .door-enter { margin: 0; padding: 0; white-space: nowrap; }
+
+  .portal-hint {
+    margin-top: 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    color: var(--gold-dim);
+  }
+
+  /* The moment of choice: chosen door blazes, the rest step back */
+  .lens-portal.choosing .portal-door:not(.chosen) { opacity: 0.12; transform: scale(0.96); }
+  .lens-portal.choosing .portal-door.chosen {
+    transform: scale(1.04);
+    border-color: rgba(var(--door-rgb),0.9);
+    box-shadow: 0 0 0 1px rgba(var(--door-rgb),0.9), 0 0 80px rgba(var(--door-rgb),0.45);
+  }
+  .lens-portal.choosing .portal-door.chosen::after { opacity: 1; }
+
+  @keyframes portalIn     { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes portalOut    { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
+  @keyframes doorRise     { from { opacity: 0; transform: translateY(18px) scale(0.97); filter: blur(4px); } }
+  @keyframes titleShimmer { 0%, 15% { background-position: 100% 0; } 60%, 100% { background-position: 0% 0; } }
+
+  /* Phones: one column, gentle arches, theme lines only — all four doors fit */
+  @media (max-width: 860px) {
+    .portal-doors { grid-template-columns: 1fr; gap: 0.85rem; }
+    .portal-inner { padding: 2.75rem 1.25rem 2rem; }
+    .portal-sub { margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .portal-door {
+      padding: 1.15rem 1.1rem 1rem;
+      gap: 0.3rem;
+      border-radius: 50% 50% 12px 12px / 26px 26px 12px 12px;
+    }
+    .portal-door-wide { margin-top: 0.85rem; border-radius: 16px; padding: 1rem 1.1rem; }
+    .portal-door .door-icon, .portal-door .door-points, .portal-door .door-enter { display: none !important; }
+    .door-name { font-size: 1.15rem; }
+    .door-theme { font-size: 0.88rem; }
+    .portal-castle { height: 22vh; opacity: 0.4; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lens-portal, .lens-portal *, .lens-portal *::before, .lens-portal *::after {
+      animation: none !important; transition: none !important;
+    }
+    .portal-title { -webkit-text-fill-color: var(--white); background: none; }
+  }
+
+  /* Reopen link under the recruiter-brief pills */
+  .focus-portal-link {
+    margin-top: 0.7rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--gold-light);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
   /* ── Lens-change toast (confirms what moved) ── */
   .lens-toast {
     position: fixed;
@@ -1925,6 +2194,8 @@
     dismissing = true;
     stopAudio();
     if(window.fadeArcTrail) window.fadeArcTrail();
+    // Crossfade into the lens portal as the castle fades (skipped for ?focus= links)
+    if(window.maybeOpenLensPortal) window.maybeOpenLensPortal();
     overlay.style.opacity = '0';
     setTimeout(function(){
       overlay.style.display='none';
@@ -2022,16 +2293,85 @@
     </ul>
     <label class="nav-lens" title="View this portfolio through a discipline lens">
       <span class="nav-lens-label">Lens</span>
-      <select id="navLens" aria-label="Portfolio focus lens" onchange="setFocus(this.value)">
+      <select id="navLens" aria-label="Portfolio focus lens" onchange="navLensChange(this)">
         <option value="default">Overview</option>
         <option value="controls">Controls &amp; Systems</option>
         <option value="data-ai">Data &amp; AI</option>
         <option value="show-systems">Show &amp; Entertainment</option>
+        <option value="__portal">✦ Open lens portal…</option>
       </select>
     </label>
   </div>
 </nav>
 <div class="lens-toast" id="lensToast" role="status" aria-live="polite"></div>
+
+<!-- ── LENS PORTAL ──────────────────────────────────────────────
+     The entry point into the portfolio: same engineer, same work,
+     chosen through the discipline the visitor cares about. "The Full
+     Picture" keeps the neutral multidisciplinary view a first-class door. -->
+<div class="lens-portal" id="lensPortal" role="dialog" aria-modal="true" aria-labelledby="portalTitle">
+  <img class="portal-castle" src="assets/castle.svg" alt="" aria-hidden="true">
+  <canvas class="portal-sky" id="portalSky" aria-hidden="true"></canvas>
+  <canvas class="portal-magic" id="portalMagic" aria-hidden="true"></canvas>
+  <div class="portal-inner">
+    <div class="portal-eyebrow">Rey Soto · Engineering Portfolio</div>
+    <h2 class="portal-title" id="portalTitle">Choose your lens</h2>
+    <p class="portal-sub">One engineer, one body of work — seen through the discipline you care about most.</p>
+
+    <div class="portal-doors">
+      <button type="button" class="portal-door" data-lens="controls">
+        <span class="door-icon"><svg viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></span>
+        <span class="door-kicker">Lens 01</span>
+        <span class="door-name">Controls &amp; Systems</span>
+        <span class="door-theme">From the machine producing the signal to the logic that commands it.</span>
+        <span class="door-points">
+          <span>PLC &amp; SCADA across a 10-plant network</span>
+          <span>Motion, drives &amp; ride-control systems</span>
+          <span>Commissioning &amp; live-show reliability</span>
+        </span>
+        <span class="door-enter">Enter →</span>
+      </button>
+
+      <button type="button" class="portal-door" data-lens="data-ai">
+        <span class="door-icon"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><path d="M6.6 7.3l3.8 3.4M6.6 16.7l3.8-3.4M14 12h3"/></svg></span>
+        <span class="door-kicker">Lens 02</span>
+        <span class="door-name">Data &amp; AI</span>
+        <span class="door-theme">From the sensor on the machine to the model that makes the decision.</span>
+        <span class="door-points">
+          <span>Enterprise production-data platform</span>
+          <span>ML predictive maintenance → IBM Maximo</span>
+          <span>Telemetry, protocols &amp; AI-augmented engineering</span>
+        </span>
+        <span class="door-enter">Enter →</span>
+      </button>
+
+      <button type="button" class="portal-door" data-lens="show-systems">
+        <span class="door-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/><path d="M19 2v4M17 4h4"/></svg></span>
+        <span class="door-kicker">Lens 03</span>
+        <span class="door-name">Show &amp; Entertainment</span>
+        <span class="door-theme">Where engineering becomes a moment guests remember.</span>
+        <span class="door-points">
+          <span>Animatronics &amp; show systems at Walt Disney World</span>
+          <span>Show control &amp; VelociCoaster C&amp;T at Universal</span>
+          <span>Embedded hardware for animatronic figures</span>
+        </span>
+        <span class="door-enter">Enter →</span>
+      </button>
+    </div>
+
+    <button type="button" class="portal-door portal-door-wide" data-lens="default">
+      <span class="door-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span>
+      <span class="door-text">
+        <span class="door-kicker">Or see everything</span>
+        <span class="door-name">The Full Picture</span>
+        <span class="door-theme">Every layer at once — physical systems, controls, data, and AI as one engineering stack.</span>
+      </span>
+      <span class="door-enter">Enter →</span>
+    </button>
+
+    <div class="portal-hint">Switch lenses anytime from the menu.</div>
+  </div>
+</div>
 
 <!-- ── HERO ── -->
 <div class="hero">
@@ -2083,6 +2423,7 @@
           <button class="focus-pill"        data-focus="show-systems" onclick="setFocus('show-systems')">Show &amp; Entertainment</button>
         </div>
         <div class="focus-lens-note" id="focusLensNote">Same engineer, same evidence — reordered and re-emphasized for the discipline you're hiring for.</div>
+        <button type="button" class="focus-portal-link" onclick="openLensPortal()">✦ Reopen the lens portal</button>
       </div>
       <p style="font-size:0.93rem;color:var(--muted);line-height:1.85;margin-bottom:1rem;">
         Rey Soto is a multidisciplinary engineer with 10+ years spanning the U.S. Air Force, Boeing aerospace, Universal Orlando, GE power generation, and Walt Disney World — working across industrial controls, automation, enterprise data and machine learning, embedded systems, and themed-entertainment technology. He currently works in Magic Kingdom West as a Ride Systems Technician, applying deep animatronic diagnostics and controls expertise in a live-show environment.
@@ -3677,12 +4018,12 @@
   }
 
   // Public: switch lens AND update the URL so the view is shareable.
-  function setFocus(mode) {
+  function setFocus(mode, opts) {
     const m = normalizeFocus(mode);
     const changed = m !== currentFocus;
     currentFocus = m;
     applyFocus(m);
-    if (changed) showLensToast(m);
+    if (changed && !(opts && opts.quiet)) showLensToast(m);
     try {
       const url = new URL(window.location.href);
       if (m === 'default') url.searchParams.delete('focus');
@@ -3699,6 +4040,407 @@
     currentFocus = normalizeFocus(param);
     applyFocus(currentFocus);   // no toast on load — the URL chose the lens
   })();
+
+  // ── PORTAL MAGIC: doors drawn in stardust ───────────────────────
+  // Two canvases: a back "sky" (stars + motes rising from the castle,
+  // drawn at half rate, behind the doors so nothing twinkles over text) and
+  // a front "magic" layer (each door's outline traced in twinkling stardust,
+  // a comet circling every arch, pixie dust, the choice burst and the sweep
+  // over the castle). Same performance recipe as the fireworks: sprites are
+  // pre-rendered once and stamped with drawImage + additive blending, the
+  // particle count is capped, quality scales down on slow devices, and the
+  // loop fully stops whenever the portal is closed.
+  const PortalMagic = (function () {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const TINT = {
+      'controls':     [232, 186,  92],
+      'data-ai':      [126, 212, 236],
+      'show-systems': [244, 160, 222],
+      'default':      [255, 234, 186],
+      'white':        [255, 255, 255],
+      'gold':         [246, 208, 120],
+    };
+    const MAX = 700;
+    let sky, sctx, fx, fctx, W = 0, H = 0, raf = 0, last = 0, ema = 16, quality = 1, frameNo = 0, t0 = 0;
+    let density = 1;                               // dust scales with screen area (phones get less)
+    let chosen = null;
+    const parts = [], stars = [], motes = [], arcs = [];
+    const doorState = new Map();
+    const sprites = {};
+
+    // ── Sprites (rendered once) ──
+    function sprite(kind, c) {
+      const key = kind + c.join(',');
+      if (sprites[key]) return sprites[key];
+      const S = kind === 'star' ? 64 : 32, s = document.createElement('canvas');
+      s.width = s.height = S;
+      const o = s.getContext('2d'), m = S / 2, rgb = c.join(',');
+      const g = o.createRadialGradient(m, m, 0, m, m, kind === 'star' ? m * 0.55 : m);
+      g.addColorStop(0, 'rgba(255,255,255,1)');
+      g.addColorStop(0.25, 'rgba(' + rgb + ',0.9)');
+      g.addColorStop(1, 'rgba(' + rgb + ',0)');
+      o.fillStyle = g; o.fillRect(0, 0, S, S);
+      if (kind === 'star') {                       // four-point twinkle rays
+        o.globalCompositeOperation = 'lighter';
+        for (const horiz of [true, false]) {
+          const lg = horiz ? o.createLinearGradient(0, m, S, m) : o.createLinearGradient(m, 0, m, S);
+          lg.addColorStop(0, 'rgba(' + rgb + ',0)');
+          lg.addColorStop(0.5, 'rgba(255,255,255,0.95)');
+          lg.addColorStop(1, 'rgba(' + rgb + ',0)');
+          o.fillStyle = lg;
+          if (horiz) o.fillRect(0, m - 1, S, 2); else o.fillRect(m - 1, 0, 2, S);
+        }
+      }
+      return (sprites[key] = s);
+    }
+    function stamp(x, kind, c, px, py, size, alpha) {
+      if (alpha <= 0.01) return;
+      x.globalAlpha = alpha > 1 ? 1 : alpha;
+      x.drawImage(sprite(kind, c), px - size, py - size, size * 2, size * 2);
+    }
+
+    // ── Sizing ──
+    function sizeCanvas(c, x) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
+      x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function resize() {
+      W = window.innerWidth; H = window.innerHeight;
+      density = Math.max(0.45, Math.min(1, (W * H) / (1100 * 750)));
+      sizeCanvas(sky, sctx); sizeCanvas(fx, fctx);
+      stars.length = 0;
+      const n = Math.min(150, Math.round(W * H / 8000));
+      for (let i = 0; i < n; i++) stars.push({
+        x: Math.random() * W, y: Math.random() * H * 0.72,
+        r: 0.5 + Math.random() * 1.3, ph: Math.random() * 6.28, sp: 0.6 + Math.random() * 1.8,
+        big: Math.random() < 0.08,
+      });
+      motes.length = 0;
+      for (let i = 0; i < 34; i++) motes.push(newMote(true));
+      doorState.forEach(st => { st.archH = null; });   // radii change with breakpoints
+    }
+    function newMote(anywhere) {
+      return {
+        x: Math.random() * W, y: anywhere ? H * (0.35 + Math.random() * 0.65) : H + 10,
+        vy: -(8 + Math.random() * 18), sway: Math.random() * 6.28, r: 1 + Math.random() * 1.8,
+        a: 0.25 + Math.random() * 0.45,
+      };
+    }
+
+    // ── Door outline geometry (follows hover lift / choose scale via rects) ──
+    function doors() { return Array.from(document.querySelectorAll('#lensPortal .portal-door')); }
+    function state(door, i) {
+      let st = doorState.get(door);
+      if (!st) {
+        st = { emit: 0, comet: 0, phase: Math.random(), archH: null, seeds: [], appearAt: 0, idx: i };
+        doorState.set(door, st);
+      }
+      return st;
+    }
+    function geom(door, st) {
+      const r = door.getBoundingClientRect();
+      if (door.classList.contains('portal-door-wide')) {
+        const rad = r.height / 2, straight = Math.max(0, r.width - 2 * rad);
+        const segs = [straight, Math.PI * rad, straight, Math.PI * rad];
+        return { r, wide: true, rad, segs, total: segs[0] + segs[1] + segs[2] + segs[3] };
+      }
+      if (st.archH == null) {
+        const v = getComputedStyle(door).borderTopLeftRadius.split(' ');
+        st.archH = parseFloat(v[1] || v[0]) || 96;
+      }
+      const ry = Math.min(st.archH, r.height * 0.45), rx = r.width / 2;
+      const arc = Math.PI * (3 * (rx + ry) - Math.sqrt((3 * rx + ry) * (rx + 3 * ry))) / 2;
+      const side = r.height - ry;
+      const segs = [side, arc, side, r.width];
+      return { r, wide: false, rx, ry, segs, total: segs[0] + segs[1] + segs[2] + segs[3] };
+    }
+    // Point at fraction s around the outline, with an outward normal.
+    function pointAt(g, s) {
+      let d = (((s % 1) + 1) % 1) * g.total;
+      const r = g.r;
+      if (g.wide) {
+        const rad = g.rad, st = g.segs[0];
+        if (d < st) return { x: r.left + rad + d, y: r.top, nx: 0, ny: -1 };
+        d -= st;
+        if (d < g.segs[1]) { const a = -Math.PI / 2 + d / rad; return { x: r.right - rad + Math.cos(a) * rad, y: r.top + rad + Math.sin(a) * rad, nx: Math.cos(a), ny: Math.sin(a) }; }
+        d -= g.segs[1];
+        if (d < st) return { x: r.right - rad - d, y: r.bottom, nx: 0, ny: 1 };
+        d -= st;
+        const a = Math.PI / 2 + d / rad;
+        return { x: r.left + rad + Math.cos(a) * rad, y: r.top + rad + Math.sin(a) * rad, nx: Math.cos(a), ny: Math.sin(a) };
+      }
+      const side = g.segs[0];
+      if (d < side) return { x: r.left, y: r.bottom - d, nx: -1, ny: 0 };          // up the left side
+      d -= side;
+      if (d < g.segs[1]) {                                                         // over the arch
+        const a = Math.PI + (d / g.segs[1]) * Math.PI, nx = Math.cos(a), ny = Math.sin(a);
+        return { x: r.left + g.rx + nx * g.rx, y: r.top + g.ry + ny * g.ry, nx, ny };
+      }
+      d -= g.segs[1];
+      if (d < side) return { x: r.right, y: r.top + g.ry + d, nx: 1, ny: 0 };      // down the right side
+      d -= side;
+      return { x: r.right - d, y: r.bottom, nx: 0, ny: 1 };                       // along the threshold
+    }
+
+    // ── Particles ──
+    function dust(x, y, vx, vy, c, opts) {
+      if (parts.length >= MAX) return;
+      opts = opts || {};
+      const life = opts.life || (0.9 + Math.random() * 1.3);
+      parts.push({
+        x, y, vx, vy, c, life, max: life,
+        g: opts.g != null ? opts.g : 22,
+        size: opts.size || (1.4 + Math.random() * 2.4),
+        star: opts.star != null ? opts.star : Math.random() < 0.24,
+        ph: Math.random() * 6.28,
+      });
+    }
+    function shed(p, c, spread, n) {
+      for (let k = 0; k < n; k++) {
+        const s = 4 + Math.random() * spread;
+        dust(p.x + (Math.random() - 0.5) * 4, p.y + (Math.random() - 0.5) * 4,
+             p.nx * s + (Math.random() - 0.5) * 14, p.ny * s - 4 + Math.random() * 6,
+             Math.random() < 0.35 ? TINT.white : c, { life: 0.7 + Math.random() * 1.2 });
+      }
+    }
+    function tintOf(door) { return TINT[door.dataset.lens] || TINT.gold; }
+
+    function burst(door) {
+      const r = door.getBoundingClientRect(), c = tintOf(door);
+      const cx = r.left + r.width / 2, cy = r.top + r.height * 0.35;
+      for (let i = 0; i < 170 * quality; i++) {
+        const a = Math.random() * 6.28, s = 60 + Math.random() * 280;
+        dust(cx, cy, Math.cos(a) * s, Math.sin(a) * s - 40, Math.random() < 0.3 ? TINT.white : c,
+             { g: 120, life: 0.8 + Math.random() * 1.1, size: 1.6 + Math.random() * 2.8 });
+      }
+    }
+    // A sparkling arc from the chosen door, up over the castle and down the far side.
+    function sweep(door) {
+      const r = door.getBoundingClientRect(), c = tintOf(door);
+      const x0 = r.left + r.width / 2, y0 = r.top + 20, toRight = x0 < W / 2;
+      arcs.push({
+        p0: [x0, y0],
+        cp: [W * (toRight ? 0.62 : 0.38), -H * 0.18],
+        p1: [toRight ? W * 0.94 : W * 0.06, H * 0.66],
+        t: 0, dur: 1.05, c,
+      });
+    }
+
+    // ── Rendering ──
+    function drawSky(t, dt) {
+      sctx.clearRect(0, 0, W, H);
+      sctx.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < stars.length; i += quality < 0.6 ? 2 : 1) {
+        const s = stars[i], a = 0.35 + 0.65 * Math.abs(Math.sin(t * s.sp + s.ph));
+        stamp(sctx, s.big ? 'star' : 'glow', s.big ? TINT.white : TINT.default, s.x, s.y, s.big ? 9 : s.r * 3, a * (s.big ? 0.95 : 0.7));
+      }
+      for (const m of motes) {
+        m.y += m.vy * dt; m.sway += dt;
+        if (m.y < H * 0.25) Object.assign(m, newMote(false));
+        const fade = Math.min(1, (m.y - H * 0.25) / (H * 0.25));
+        stamp(sctx, 'glow', TINT.gold, m.x + Math.sin(m.sway) * 8, m.y, m.r * 3, m.a * fade);
+      }
+      sctx.globalAlpha = 1;
+      sctx.globalCompositeOperation = 'source-over';
+    }
+
+    function drawDoors(t, dt, now, still) {
+      const portal = document.getElementById('lensPortal');
+      const choosing = portal.classList.contains('choosing');
+      doors().forEach((door, i) => {
+        const st = state(door, i), g = geom(door, st), c = tintOf(door);
+        const appear = still ? 1 : Math.max(0, Math.min(1, (now - st.appearAt) / 650));
+        if (appear <= 0) return;
+        const isChosen = door === chosen;
+        const active = isChosen || (!choosing && (door.matches(':hover') || door.matches(':focus-visible')));
+        const dim = choosing && !isChosen ? 0.12 : 1;
+
+        // 1) The outline, traced in twinkling stardust
+        const n = Math.max(12, Math.floor(g.total / 15));
+        const step = quality < 0.6 ? 2 : 1;
+        const drift = still ? 0 : t * 0.006;
+        for (let k = 0; k < n; k += step) {
+          const p = pointAt(g, k / n + drift);
+          const tw = still ? 0.6 : 0.3 + 0.7 * Math.abs(Math.sin(t * 1.7 + k * 1.37 + i));
+          const a = tw * (active ? 0.95 : 0.55) * appear * dim;
+          const big = k % 7 === 0;
+          stamp(fctx, big ? 'star' : 'glow', big ? TINT.white : c, p.x, p.y, big ? (active ? 6.5 : 5) : (active ? 3.4 : 2.6), a);
+        }
+        if (still) return;
+
+        // 2) Comets circling the arch (a second joins when the door is active)
+        if (!choosing || isChosen) {
+          const speed = active ? 0.23 : 0.085;
+          st.phase = (st.phase + speed * dt) % 1;
+          const heads = active ? [st.phase, st.phase + 0.5] : [st.phase];
+          for (const h of heads) {
+            const p = pointAt(g, h);
+            stamp(fctx, 'glow', c, p.x, p.y, active ? 15 : 11, 0.75 * appear * dim);
+            stamp(fctx, 'star', TINT.white, p.x, p.y, active ? 11 : 8, appear * dim);
+            st.comet += (active ? 70 : 24) * quality * density * dt;
+            const m = Math.floor(st.comet); st.comet -= m;
+            shed(p, c, active ? 38 : 22, m);
+          }
+        }
+        // 3) Loose dust lifting off the frame
+        if (!choosing) {
+          st.emit += (active ? 40 : 7) * quality * density * dt;
+          let m = Math.floor(st.emit); st.emit -= m;
+          while (m-- > 0) shed(pointAt(g, Math.random()), c, 26, 1);
+        }
+      });
+    }
+
+    function frame(ts) {
+      const dt = Math.min((ts - last) / 1000, 0.05) || 0.016; last = ts;
+      ema = ema * 0.92 + dt * 1000 * 0.08;           // adaptive quality for weak GPUs
+      quality = ema > 30 ? 0.45 : ema > 22 ? 0.7 : 1;
+      const t = ts / 1000;
+      frameNo++;
+
+      if (frameNo % 2 === 0) drawSky(t, dt * 2);     // the sky only needs ~30 fps
+
+      fctx.clearRect(0, 0, W, H);
+      fctx.globalCompositeOperation = 'lighter';
+      drawDoors(t, dt, ts, false);
+
+      for (let i = arcs.length - 1; i >= 0; i--) {    // the sweep over the castle
+        const a = arcs[i];
+        a.t = Math.min(1, a.t + dt / a.dur);
+        const e = 0.5 - 0.5 * Math.cos(Math.PI * a.t), u = 1 - e;
+        const x = u * u * a.p0[0] + 2 * u * e * a.cp[0] + e * e * a.p1[0];
+        const y = u * u * a.p0[1] + 2 * u * e * a.cp[1] + e * e * a.p1[1];
+        for (let k = 0; k < 10 * quality; k++)
+          dust(x + (Math.random() - 0.5) * 8, y + (Math.random() - 0.5) * 8,
+               (Math.random() - 0.5) * 40, Math.random() * 30, Math.random() < 0.4 ? TINT.white : a.c,
+               { g: 70, life: 0.7 + Math.random() * 1.1 });
+        stamp(fctx, 'glow', a.c, x, y, 28, 1);
+        stamp(fctx, 'star', TINT.white, x, y, 24, 1);
+        if (a.t >= 1) arcs.splice(i, 1);
+      }
+
+      for (let i = parts.length - 1; i >= 0; i--) {   // pixie dust
+        const p = parts[i];
+        p.life -= dt;
+        if (p.life <= 0) { parts.splice(i, 1); continue; }
+        p.vx *= 0.985; p.vy = p.vy * 0.985 + p.g * dt;
+        p.x += p.vx * dt; p.y += p.vy * dt;
+        const k = p.life / p.max, tw = 0.55 + 0.45 * Math.sin(t * 14 + p.ph);
+        stamp(fctx, p.star ? 'star' : 'glow', p.c, p.x, p.y,
+              p.size * (p.star ? 4.2 : 2.6) * (0.5 + 0.5 * k), Math.min(1, k * 1.4) * tw);
+      }
+      fctx.globalAlpha = 1;
+      fctx.globalCompositeOperation = 'source-over';
+      raf = requestAnimationFrame(frame);
+    }
+
+    function drawStill() {                         // reduced motion: a quiet, static starlit scene
+      drawSky(0, 0);
+      fctx.clearRect(0, 0, W, H);
+      fctx.globalCompositeOperation = 'lighter';
+      drawDoors(0, 0, 0, true);
+      fctx.globalAlpha = 1; fctx.globalCompositeOperation = 'source-over';
+    }
+
+    function onResize() { resize(); if (reduce) drawStill(); }
+
+    return {
+      start() {
+        sky = sky || document.getElementById('portalSky');
+        fx = fx || document.getElementById('portalMagic');
+        if (!sky || !fx) return;
+        sctx = sctx || sky.getContext('2d');
+        fctx = fctx || fx.getContext('2d');
+        chosen = null;
+        resize();
+        window.addEventListener('resize', onResize);
+        if (reduce) { requestAnimationFrame(drawStill); return; }
+        parts.length = 0; arcs.length = 0; ema = 16; frameNo = 0;
+        t0 = performance.now();
+        // Doors materialize in sequence with their CSS entrance
+        doors().forEach((d, i) => {
+          const st = state(d, i);
+          st.appearAt = t0 + 150 + i * 150; st.emit = 0; st.comet = 0;
+          setTimeout(() => {
+            const g = geom(d, st), c = tintOf(d);
+            for (let k = 0; k < 50 * quality; k++) shed(pointAt(g, Math.random()), c, 70, 1);
+          }, 150 + i * 150);
+        });
+        cancelAnimationFrame(raf);
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+      },
+      stop() {
+        cancelAnimationFrame(raf); raf = 0;
+        window.removeEventListener('resize', onResize);
+        parts.length = 0; arcs.length = 0; chosen = null;
+        if (sctx) sctx.clearRect(0, 0, W, H);
+        if (fctx) fctx.clearRect(0, 0, W, H);
+      },
+      choose(door) {
+        chosen = door;
+        if (!reduce) { burst(door); setTimeout(() => sweep(door), 140); }
+      },
+      reduced: reduce,
+    };
+  })();
+
+  // ── LENS PORTAL ─────────────────────────────────────────────────
+  // The way into the portfolio: shown as the fireworks fade, skipped when a
+  // ?focus= link already chose the lens. Choosing a door applies the lens and
+  // dissolves into the page.
+  let portalBusy = false;
+  function openLensPortal() {
+    const p = document.getElementById('lensPortal');
+    if (!p || p.classList.contains('open')) return;
+    p.classList.remove('choosing', 'leaving');
+    p.querySelectorAll('.portal-door').forEach(d => d.classList.remove('chosen'));
+    p.scrollTop = 0;
+    p.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    PortalMagic.start();
+    const current = p.querySelector('.portal-door[data-lens="' + (currentFocus || 'default') + '"]');
+    setTimeout(() => { try { (current || p.querySelector('.portal-door')).focus({ preventScroll: true }); } catch (e) {} }, 450);
+  }
+  function chooseLens(mode, door) {
+    const p = document.getElementById('lensPortal');
+    if (portalBusy || !p.classList.contains('open')) return;
+    portalBusy = true;
+    door.classList.add('chosen');
+    p.classList.add('choosing');
+    setFocus(mode, { quiet: true });          // the portal itself is the confirmation
+    PortalMagic.choose(door);                 // pixie-dust burst, then the arc over the castle
+    const linger = PortalMagic.reduced ? 420 : 1050;
+    setTimeout(() => p.classList.add('leaving'), linger);
+    setTimeout(() => {
+      p.classList.remove('open', 'choosing', 'leaving');
+      PortalMagic.stop();
+      document.body.style.overflow = '';
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      portalBusy = false;
+    }, linger + 700);
+  }
+  document.querySelectorAll('#lensPortal .portal-door').forEach(d =>
+    d.addEventListener('click', () => chooseLens(d.dataset.lens, d)));
+  document.addEventListener('keydown', e => {
+    const p = document.getElementById('lensPortal');
+    if (e.key === 'Escape' && p && p.classList.contains('open'))
+      chooseLens('default', p.querySelector('.portal-door[data-lens="default"]'));
+  });
+  window.openLensPortal = openLensPortal;
+  window.maybeOpenLensPortal = function () {
+    let param = null;
+    try { param = new URL(window.location.href).searchParams.get('focus'); } catch (e) {}
+    if (!param) openLensPortal();
+  };
+
+  // Nav lens menu: a lens applies directly; the last entry reopens the portal.
+  function navLensChange(sel) {
+    if (sel.value === '__portal') { sel.value = currentFocus || 'default'; openLensPortal(); return; }
+    setFocus(sel.value);
+  }
+  window.navLensChange = navLensChange;
 </script>
 
 <!-- ── HMI SIMULATOR MODAL ── -->
@@ -3737,36 +4479,67 @@
 </div>
 
 <!-- ── BAYOU BITES GAME MODAL ── -->
-<div id="gameModal" style="
-  display:none;position:fixed;inset:0;z-index:8889;
-  background:rgba(4,10,14,0.90);
-  backdrop-filter:blur(6px);
-  align-items:center;justify-content:center;
-" onclick="if(event.target===this)closeGame()">
-  <div style="position:relative;">
-    <button onclick="closeGame()" style="
-      position:absolute;top:-2.6rem;right:0;z-index:10;
-      background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);
-      border-radius:4px;color:rgba(255,255,255,0.7);
-      font-size:0.8rem;padding:0.4rem 0.8rem;
-      cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:0.1em;
-      transition:background 0.15s, color 0.15s;
-    " onmouseover="this.style.background='rgba(255,255,255,0.14)';this.style.color='#fff'"
-       onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='rgba(255,255,255,0.7)'">✕ CLOSE</button>
-    <iframe
-      id="gameFrame"
-      src=""
-      style="width:480px;height:680px;aspect-ratio:12/17;max-width:94vw;max-height:86vh;border:none;border-radius:14px;box-shadow:0 30px 70px rgba(0,0,0,0.7);display:block;background:#071923;"
-      allow="autoplay"
-      title="Bayou Bites rhythm game"
-    ></iframe>
+<style>
+  /* Solid backdrop, no backdrop-filter: a full-screen blur is a large,
+     continuous GPU cost on low-end devices (Chromebooks, phones) and the
+     game needs every frame it can get. */
+  #gameModal {
+    display: none; position: fixed; inset: 0; z-index: 9500;
+    background: rgba(4,10,14,0.96);
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 10px;
+  }
+  .game-shell { display: flex; flex-direction: column; gap: 8px; }
+  .game-shell-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 36px;
+    font-family: 'DM Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-dim);
+  }
+  .game-shell-bar button {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 4px; color: rgba(255,255,255,0.8);
+    font: inherit; letter-spacing: 0.1em; padding: 0.45rem 0.85rem; cursor: pointer;
+  }
+  .game-shell-bar button:hover { background: rgba(255,255,255,0.14); color: #fff; }
+  /* Size to the game's true 12:17 shape and fit the *visible* viewport.
+     dvh tracks mobile browser toolbars (vh doesn't on Android Chrome),
+     so the tap pads at the bottom of the game never end up under them.
+     The first declarations are the fallback for browsers without dvh. */
+  #gameFrame {
+    display: block; border: none; border-radius: 12px; background: #071923;
+    width:  min(480px, calc(100vw - 20px), calc((100vh - 64px) * 12 / 17));
+    height: min(680px, calc((100vw - 20px) * 17 / 12), calc(100vh - 64px));
+    width:  min(480px, calc(100vw - 20px), calc((100dvh - 64px) * 12 / 17));
+    height: min(680px, calc((100vw - 20px) * 17 / 12), calc(100dvh - 64px));
+  }
+</style>
+<div id="gameModal" role="dialog" aria-modal="true" aria-label="Bayou Bites rhythm game"
+     onclick="if(event.target===this)closeGame()">
+  <div class="game-shell">
+    <div class="game-shell-bar">
+      <span>Bayou Bites</span>
+      <button type="button" onclick="closeGame()">✕ Close</button>
+    </div>
+    <iframe id="gameFrame" src="about:blank" allow="autoplay" title="Bayou Bites rhythm game"></iframe>
   </div>
 </div>
 <script>
   // Lazy-load the game on open (keeps audio/assets off the initial page load)
-  // and fully tear down the iframe on close so its music stops.
+  // and fully tear down the iframe on close so its music stops. While it's
+  // open, the portfolio stops animating so the game gets the whole frame budget.
+  (function(){
+    var frame = document.getElementById('gameFrame');
+    // Hand keyboard focus to the game as soon as it loads, so A / S / D
+    // work without first clicking inside it.
+    frame.addEventListener('load', function(){
+      if (frame.getAttribute('src') === 'about:blank') return;
+      try { frame.focus(); frame.contentWindow.focus(); } catch (e) {}
+    });
+  })();
   function openGame(){
     var m = document.getElementById('gameModal');
+    if (window.fairyPause) window.fairyPause(true);
     document.getElementById('gameFrame').src = 'assets/bayou-bites/index.html?embed=1';
     m.style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -3775,6 +4548,7 @@
     document.getElementById('gameModal').style.display = 'none';
     document.getElementById('gameFrame').src = 'about:blank';
     document.body.style.overflow = '';
+    if (window.fairyPause) window.fairyPause(false);
   }
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && document.getElementById('gameModal').style.display === 'flex') closeGame();
@@ -4307,11 +5081,29 @@
   }
 
   /* ── RAF loop ─────────────────────────────────────────────── */
+  var paused=false, rafId=0;
   function loop(ts){
+    if(paused){ rafId=0; return; }
     var dt=Math.min(ts-lastTs,50); lastTs=ts;
-    update(dt); draw(); requestAnimationFrame(loop);
+    update(dt); draw(); rafId=requestAnimationFrame(loop);
   }
-  requestAnimationFrame(function(ts){ lastTs=ts; requestAnimationFrame(loop); });
+  function start(){ rafId=requestAnimationFrame(function(ts){ lastTs=ts; rafId=requestAnimationFrame(loop); }); }
+  start();
+
+  /* Freeze completely while something full-screen (the game) owns the
+     stage: no update, no draw, no RAF — zero frame cost — then resume. */
+  window.fairyPause = function(p){
+    if(p){
+      if(paused) return; paused=true;
+      ctx.clearRect(0,0,cvs.width,cvs.height); cvs.style.visibility='hidden';
+      var b=document.getElementById('fairy-bubble'); if(b) b.style.visibility='hidden';
+    } else {
+      if(!paused) return; paused=false;
+      cvs.style.visibility='';
+      var b2=document.getElementById('fairy-bubble'); if(b2) b2.style.visibility='';
+      if(!rafId) start();
+    }
+  };
 
 })();
 </script>
