@@ -11,7 +11,11 @@
     try { id = decodeURIComponent(window.location.hash.slice(1)); } catch (e) { return null; }
     return ['about', 'projects', 'timeline', 'personal', 'skills', 'contact', 'walle'].indexOf(id) !== -1 ? id : null;
   };
-  if (window.portfolioDestination()) document.documentElement.classList.add('has-destination');
+  if (window.portfolioDestination()) {
+    document.documentElement.classList.add('has-destination');
+    // A bookmarked destination also wins over a stale position on refresh.
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  }
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
