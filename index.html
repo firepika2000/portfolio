@@ -1274,6 +1274,22 @@
     transition: max-height 0.5s ease;
   }
   .card-detail-body.open { max-height: 4000px; }
+  #body-haunted-chorus-detail.open { max-height: none; }
+  #trigger-haunted-chorus-detail:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 4px; }
+  .haunted-showcase { padding-top: 1.5rem; }
+  .haunted-media { margin: 0 0 2rem; padding: 1rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border); }
+  .haunted-media video, .haunted-media img { display: block; width: 100%; height: auto; }
+  .haunted-media video { max-height: 70vh; background: #000; }
+  .haunted-media figcaption, .haunted-caption { margin-top: 0.75rem; font-size: 0.8rem; color: var(--muted); }
+  .haunted-software-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .haunted-software-grid h4 { color: var(--gold-light); font-size: 1.1rem; margin-bottom: 0.75rem; }
+  .haunted-software-grid ul { padding-left: 1.2rem; margin-top: 1rem; }
+  .haunted-software-grid li + li { margin-top: 0.6rem; }
+  .haunted-screenshots { margin-top: 2rem; }
+  .haunted-screenshots summary { cursor: pointer; color: var(--gold-light); font-size: 0.85rem; margin-top: 0.75rem; }
+  .haunted-screenshots summary:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 4px; }
+  .haunted-screenshots details img { margin-top: 1rem; }
+  @media (max-width: 700px) { .haunted-software-grid { grid-template-columns: 1fr; } }
 
   /* ── PERSONAL PROJECTS ── */
   .personal-grid {
@@ -3060,7 +3076,73 @@
       <div style="font-size:0.88rem;color:var(--gold-light);font-style:italic;margin-bottom:1.25rem;">Haunted Mansion–inspired singing busts · End-to-end digital show technology</div>
       <p class="personal-desc">Two 3D-printed character busts become performance surfaces through an entirely custom content-production and projection-mapping workflow. ChorusForge and Tesselume Mapper connect digital performance content to sculpted physical geometry, creating the illusion of singing characters.</p>
       <div class="project-tags"><span class="tag">3D Printing</span><span class="tag">ChorusForge</span><span class="tag">Tesselume Mapper</span><span class="tag">Projection Mapping</span><span class="tag">Show Technology</span></div>
-      <a class="hero-cta-ghost" href="haunted-chorus/" style="margin-top:1.25rem;">Explore Project &amp; Demonstration →</a>
+      <button type="button" class="card-detail-trigger" onclick="toggleInit('haunted-chorus-detail')" id="trigger-haunted-chorus-detail" aria-expanded="false" aria-controls="body-haunted-chorus-detail" style="width:100%;background:none;border-right:0;border-bottom:0;border-left:0;text-align:left;">
+        <span>Explore Project &amp; Demonstration</span>
+        <span class="sub-init-chevron" id="chevron-haunted-chorus-detail" aria-hidden="true">▼</span>
+      </button>
+      <div class="card-detail-body" id="body-haunted-chorus-detail" inert>
+        <div class="haunted-showcase">
+          <div class="case-label">The performance / From sculpture to singing character</div>
+          <p class="personal-desc">Two physical busts, a digital performance, and carefully aligned projected imagery come together as one illusion. The build connects character fabrication with custom software for producing content and fitting it to real surfaces.</p>
+          <figure class="haunted-media">
+            <video controls playsinline preload="none" poster="assets/haunted-chorus/poster.jpg" aria-label="The Haunted Chorus singing busts demonstration">
+              <source src="assets/haunted-chorus/demo.mp4" type="video/mp4">
+              <a href="assets/haunted-chorus/demo.mp4">Watch the Haunted Chorus demonstration.</a>
+            </video>
+            <figcaption>See the finished illusion: projected character performances on two 3D-printed busts.</figcaption>
+          </figure>
+          <h3 class="personal-name">The software behind the show</h3>
+          <p class="personal-desc">The tools form a practical production workflow: create the character performance, fit the imagery to the sculpture, and prepare the mapped show for playback.</p>
+          <div class="haunted-software-grid">
+            <article class="case-item">
+              <div class="case-label">01 / Performance production</div>
+              <h4>ChorusForge Studio</h4>
+              <p class="case-text">Build a cast once, then direct a library of songs. This custom desktop application brings local AI lip-sync rendering, audio preparation, and character direction into one workflow.</p>
+              <ul class="case-text">
+                <li><strong>Prepare the performance:</strong> optional vocal isolation and lead/backing estimation help prepare audio drivers.</li>
+                <li><strong>Direct each character:</strong> adjustable face regions, per-character audio and timing, and timeline cues control who performs and when.</li>
+                <li><strong>Refine expression:</strong> experimental blinks and brow gestures use editable regions, music-driven timing, and isolated previews.</li>
+                <li><strong>Render locally:</strong> test short sections, queue multiple songs, and save portable cast projects.</li>
+              </ul>
+              <p class="haunted-caption">Custom authoring software built around MuseTalk, with optional audio-processing components. Alpha development; eye and brow effects use 2D texture deformation.</p>
+            </article>
+            <article class="case-item">
+              <div class="case-label">02 / Projection alignment</div>
+              <h4>Tesselume Studio / Mapper</h4>
+              <p class="case-text">Turn a performance video into imagery fitted to a physical object. The mapping workflow separates the sculpture's fixed boundary from the content placed inside it.</p>
+              <ul class="case-text">
+                <li><strong>Trace the surface:</strong> define object outlines in projector space and mask areas that should remain dark.</li>
+                <li><strong>Fit the imagery:</strong> position, scale, crop, and refine a mesh while keeping the physical boundary fixed.</li>
+                <li><strong>Deliver a show:</strong> save installation templates and show variants, check exports, and queue prewarped H.264/AAC video for standalone playback.</li>
+                <li><strong>Support repeat setup:</strong> collect project media and export alignment-recovery references.</li>
+              </ul>
+              <p class="haunted-caption">Native C++ / Qt application. Beta development; the screenshots below show a calibration example, separate from the physical bust demonstration.</p>
+            </article>
+          </div>
+          <div class="haunted-screenshots">
+            <h3 class="personal-name">Inside the tools</h3>
+            <p class="personal-desc">Actual development screenshots show how the software connects creative decisions to a repeatable production workflow.</p>
+            <figure class="haunted-media">
+              <img src="assets/haunted-chorus/chorusforge-cast.png" alt="ChorusForge Studio cast editor with four busts, editable face and eye regions, and per-character blink controls" loading="lazy" width="2048" height="1240">
+              <figcaption><strong>ChorusForge — cast and expression direction.</strong> Define each performer's face and expression regions, then tune its behavior. Shown in the alpha development interface.</figcaption>
+            </figure>
+            <figure class="haunted-media">
+              <img src="assets/haunted-chorus/tesselume-mapping.png" alt="Tesselume Studio Fit content workspace showing a calibration mesh and controls for scale, position, opacity, and mapping" loading="lazy" width="1420" height="920">
+              <figcaption><strong>Tesselume — fit content to a surface.</strong> A calibration grid illustrates mesh control and independent content placement within an object's boundary.</figcaption>
+              <details>
+                <summary>See the show-delivery workspace</summary>
+                <img src="assets/haunted-chorus/tesselume-delivery.png" alt="Tesselume Studio Deliver shows workspace with preflight, render queue, media collection, and recovery export controls" loading="lazy" width="1420" height="920">
+                <p class="haunted-caption">Prepare output profiles, run preflight checks, queue shows, and collect the media and recovery references needed to move an installation into playback.</p>
+              </details>
+            </figure>
+          </div>
+          <div class="case-item" style="margin-top:1.5rem;">
+            <div class="case-label">What this build demonstrates</div>
+            <p class="case-text">An end-to-end show workflow spanning digital fabrication, software development, content preparation, and projection alignment. Designing the physical surfaces and software together gives control over how a digital character becomes a performance in a real space.</p>
+          </div>
+          <p class="haunted-caption">Independent, Haunted Mansion–inspired fan project; not an official Disney production.</p>
+        </div>
+      </div>
     </div>
 
     <!-- JOLLY ROGER — full width featured -->
@@ -3814,6 +3896,11 @@
     var isOpen  = body.classList.contains('open');
     body.classList.toggle('open', !isOpen);
     header.classList.toggle('open', !isOpen);
+    if (id === 'haunted-chorus-detail') {
+      header.setAttribute('aria-expanded', String(!isOpen));
+      body.inert = isOpen;
+      if (isOpen) body.querySelectorAll('video').forEach(function(video) { video.pause(); });
+    }
   }
 
   let activeCategory = 'all';
